@@ -8,7 +8,7 @@
   if real_rating != blank or section.blocks.size > 0
     assign show = true
   endif
-  comment Prefer the dedicated reviews page for "View more"; fall back to Google. endcomment
+  # Prefer the dedicated reviews page for "View more"; fall back to Google.
   assign more_href = section.settings.more_reviews_link
   assign more_external = false
   if more_href == blank

@@ -114,7 +114,7 @@
 
         {%- if s.show_urgency -%}
           {%- liquid
-            comment Real inventory-driven stock status. endcomment
+            # Real inventory-driven stock status.
             assign threshold = s.low_stock_threshold | default: 10
             assign tracked = false
             if cur.inventory_management != blank

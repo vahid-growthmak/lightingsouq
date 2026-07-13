@@ -1,0 +1,28 @@
+{%- comment -%}
+  Renders a real payment icon from a label (Visa, MC/Mastercard, Apple Pay, COD,
+  Google Pay, mada, Tabby, Amex, PayPal). Unknown labels fall back to a text chip.
+  Param: label
+{%- endcomment -%}
+{%- assign k = label | downcase | strip | replace: '.', '' -%}
+{%- case k -%}
+  {%- when 'visa' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Visa"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><text x="20" y="17.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="800" font-style="italic" fill="#1A1F71" letter-spacing="0.5">VISA</text></svg>
+  {%- when 'mc', 'mastercard', 'master card' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Mastercard"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><circle cx="17" cy="13" r="6.4" fill="#EB001B"/><circle cx="24" cy="13" r="6.4" fill="#F79E1B"/><path d="M20.5 8.1a6.4 6.4 0 0 0 0 9.8 6.4 6.4 0 0 0 0-9.8z" fill="#FF5F00"/></svg>
+  {%- when 'apple pay', 'applepay' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Apple Pay"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><g fill="#000"><path d="M11.9 9.6c.3-.4.5-.9.45-1.45-.46.02-1.02.3-1.35.7-.3.35-.55.9-.48 1.42.52.04 1.05-.27 1.38-.67z"/><path d="M12.35 10.35c-.75-.05-1.38.42-1.74.42-.36 0-.9-.4-1.48-.39-.76.01-1.46.44-1.85 1.12-.79 1.37-.2 3.4.56 4.52.37.54.82 1.15 1.41 1.13.56-.02.78-.36 1.46-.36.68 0 .87.36 1.46.35.61-.01.99-.55 1.36-1.09.43-.62.6-1.22.61-1.25-.01-.01-1.17-.46-1.18-1.81-.01-1.13.92-1.67.96-1.7-.53-.77-1.34-.86-1.63-.87z"/></g><text x="26" y="16.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#000">Pay</text></svg>
+  {%- when 'google pay', 'gpay', 'googlepay' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Google Pay"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><text x="15" y="17" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" font-weight="700"><tspan fill="#4285F4">G</tspan></text><text x="27" y="16.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="600" fill="#5f6368">Pay</text></svg>
+  {%- when 'mada' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="mada"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><text x="20" y="17" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="10" font-weight="800" fill="#84368b">mada</text></svg>
+  {%- when 'amex', 'american express' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="American Express"><rect width="40" height="26" rx="4" fill="#2E77BC"/><text x="20" y="16.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="7.5" font-weight="800" fill="#fff">AMEX</text></svg>
+  {%- when 'paypal' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="PayPal"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><text x="20" y="17" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="800" font-style="italic"><tspan fill="#003087">Pay</tspan><tspan fill="#009cde">Pal</tspan></text></svg>
+  {%- when 'tabby' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Tabby"><rect width="40" height="26" rx="4" fill="#3fe4b4"/><text x="20" y="17" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="800" fill="#0a1b2a">tabby</text></svg>
+  {%- when 'cod', 'cash on delivery' -%}
+    <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Cash on Delivery"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><rect x="7" y="9.5" width="12" height="7.5" rx="1.3" fill="none" stroke="#059669" stroke-width="1.2"/><circle cx="13" cy="13.2" r="1.9" fill="#059669"/><text x="29" y="16.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-weight="800" fill="#059669">COD</text></svg>
+  {%- else -%}
+    <span class="pay-badge">{{ label }}</span>
+{%- endcase -%}

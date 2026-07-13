@@ -1,0 +1,78 @@
+<section class="pdp-section">
+  <h2 class="pdp-section-title">{{ section.settings.heading }}</h2>
+  <p class="pdp-section-sub">{{ section.settings.subtitle }}</p>
+  <div class="trust-cluster">
+    {% for block in section.blocks %}
+      <div class="trust-cluster-card" {{ block.shopify_attributes }}><span class="material-symbols-outlined">{{ block.settings.icon }}</span><h4>{{ block.settings.title }}</h4><p>{{ block.settings.text }}{% if block.settings.link_label != blank and block.settings.link != blank %} <a href="{{ block.settings.link }}">{{ block.settings.link_label }}</a>{% endif %}</p></div>
+    {% endfor %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "PDP Trust",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Buy with confidence"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "The local advantages marketplaces can't match."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "card",
+      "name": "Trust card",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "default": "local_shipping"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Same-day Doha"
+        },
+        {
+          "type": "textarea",
+          "id": "text",
+          "label": "Text",
+          "default": "Order before 4 PM for same-day delivery. GCC shipping available."
+        },
+        {
+          "type": "text",
+          "id": "link_label",
+          "label": "Link label",
+          "default": "Details"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Trust",
+      "blocks": [
+        { "type": "card", "settings": { "icon": "local_shipping", "title": "Same-day Doha", "text": "Order before 4 PM for same-day delivery. GCC shipping available.", "link_label": "Details" } },
+        { "type": "card", "settings": { "icon": "assignment_return", "title": "7-day returns", "text": "Changed your mind? Return within 7 days in original packaging.", "link_label": "Policy" } },
+        { "type": "card", "settings": { "icon": "verified", "title": "2-year warranty", "text": "Genuine local warranty — not grey-market imports.", "link_label": "Claim" } },
+        { "type": "card", "settings": { "icon": "storefront", "title": "Visit the showroom", "text": "See it lit in person at our Doha showroom.", "link_label": "Directions" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

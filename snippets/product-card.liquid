@@ -1,0 +1,58 @@
+{%- comment -%}
+  Renders one product card from a REAL Shopify product object, matching the mockup markup.
+  Usage: {% render 'product-card', product: product %}
+         {% render 'product-card', product: product, fallback_image: 'prod-bulb.png' %}
+{%- endcomment -%}
+{%- liquid
+  assign fb = fallback_image | default: 'prod-bulb.png'
+  assign fb_src = fb | asset_url
+  if settings.default_product_image != blank
+    assign fb_src = settings.default_product_image | image_url: width: 800
+  endif
+  assign on_sale = false
+  if product.compare_at_price > product.price
+    assign on_sale = true
+  endif
+  assign rating = product.metafields.reviews.rating.value
+-%}
+<div class="product-card">
+  <div class="product-img-wrap">
+    <a href="{{ product.url }}">
+      {%- if product.featured_image != blank -%}
+        <img src="{{ product.featured_image | image_url: width: 800 }}" alt="{{ product.featured_image.alt | default: product.title | escape }}" width="800" height="800" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+      {%- else -%}
+        <img src="{{ fb_src }}" alt="{{ product.title | escape }}" width="800" height="800" loading="lazy" style="width:100%;height:100%;object-fit:cover;">
+      {%- endif -%}
+    </a>
+    <button class="btn-wishlist" type="button" aria-label="{{ settings.aria_add_wishlist | default: 'Add to wishlist' | escape }}" data-wishlist-toggle
+      data-handle="{{ product.handle }}"
+      data-id="{{ product.id }}"
+      data-variant="{{ product.selected_or_first_available_variant.id }}"
+      data-available="{{ product.available }}"
+      data-title="{{ product.title | escape }}"
+      data-url="{{ product.url }}"
+      data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 400 }}{% else %}{{ fb_src }}{% endif %}"
+      data-price="{{ product.price | money }}"><span class="material-symbols-outlined">favorite</span></button>
+  </div>
+  <div class="product-body">
+    {%- if product.type != blank -%}<p class="product-type">{{ product.type }}</p>{%- endif -%}
+    <h3 class="product-title"><a href="{{ product.url }}">{{ product.title }}</a></h3>
+    {%- if rating != blank -%}
+      <div class="product-stars">{% render 'rating-stars', rating: rating %}{%- if product.metafields.reviews.rating_count -%}<span class="review-count">({{ product.metafields.reviews.rating_count }})</span>{%- endif -%}</div>
+    {%- endif -%}
+    <div class="product-price">
+      {%- if on_sale -%}<span class="old-price">{{ product.compare_at_price | money }}</span>{%- endif -%}
+      <span class="new-price">{{ product.price | money }}</span>
+    </div>
+    {%- if product.available -%}
+      <form method="post" action="{{ routes.cart_add_url }}" accept-charset="UTF-8" data-cart-form>
+        <input type="hidden" name="form_type" value="product">
+        <input type="hidden" name="utf8" value="✓">
+        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+        <button class="btn-cart" type="submit"><span class="material-symbols-outlined" style="font-size:1.1rem;">shopping_cart</span> {{ settings.label_add_to_cart | default: 'Add to Cart' | escape }}</button>
+      </form>
+    {%- else -%}
+      <button class="btn-cart" type="button" disabled><span class="material-symbols-outlined" style="font-size:1.1rem;">shopping_cart</span> {{ settings.label_sold_out | default: 'Sold Out' | escape }}</button>
+    {%- endif -%}
+  </div>
+</div>

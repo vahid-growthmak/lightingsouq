@@ -1,0 +1,502 @@
+{%- comment -%}
+  Header — replicates the mockup exactly: announcement bar, main header
+  (logo / search / actions), category nav with rich MEGA MENUS (Shop by Type +
+  Shop by Brand + feature card), and mobile drawer. All classes come from base.css.
+  Nav is block-driven (nav_link / nav_mega) so it is 100% editable in the Theme Editor.
+  Follows Shopify schema rules (no empty defaults, url defaults only /collections/all or /).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign uid = section.id
+  assign the_logo = settings.logo_image | default: section.settings.logo_image
+  assign logo_h = settings.logo_height | default: section.settings.logo_height | default: 52
+  assign wa_href = s.whatsapp_link
+  if wa_href == blank and s.whatsapp_number != blank
+    assign wa_num = s.whatsapp_number | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
+    assign wa_href = 'https://wa.me/' | append: wa_num
+  endif
+  if wa_href == blank
+    assign wa_href = '#'
+  endif
+  capture wa_icon
+    echo '<svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true" focusable="false"><path d="M17.5 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.96-.94 1.16-.17.2-.35.22-.64.08-.3-.15-1.26-.47-2.4-1.48-.89-.8-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.6.14-.14.3-.35.44-.53.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49 0 1.47 1.07 2.89 1.22 3.09.15.2 2.1 3.2 5.08 4.48.71.31 1.26.49 1.69.63.71.22 1.36.19 1.87.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.19-.57-.34zM12.04 21.5a9.4 9.4 0 0 1-4.79-1.31l-.34-.2-3.56.93.95-3.47-.22-.36a9.38 9.38 0 0 1 1.45-11.66 9.38 9.38 0 0 1 13.25 13.26 9.4 9.4 0 0 1-6.69 2.81zm8-17.4A11.32 11.32 0 0 0 12.04.72C5.8.72.72 5.8.72 12.04c0 2 .52 3.95 1.5 5.68L.6 23.28l5.7-1.5a11.3 11.3 0 0 0 5.73 1.47h.01c6.24 0 11.32-5.08 11.32-11.32 0-3.02-1.18-5.86-3.32-8z"/></svg>'
+  endcapture
+-%}
+{%- style -%}
+  /* Invisible bridge so moving the cursor from the tab to the panel never crosses a dead gap */
+  #Header--{{ uid }} .nav-item.has-mega > .mega-panel::before {
+    content: ""; position: absolute; top: -16px; left: 0; right: 0; height: 18px;
+  }
+  #Header--{{ uid }} .nav-item.has-mega > .cat-nav-btn { cursor: pointer; }
+{%- endstyle -%}
+
+<div id="Header--{{ uid }}">
+
+  {%- comment -%} 1. Announcement bar {%- endcomment -%}
+  {%- if s.show_announcement -%}
+    <div class="announcement-bar">
+      <div class="container announcement-inner">
+        <div class="announcement-left">
+          {%- if s.announce_1 != blank -%}<span>{{ s.announce_1 }}</span>{%- endif -%}
+          {%- if s.announce_1 != blank and s.announce_2 != blank -%}<span class="announcement-sep hide-mobile" aria-hidden="true">•</span>{%- endif -%}
+          {%- if s.announce_2 != blank -%}<span class="hide-mobile">{{ s.announce_2 }}</span>{%- endif -%}
+        </div>
+        <div class="announcement-right">
+          {%- comment -%} 1) Language selector — native Shopify languages {%- endcomment -%}
+          {%- if s.show_language and localization.available_languages.size > 1 -%}
+            {%- form 'localization', class: 'loc-form' -%}
+              <input type="hidden" name="locale_code" value="{{ localization.language.iso_code }}" data-loc-input>
+              <div class="loc" data-loc>
+                <button type="button" class="loc-toggle" data-loc-toggle aria-expanded="false" aria-haspopup="listbox" aria-label="{{ s.language_label | default: 'Language' }}">
+                  <span class="loc-current">{{ localization.language.endonym_name | capitalize }}</span>
+                  <span class="material-symbols-outlined loc-caret">expand_more</span>
+                </button>
+                <ul class="loc-panel" role="listbox" hidden>
+                  {%- for language in localization.available_languages -%}
+                    <li>
+                      <button type="button" class="loc-option{% if language.iso_code == localization.language.iso_code %} is-active{% endif %}" data-value="{{ language.iso_code }}" role="option" aria-selected="{% if language.iso_code == localization.language.iso_code %}true{% else %}false{% endif %}" lang="{{ language.iso_code }}">
+                        {{ language.endonym_name | capitalize }}
+                      </button>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endform -%}
+          {%- endif -%}
+
+          {%- comment -%} 2) Country / currency selector — native Shopify Markets {%- endcomment -%}
+          {%- if s.show_country and localization.available_countries.size > 1 -%}
+            {%- form 'localization', class: 'loc-form' -%}
+              <input type="hidden" name="country_code" value="{{ localization.country.iso_code }}" data-loc-input>
+              <div class="loc" data-loc>
+                <button type="button" class="loc-toggle" data-loc-toggle aria-expanded="false" aria-haspopup="listbox" aria-label="{{ s.country_label | default: 'Country/region' }}">
+                  <span class="loc-current">{{ localization.country.currency.iso_code }} {{ localization.country.currency.symbol }}</span>
+                  <span class="material-symbols-outlined loc-caret">expand_more</span>
+                </button>
+                <ul class="loc-panel" role="listbox" hidden>
+                  {%- for country in localization.available_countries -%}
+                    <li>
+                      <button type="button" class="loc-option{% if country.iso_code == localization.country.iso_code %} is-active{% endif %}" data-value="{{ country.iso_code }}" role="option" aria-selected="{% if country.iso_code == localization.country.iso_code %}true{% else %}false{% endif %}">
+                        <span class="loc-name">{{ country.name }}</span>
+                        <span class="loc-cur">{{ country.currency.iso_code }} {{ country.currency.symbol }}</span>
+                      </button>
+                    </li>
+                  {%- endfor -%}
+                </ul>
+              </div>
+            {%- endform -%}
+          {%- endif -%}
+        </div>
+      </div>
+    </div>
+  {%- endif -%}
+
+  {%- comment -%} 2. Main header {%- endcomment -%}
+  <header class="main-header">
+    <div class="container header-inner">
+      <div class="logo">
+        <a href="{{ routes.root_url }}" aria-label="{{ shop.name | escape }}">
+          {%- if the_logo != blank -%}
+            <img src="{{ the_logo | image_url: width: 600 }}" alt="{{ shop.name | escape }}" width="240" style="height:{{ logo_h }}px;max-height:{{ logo_h }}px;width:auto;" class="logo-img">
+          {%- else -%}
+            {{ s.logo_text }}<span class="logo-accent">{{ s.logo_accent }}</span>
+          {%- endif -%}
+        </a>
+      </div>
+
+      {%- if s.show_search -%}
+        <form class="search-wrap" action="{{ routes.search_url }}" method="get" role="search" data-search>
+          <input type="hidden" name="type" value="product">
+          <input type="hidden" name="options[prefix]" value="last">
+          <span class="search-icon"><span class="material-symbols-outlined">search</span></span>
+          <input type="search" name="q" class="search-input" placeholder="{{ s.search_placeholder }}" autocomplete="off" aria-label="{{ s.search_aria | default: 'Search products' }}" data-search-input>
+          <div class="search-suggest" data-search-results role="listbox" aria-label="Search suggestions" hidden></div>
+        </form>
+      {%- endif -%}
+
+      <div class="header-actions">
+        <div class="desktop-only-actions flex items-center gap-2">
+          {%- if settings.theqa_image != blank -%}
+            <a class="header-theqa" href="{{ settings.theqa_link | default: '#' }}"{% if settings.theqa_link != blank %} target="_blank" rel="noopener"{% endif %} aria-label="{{ settings.theqa_alt | default: 'Theqa Certified Store' }}"><img src="{{ settings.theqa_image | image_url: width: 260 }}" alt="{{ settings.theqa_alt | default: 'Theqa Certified' }}" loading="lazy"></a>
+          {%- endif -%}
+          {%- if s.show_whatsapp -%}
+            <a class="icon-btn icon-whatsapp" href="{{ wa_href }}" target="_blank" rel="noopener" aria-label="{{ s.whatsapp_label | default: 'WhatsApp' }}">{{ wa_icon }}</a>
+          {%- endif -%}
+          <a class="icon-btn" href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" aria-label="{{ s.account_label }}"><span class="material-symbols-outlined">person</span></a>
+          {%- if s.show_wishlist -%}
+            <a class="icon-btn" href="{{ s.wishlist_link | default: '/pages/wishlist' }}" aria-label="{{ s.wishlist_label }}"><span class="material-symbols-outlined">favorite</span><span class="cart-count" data-wishlist-count style="display:none;">0</span></a>
+          {%- endif -%}
+          <a class="icon-btn cart-btn" href="{{ routes.cart_url }}" aria-label="{{ s.cart_label }}"><span class="material-symbols-outlined">shopping_cart</span><span class="cart-count" data-cart-count>{{ cart.item_count }}</span></a>
+        </div>
+        <button class="menu-toggle-btn" type="button" data-menu-toggle aria-label="{{ s.menu_label | default: 'Open Menu' }}"><span class="material-symbols-outlined">menu</span></button>
+      </div>
+    </div>
+  </header>
+
+  {%- comment -%} 3. Category nav + mega menus {%- endcomment -%}
+  <nav class="category-nav" aria-label="Primary">
+    <div class="container">
+      <div class="cat-nav-list">
+        {%- for block in section.blocks -%}
+          {%- case block.type -%}
+            {%- when 'nav_link' -%}
+              <div class="nav-item" {{ block.shopify_attributes }}>
+                <a href="{{ block.settings.link | default: '/collections/all' }}" class="cat-nav-btn{% if block.settings.highlight %} offers-btn{% endif %}">{{ block.settings.label }}</a>
+              </div>
+            {%- when 'nav_mega' -%}
+              <div class="nav-item has-mega" {{ block.shopify_attributes }}>
+                <button class="cat-nav-btn" type="button" aria-expanded="false">
+                  {{ block.settings.label }}
+                  <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+                </button>
+                <div class="mega-panel">
+                  <div class="mega-inner">
+                    <div class="mega-col">
+                      <p class="mega-col-title">{{ block.settings.col1_title }}</p>
+                      <div class="mega-list">
+                        {%- for i in (1..6) -%}
+                          {%- assign lk = 'c1_label_' | append: i -%}
+                          {%- assign uk = 'c1_url_' | append: i -%}
+                          {%- assign lbl = block.settings[lk] -%}
+                          {%- if lbl != blank -%}<a href="{{ block.settings[uk] | default: '/collections/all' }}">{{ lbl }}</a>{%- endif -%}
+                        {%- endfor -%}
+                      </div>
+                    </div>
+                    <div class="mega-col">
+                      <p class="mega-col-title">{{ block.settings.col2_title }}</p>
+                      <div class="mega-list">
+                        {%- for i in (1..6) -%}
+                          {%- assign lk = 'c2_label_' | append: i -%}
+                          {%- assign uk = 'c2_url_' | append: i -%}
+                          {%- assign lbl = block.settings[lk] -%}
+                          {%- if lbl != blank -%}<a href="{{ block.settings[uk] | default: '/collections/all' }}">{{ lbl }}</a>{%- endif -%}
+                        {%- endfor -%}
+                      </div>
+                    </div>
+                    {%- assign feat_bg = 'space-smart.png' -%}
+                    <a href="{{ block.settings.feature_link | default: '/collections/all' }}" class="mega-feature" style="background-image:url({% if block.settings.feature_image != blank %}{{ block.settings.feature_image | image_url: width: 600 }}{% else %}{{ feat_bg | asset_url }}{% endif %})">
+                      {%- if block.settings.feature_eyebrow != blank -%}<span class="mega-feature-eyebrow">{{ block.settings.feature_eyebrow }}</span>{%- endif -%}
+                      <h4>{{ block.settings.feature_title }}</h4>
+                      {%- if block.settings.feature_btn != blank -%}<span class="mega-feature-btn">{{ block.settings.feature_btn }}</span>{%- endif -%}
+                    </a>
+                  </div>
+                </div>
+              </div>
+          {%- endcase -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </nav>
+
+  {%- comment -%} 4. Mobile drawer {%- endcomment -%}
+  <div class="mobile-menu-drawer" data-mobile-menu>
+    <div class="drawer-header">
+      <div class="logo">{%- if the_logo != blank -%}<img src="{{ the_logo | image_url: width: 400 }}" alt="{{ shop.name | escape }}" style="height:38px;width:auto;">{%- else -%}{{ s.logo_text }}<span class="logo-accent">{{ s.logo_accent }}</span>{%- endif -%}</div>
+      <button class="close-drawer-btn" type="button" data-menu-close aria-label="{{ s.close_label | default: 'Close' }}"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <div class="drawer-content">
+      <div class="mobile-actions-grid">
+        <a href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="mobile-action-item"><span class="material-symbols-outlined">person</span><span>{{ s.account_label }}</span></a>
+        <a href="{{ s.wishlist_link | default: '/pages/wishlist' }}" class="mobile-action-item"><span class="material-symbols-outlined">favorite</span><span>{{ s.wishlist_label }}</span></a>
+        <a href="{{ routes.cart_url }}" class="mobile-action-item cart-btn"><div class="relative"><span class="material-symbols-outlined">shopping_cart</span><span class="cart-count" style="top:-8px;right:-8px;" data-cart-count>{{ cart.item_count }}</span></div><span>{{ s.cart_label }}</span></a>
+        <a href="{{ wa_href }}" target="_blank" rel="noopener" class="mobile-action-item">{{ wa_icon }}<span>{{ s.whatsapp_label }}</span></a>
+      </div>
+      <div class="drawer-nav-section">
+        <h3 class="drawer-section-title">{{ s.drawer_title | default: 'Shop by Category' }}</h3>
+        <ul class="drawer-nav-list">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'nav_link' -%}
+              <li><a href="{{ block.settings.link | default: '/collections/all' }}"{% if block.settings.highlight %} class="offers-link"{% endif %}>{{ block.settings.label }}</a></li>
+            {%- endif -%}
+          {%- endfor -%}
+        </ul>
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'nav_mega' -%}
+            <p class="drawer-group-label">{{ block.settings.label }}</p>
+            <ul class="drawer-nav-list">
+              {%- for i in (1..6) -%}
+                {%- assign lk = 'c1_label_' | append: i -%}
+                {%- assign uk = 'c1_url_' | append: i -%}
+                {%- assign lbl = block.settings[lk] -%}
+                {%- if lbl != blank -%}<li><a href="{{ block.settings[uk] | default: '/collections/all' }}">{{ lbl }}</a></li>{%- endif -%}
+              {%- endfor -%}
+            </ul>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+  <div class="menu-overlay" data-menu-overlay></div>
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('Header--{{ uid }}');
+    if (!root) return;
+
+    /* Mega menu — hover-intent with a close delay (reliable), plus tap toggle for touch */
+    var megas = root.querySelectorAll('.nav-item.has-mega');
+    var hasHover = window.matchMedia('(hover: hover)').matches;
+    function closeAll(except) {
+      megas.forEach(function (i) {
+        if (i === except) return;
+        i.classList.remove('mega-open');
+        var b = i.querySelector('.cat-nav-btn'); if (b) b.setAttribute('aria-expanded', 'false');
+      });
+    }
+    megas.forEach(function (item) {
+      var btn = item.querySelector('.cat-nav-btn');
+      if (!btn) return;
+      var closeTimer;
+      function open() { clearTimeout(closeTimer); closeAll(item); item.classList.add('mega-open'); btn.setAttribute('aria-expanded', 'true'); }
+      function scheduleClose() { clearTimeout(closeTimer); closeTimer = setTimeout(function () { item.classList.remove('mega-open'); btn.setAttribute('aria-expanded', 'false'); }, 220); }
+
+      if (hasHover) {
+        item.addEventListener('mouseenter', open);
+        item.addEventListener('mouseleave', scheduleClose);
+      }
+      /* Tap / click toggle (touch + keyboard) */
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        var isOpen = item.classList.contains('mega-open');
+        closeAll();
+        if (!isOpen) { item.classList.add('mega-open'); btn.setAttribute('aria-expanded', 'true'); }
+        else { item.classList.remove('mega-open'); btn.setAttribute('aria-expanded', 'false'); }
+      });
+    });
+    document.addEventListener('click', function (e) {
+      if (!e.target.closest('#Header--{{ uid }} .nav-item.has-mega')) closeAll();
+    });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(); });
+
+    /* Mobile drawer */
+    var drawer = root.querySelector('[data-mobile-menu]');
+    var overlay = root.querySelector('[data-menu-overlay]');
+    var toggle = root.querySelector('[data-menu-toggle]');
+    var close = root.querySelector('[data-menu-close]');
+    function toggleMenu() {
+      if (!drawer || !overlay) return;
+      var open = drawer.classList.toggle('open');
+      overlay.classList.toggle('show', open);
+      document.body.style.overflow = open ? 'hidden' : '';
+    }
+    if (toggle) toggle.addEventListener('click', toggleMenu);
+    if (close) close.addEventListener('click', toggleMenu);
+    if (overlay) overlay.addEventListener('click', toggleMenu);
+    if (drawer) drawer.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', function () { if (drawer.classList.contains('open')) toggleMenu(); }); });
+  })();
+
+  /* ---- Predictive search: live product suggestions ---- */
+  (function () {
+    var form = document.querySelector('[data-search]');
+    if (!form) return;
+    var input = form.querySelector('[data-search-input]');
+    var box = form.querySelector('[data-search-results]');
+    if (!input || !box) return;
+    var endpoint = '{{ routes.predictive_search_url }}';
+    var SS = {
+      noResults: {{ settings.search_no_results | default: 'No products found for' | json }},
+      seeAll: {{ settings.search_see_all | default: 'See all results for' | json }}
+    };
+    var timer, controller;
+    function hide() { box.hidden = true; }
+    function render(products, q) {
+      var html = '';
+      if (!products.length) {
+        html = '<div class="ss-empty">' + SS.noResults + ' &ldquo;' + q.replace(/</g, '') + '&rdquo;</div>';
+      } else {
+        html = products.map(function (p) {
+          var img = p.image || (p.featured_image && p.featured_image.url) || '';
+          var type = p.product_type ? '<span class="ss-type">' + p.product_type + '</span>' : '';
+          return '<a class="ss-item" href="' + p.url + '" role="option">' +
+            (img ? '<img class="ss-img" src="' + img + '" alt="" width="44" height="44" loading="lazy">' : '<span class="ss-img"></span>') +
+            '<span class="ss-info"><span class="ss-title">' + p.title + '</span>' + type + '</span></a>';
+        }).join('');
+        html += '<a class="ss-all" href="' + form.action + '?q=' + encodeURIComponent(q) + '&type=product">' + SS.seeAll + ' &ldquo;' + q.replace(/</g, '') + '&rdquo;</a>';
+      }
+      box.innerHTML = html;
+      box.hidden = false;
+    }
+    function run(q) {
+      if (controller) controller.abort();
+      controller = new AbortController();
+      fetch(endpoint + '.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last', { signal: controller.signal, headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (d) { render((d.resources && d.resources.results && d.resources.results.products) || [], q); })
+        .catch(function () {});
+    }
+    input.addEventListener('input', function () {
+      var q = input.value.trim();
+      clearTimeout(timer);
+      if (q.length < 2) { hide(); return; }
+      timer = setTimeout(function () { run(q); }, 200);
+    });
+    input.addEventListener('focus', function () { if (input.value.trim().length >= 2 && box.innerHTML) box.hidden = false; });
+    input.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+    document.addEventListener('click', function (e) { if (!form.contains(e.target)) hide(); });
+  })();
+
+  /* ---- Localization: country/currency + language dropdowns (native Shopify) ---- */
+  (function () {
+    var root = document.getElementById('Header--{{ uid }}');
+    if (!root) return;
+    function closeAll(except) {
+      root.querySelectorAll('.loc').forEach(function (loc) {
+        if (loc === except) return;
+        loc.classList.remove('open');
+        var t = loc.querySelector('[data-loc-toggle]'); if (t) t.setAttribute('aria-expanded', 'false');
+        var p = loc.querySelector('.loc-panel'); if (p) p.hidden = true;
+      });
+    }
+    root.addEventListener('click', function (e) {
+      var toggle = e.target.closest('[data-loc-toggle]');
+      if (toggle) {
+        var loc = toggle.closest('.loc');
+        var open = !loc.classList.contains('open');
+        closeAll(loc);
+        loc.classList.toggle('open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        var panel = loc.querySelector('.loc-panel'); if (panel) panel.hidden = !open;
+        return;
+      }
+      var option = e.target.closest('.loc-option');
+      if (option) {
+        var form = option.closest('form');
+        var inp = form && form.querySelector('[data-loc-input]');
+        if (inp) { inp.value = option.getAttribute('data-value'); form.submit(); }
+      }
+    });
+    document.addEventListener('click', function (e) { if (!e.target.closest('.loc')) closeAll(null); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(null); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Header",
+  "tag": "header",
+  "settings": [
+    { "type": "header", "content": "Announcement bar" },
+    { "type": "checkbox", "id": "show_announcement", "label": "Show announcement bar", "default": true },
+    { "type": "text", "id": "announce_1", "label": "Message 1", "default": "Free delivery across Qatar on orders above QAR 150" },
+    { "type": "text", "id": "announce_2", "label": "Message 2 (hidden on mobile)", "default": "WhatsApp Support Available" },
+    { "type": "header", "content": "Localization (Markets & Languages)" },
+    { "type": "paragraph", "content": "Selectors pull live from Settings > Markets and Settings > Languages. They only appear when more than one country/language is active." },
+    { "type": "checkbox", "id": "show_country", "label": "Show country / currency selector", "default": true },
+    { "type": "text", "id": "country_label", "label": "Country selector aria-label", "default": "Country/region" },
+    { "type": "checkbox", "id": "show_language", "label": "Show language selector", "default": true },
+    { "type": "text", "id": "language_label", "label": "Language selector aria-label", "default": "Language" },
+
+    { "type": "header", "content": "Logo" },
+    { "type": "image_picker", "id": "logo_image", "label": "Logo image (overrides text)" },
+    { "type": "range", "id": "logo_height", "label": "Logo height", "min": 28, "max": 90, "step": 2, "unit": "px", "default": 52 },
+    { "type": "text", "id": "logo_text", "label": "Logo text", "default": "LIGHTING" },
+    { "type": "text", "id": "logo_accent", "label": "Logo accent", "default": "SOUQ" },
+
+    { "type": "header", "content": "Search" },
+    { "type": "checkbox", "id": "show_search", "label": "Show search", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Placeholder", "default": "Search bulbs, lamps, tubes, solar lights…" },
+    { "type": "text", "id": "search_aria", "label": "Search input aria-label", "default": "Search products" },
+
+    { "type": "header", "content": "Actions" },
+    { "type": "checkbox", "id": "show_whatsapp", "label": "Show WhatsApp", "default": true },
+    { "type": "text", "id": "whatsapp_label", "label": "WhatsApp label", "default": "WhatsApp" },
+    { "type": "text", "id": "whatsapp_number", "label": "WhatsApp number (with country code, e.g. 97412345678)", "default": "97412345678" },
+    { "type": "url", "id": "whatsapp_link", "label": "WhatsApp link (overrides number)" },
+    { "type": "text", "id": "account_label", "label": "Account label", "default": "Account" },
+    { "type": "checkbox", "id": "show_wishlist", "label": "Show wishlist", "default": true },
+    { "type": "text", "id": "wishlist_label", "label": "Wishlist label", "default": "Wishlist" },
+    { "type": "url", "id": "wishlist_link", "label": "Wishlist link" },
+    { "type": "text", "id": "cart_label", "label": "Cart label", "default": "Cart" },
+
+    { "type": "header", "content": "Mobile drawer" },
+    { "type": "text", "id": "drawer_title", "label": "Drawer title", "default": "Shop by Category" },
+    { "type": "text", "id": "menu_label", "label": "Open-menu aria label", "default": "Open Menu" },
+    { "type": "text", "id": "close_label", "label": "Close aria label", "default": "Close" }
+  ],
+  "blocks": [
+    {
+      "type": "nav_link",
+      "name": "Nav link",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Menu item" },
+        { "type": "url", "id": "link", "label": "Link", "default": "/collections/all" },
+        { "type": "checkbox", "id": "highlight", "label": "Highlight (Deals style)", "default": false }
+      ]
+    },
+    {
+      "type": "nav_mega",
+      "name": "Mega menu",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Category" },
+        { "type": "header", "content": "Column 1" },
+        { "type": "text", "id": "col1_title", "label": "Column 1 title", "default": "Shop by Type" },
+        { "type": "text", "id": "c1_label_1", "label": "Link 1 label" },
+        { "type": "url", "id": "c1_url_1", "label": "Link 1 url", "default": "/collections/all" },
+        { "type": "text", "id": "c1_label_2", "label": "Link 2 label" },
+        { "type": "url", "id": "c1_url_2", "label": "Link 2 url", "default": "/collections/all" },
+        { "type": "text", "id": "c1_label_3", "label": "Link 3 label" },
+        { "type": "url", "id": "c1_url_3", "label": "Link 3 url", "default": "/collections/all" },
+        { "type": "text", "id": "c1_label_4", "label": "Link 4 label" },
+        { "type": "url", "id": "c1_url_4", "label": "Link 4 url", "default": "/collections/all" },
+        { "type": "text", "id": "c1_label_5", "label": "Link 5 label" },
+        { "type": "url", "id": "c1_url_5", "label": "Link 5 url", "default": "/collections/all" },
+        { "type": "text", "id": "c1_label_6", "label": "Link 6 label" },
+        { "type": "url", "id": "c1_url_6", "label": "Link 6 url", "default": "/collections/all" },
+        { "type": "header", "content": "Column 2" },
+        { "type": "text", "id": "col2_title", "label": "Column 2 title", "default": "Shop by Brand" },
+        { "type": "text", "id": "c2_label_1", "label": "Link 1 label" },
+        { "type": "url", "id": "c2_url_1", "label": "Link 1 url", "default": "/collections/all" },
+        { "type": "text", "id": "c2_label_2", "label": "Link 2 label" },
+        { "type": "url", "id": "c2_url_2", "label": "Link 2 url", "default": "/collections/all" },
+        { "type": "text", "id": "c2_label_3", "label": "Link 3 label" },
+        { "type": "url", "id": "c2_url_3", "label": "Link 3 url", "default": "/collections/all" },
+        { "type": "text", "id": "c2_label_4", "label": "Link 4 label" },
+        { "type": "url", "id": "c2_url_4", "label": "Link 4 url", "default": "/collections/all" },
+        { "type": "text", "id": "c2_label_5", "label": "Link 5 label" },
+        { "type": "url", "id": "c2_url_5", "label": "Link 5 url", "default": "/collections/all" },
+        { "type": "text", "id": "c2_label_6", "label": "Link 6 label" },
+        { "type": "url", "id": "c2_url_6", "label": "Link 6 url", "default": "/collections/all" },
+        { "type": "header", "content": "Feature card" },
+        { "type": "image_picker", "id": "feature_image", "label": "Feature image" },
+        { "type": "text", "id": "feature_eyebrow", "label": "Eyebrow", "default": "Life in Light" },
+        { "type": "text", "id": "feature_title", "label": "Title", "default": "Build a smart home in an afternoon" },
+        { "type": "text", "id": "feature_btn", "label": "Button label", "default": "Explore →" },
+        { "type": "url", "id": "feature_link", "label": "Feature link", "default": "/collections/all" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Header",
+      "blocks": [
+        { "type": "nav_link", "settings": { "label": "Home", "link": "/" } },
+        { "type": "nav_mega", "settings": {
+          "label": "Smart Lights", "col1_title": "Shop by Type",
+          "c1_label_1": "WiFi Smart Bulbs", "c1_label_2": "RGB & LED Strips", "c1_label_3": "Smart Downlights", "c1_label_4": "Smart Ceiling Lights", "c1_label_5": "Star Projectors", "c1_label_6": "Smart Switches & Controllers",
+          "col2_title": "Shop by Brand",
+          "c2_label_1": "Philips Hue", "c2_label_2": "Wink", "c2_label_3": "Nanoleaf", "c2_label_4": "Xiaomi / Mi", "c2_label_5": "Ledvance", "c2_label_6": "Konke",
+          "feature_eyebrow": "Life in Light", "feature_title": "Build a smart home in an afternoon", "feature_btn": "Explore Smart Home →"
+        } },
+        { "type": "nav_mega", "settings": {
+          "label": "LED Bulbs & Tubes", "col1_title": "Shop by Type",
+          "c1_label_1": "E27 & E14 Bulbs", "c1_label_2": "GU10 & MR16 Spots", "c1_label_3": "LED Tubes (T8)", "c1_label_4": "Ceiling Panels", "c1_label_5": "Downlights", "c1_label_6": "Filament & Decorative",
+          "col2_title": "Shop by Brand",
+          "c2_label_1": "Ledvance", "c2_label_2": "Philips", "c2_label_3": "GE", "c2_label_4": "Panasonic", "c2_label_5": "Vettam", "c2_label_6": "Glint",
+          "feature_eyebrow": "Daily Essentials", "feature_title": "Everyday bulbs & tubes from QAR 10", "feature_btn": "Shop Essentials →"
+        } },
+        { "type": "nav_mega", "settings": {
+          "label": "Solar & Outdoor", "col1_title": "Shop by Type",
+          "c1_label_1": "Solar Street Lights", "c1_label_2": "Solar Garden Lights", "c1_label_3": "Solar Flood Lights", "c1_label_4": "Outdoor Wall Lights", "c1_label_5": "Grow Lights", "c1_label_6": "Emergency Lighting",
+          "col2_title": "Shop by Brand",
+          "c2_label_1": "Topstar", "c2_label_2": "Vettam", "c2_label_3": "Glint", "c2_label_4": "Ledvance", "c2_label_5": "Amazon Products", "c2_label_6": "View all brands →",
+          "feature_eyebrow": "Villa & Garden", "feature_title": "Brighten every outdoor space", "feature_btn": "Explore Outdoor →"
+        } },
+        { "type": "nav_link", "settings": { "label": "Shop All", "link": "/collections/all" } },
+        { "type": "nav_link", "settings": { "label": "Deals", "link": "/collections/all", "highlight": true } },
+        { "type": "nav_link", "settings": { "label": "Bulk Orders", "link": "/collections/all" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

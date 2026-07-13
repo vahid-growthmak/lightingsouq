@@ -1,0 +1,42 @@
+{%- liquid
+  assign bg = section.settings.bg
+-%}
+<section class="section {{ bg }}" id="RT--{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-title">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    <div class="lsq-prose{% if section.settings.heading != blank %} mt-8{% endif %}">
+      {% if page.content != blank %}{{ page.content }}{% else %}{{ section.settings.content }}{% endif %}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Rich Text",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading" },
+    {
+      "type": "richtext",
+      "id": "content",
+      "label": "Content (used when the page has no body content)",
+      "default": "<p>Add your content here. When this page has body content in the admin, that content is shown automatically instead of this placeholder.</p>"
+    },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "presets": [
+    { "name": "Rich Text" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,166 @@
+{%- comment -%}
+  Main collection (PLP) — universal template for All Products, by-type, by-brand and
+  deal collections. Real Shopify data: collection.title/description, storefront
+  filters (Search & Discovery), sort, pagination, product grid. Editable SEO content
+  + cross-links. Reuses base.css collection classes + the product-card snippet.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign has_filters = false
+  if s.show_filters and collection.filters.size > 0
+    assign has_filters = true
+  endif
+-%}
+
+<div class="collection-header">
+  <div class="container">
+    <h1 class="collection-title">{{ collection.title | default: 'Products' }}</h1>
+    {%- if collection.description != blank -%}
+      <div class="collection-intro">{{ collection.description }}</div>
+    {%- elsif s.intro_fallback != blank -%}
+      <p class="collection-intro">{{ s.intro_fallback }}</p>
+    {%- endif -%}
+  </div>
+</div>
+
+<section class="section" style="padding-top:1rem;" id="Coll--{{ section.id }}">
+  <div class="container">
+    {%- paginate collection.products by s.per_page -%}
+    {%- if has_filters -%}
+      <button class="mobile-filter-toggle" type="button" data-filter-toggle>
+        <span class="material-symbols-outlined" style="font-size:1.2rem;">tune</span> {{ section.settings.label_filters | default: 'Filters' | escape }}
+      </button>
+    {%- endif -%}
+
+    <div class="collection-layout" style="margin-top:1rem;">
+      {%- if has_filters -%}
+        <aside class="filter-rail rail-collapsed" id="FilterRail--{{ section.id }}" aria-label="Product filters">
+          <form method="get">
+            <div class="filter-rail-head">
+              <h2>{{ section.settings.label_filters | default: 'Filters' | escape }}</h2>
+              <a class="filter-clear" href="{{ collection.url }}">{{ section.settings.label_clear_all | default: 'Clear all' | escape }}</a>
+            </div>
+            {%- for filter in collection.filters -%}
+              <div class="filter-group">
+                <p class="filter-group-title">{{ filter.label }}</p>
+                {%- case filter.type -%}
+                  {%- when 'list', 'boolean' -%}
+                    {%- for value in filter.values -%}
+                      <a class="filter-option" href="{% if value.active %}{{ value.url_to_remove }}{% else %}{{ value.url_to_add }}{% endif %}" rel="nofollow">
+                        <span class="material-symbols-outlined" style="font-size:1.05rem;color:{% if value.active %}var(--brand-primary){% else %}var(--gray-300,#d1d5db){% endif %};">{% if value.active %}check_box{% else %}check_box_outline_blank{% endif %}</span>
+                        {{ value.label }} <span class="filter-count">{{ value.count }}</span>
+                      </a>
+                    {%- endfor -%}
+                  {%- when 'price_range' -%}
+                    <div style="display:flex;gap:0.5rem;align-items:center;">
+                      <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="Min" min="0" max="{{ filter.range_max | money_without_currency | ceil }}" style="width:50%;padding:0.4rem;border:1px solid var(--gray-200);border-radius:var(--radius);">
+                      <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="Max" min="0" max="{{ filter.range_max | money_without_currency | ceil }}" style="width:50%;padding:0.4rem;border:1px solid var(--gray-200);border-radius:var(--radius);">
+                    </div>
+                    <button type="submit" class="btn-primary-sm" style="margin-top:0.5rem;">{{ section.settings.label_apply | default: 'Apply' | escape }}</button>
+                {%- endcase -%}
+              </div>
+            {%- endfor -%}
+          </form>
+        </aside>
+      {%- endif -%}
+
+      <div class="collection-main">
+        <div class="collection-toolbar">
+          <p class="result-count"><strong>{{ collection.products_count }}</strong> {{ section.settings.label_products_word | default: 'products' | escape }}</p>
+          {%- if collection.sort_options.size > 0 -%}
+            <div class="sort-wrap">
+              <label for="Sort--{{ section.id }}">{{ section.settings.label_sort | default: 'Sort' | escape }}</label>
+              <select class="sort-select" id="Sort--{{ section.id }}" data-sort>
+                {%- assign sort_by = collection.sort_by | default: collection.default_sort_by -%}
+                {%- for opt in collection.sort_options -%}
+                  <option value="{{ opt.value }}"{% if opt.value == sort_by %} selected{% endif %}>{{ opt.name }}</option>
+                {%- endfor -%}
+              </select>
+            </div>
+          {%- endif -%}
+        </div>
+
+        {%- if has_filters and collection.filters != empty -%}
+          <div class="active-chips">
+            {%- for filter in collection.filters -%}
+              {%- for value in filter.active_values -%}
+                <span class="active-chip">{{ value.label }} <a href="{{ value.url_to_remove }}" aria-label="Remove {{ value.label }}"><span class="material-symbols-outlined">close</span></a></span>
+              {%- endfor -%}
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+
+        {%- if collection.products.size > 0 -%}
+          <div class="grid-4">
+            {%- for product in collection.products -%}
+              {%- render 'product-card', product: product -%}
+            {%- endfor -%}
+          </div>
+          {%- if paginate.pages > 1 -%}
+            <nav class="pagination" aria-label="Pagination">
+              {%- if paginate.previous -%}<a class="page-btn" href="{{ paginate.previous.url }}" aria-label="Previous">‹</a>{%- else -%}<button class="page-btn" disabled aria-label="Previous">‹</button>{%- endif -%}
+              {%- for part in paginate.parts -%}
+                {%- if part.is_link -%}<a class="page-btn" href="{{ part.url }}">{{ part.title }}</a>
+                {%- elsif part.title == paginate.current_page -%}<button class="page-btn active">{{ part.title }}</button>
+                {%- else -%}<span class="page-btn">{{ part.title }}</span>{%- endif -%}
+              {%- endfor -%}
+              {%- if paginate.next -%}<a class="page-btn" href="{{ paginate.next.url }}" aria-label="Next">›</a>{%- else -%}<button class="page-btn" disabled aria-label="Next">›</button>{%- endif -%}
+            </nav>
+          {%- endif -%}
+        {%- else -%}
+          <div style="padding:3rem 0;text-align:center;color:var(--gray-500);">
+            <p>{{ section.settings.empty_title | default: 'No products found' | escape }}{% if collection.all_products_count > 0 %} {{ section.settings.empty_subtitle | default: 'with these filters' | escape }}{% endif %}.</p>
+            <a class="btn-primary" href="{{ collection.url | default: routes.all_products_collection_url }}" style="margin-top:1rem;">{{ section.settings.empty_button | default: 'View all products' | escape }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- endpaginate -%}
+  </div>
+</section>
+
+{%- if s.seo_content != blank -%}
+  <section class="section bg-gray">
+    <div class="container"><div class="lsq-prose">{{ s.seo_content }}</div></div>
+  </section>
+{%- endif -%}
+
+<script>
+  (function () {
+    var root = document.getElementById('Coll--{{ section.id }}');
+    if (!root) return;
+    var sort = root.querySelector('[data-sort]');
+    if (sort) sort.addEventListener('change', function () {
+      var u = new URL(location.href); u.searchParams.set('sort_by', sort.value); u.searchParams.delete('page'); location.href = u.toString();
+    });
+    var t = root.querySelector('[data-filter-toggle]');
+    var rail = document.getElementById('FilterRail--{{ section.id }}');
+    if (t && rail) t.addEventListener('click', function () { rail.classList.toggle('rail-collapsed'); });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Collection",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "show_filters", "label": "Show filter rail", "default": true },
+    { "type": "range", "id": "per_page", "label": "Products per page", "min": 8, "max": 48, "step": 4, "default": 24 },
+    { "type": "text", "id": "intro_fallback", "label": "Intro fallback (if collection has no description)", "default": "Browse our range. Use the filters to narrow by brand, base, wattage and colour temperature." },
+    { "type": "header", "content": "Labels / text" },
+    { "type": "text", "id": "label_filters", "label": "Filters label", "default": "Filters" },
+    { "type": "text", "id": "label_clear_all", "label": "Clear all label", "default": "Clear all" },
+    { "type": "text", "id": "label_apply", "label": "Price filter apply button", "default": "Apply" },
+    { "type": "text", "id": "label_sort", "label": "Sort label", "default": "Sort" },
+    { "type": "text", "id": "label_products_word", "label": "Products count word", "default": "products" },
+    { "type": "text", "id": "empty_title", "label": "Empty state title", "default": "No products found" },
+    { "type": "text", "id": "empty_subtitle", "label": "Empty state subtitle (filtered)", "default": "with these filters" },
+    { "type": "text", "id": "empty_button", "label": "Empty state button", "default": "View all products" },
+    { "type": "header", "content": "SEO / cross-links (optional)" },
+    { "type": "richtext", "id": "seo_content", "label": "SEO content", "default": "<p>Shop lighting for every space in Qatar with same-day Doha delivery and secure checkout.</p>" }
+  ],
+  "presets": [
+    { "name": "Collection" }
+  ]
+}
+{% endschema %}

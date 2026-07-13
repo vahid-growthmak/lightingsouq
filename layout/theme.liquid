@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}" dir="{% if request.locale.iso_code == 'ar' %}rtl{% else %}ltr{% endif %}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="canonical" href="{{ canonical_url }}">
+    {%- if settings.favicon != blank -%}
+      <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
+    {%- endif -%}
+
+    <title>{{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+
+    {%- if page_description -%}
+      <meta name="description" content="{{ page_description | escape }}">
+    {%- endif -%}
+
+    {%- render 'meta-tags' -%}
+
+    {%- comment -%} Icon font used by design mockup {%- endcomment -%}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+
+    {%- comment -%} Base component styles ported from mockup (pixel-perfect backbone).
+       NOTE: a `.css.liquid` asset is served WITHOUT the `.liquid` suffix — reference it as `base.css`. {%- endcomment -%}
+    {{ 'base.css' | asset_url | stylesheet_tag }}
+
+    {%- comment -%} Optional custom fonts — only load when the merchant opts in, so the default system font is untouched {%- endcomment -%}
+    {%- if settings.use_custom_fonts -%}
+      {%- if settings.heading_font -%}{{ settings.heading_font | font_face: font_display: 'swap' }}{%- endif -%}
+      {%- if settings.body_font -%}{{ settings.body_font | font_face: font_display: 'swap' }}{%- endif -%}
+    {%- endif -%}
+
+    {%- comment -%} Brand tokens from theme settings — loaded AFTER base.css so merchant colors win {%- endcomment -%}
+    <style>
+      :root {
+        --brand-primary: {{ settings.brand_primary | default: '#2B60AD' }};
+        --brand-secondary: {{ settings.brand_secondary | default: '#268290' }};
+        --brand-accent: {{ settings.brand_accent | default: '#337AB7' }};
+        --brand-text: {{ settings.brand_text | default: '#333333' }};
+        --brand-background: {{ settings.brand_background | default: '#FFFFFF' }};
+        --radius: {{ settings.corner_radius | default: 10 }}px;
+        --font-body: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        --font-heading: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        {%- if settings.use_custom_fonts -%}
+          {%- if settings.body_font -%}--font-body: {{ settings.body_font.family }}, {{ settings.body_font.fallback_families }};{%- endif -%}
+          {%- if settings.heading_font -%}--font-heading: {{ settings.heading_font.family }}, {{ settings.heading_font.fallback_families }};{%- endif -%}
+        {%- endif -%}
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: var(--font-body);
+        color: var(--brand-text);
+        background: var(--brand-background);
+        line-height: 1.6;
+      }
+      h1, h2, h3, h4, h5, h6 { font-family: var(--font-heading); }
+      img { max-width: 100%; height: auto; }
+      .skip-link { position: absolute; left: -999px; top: 0; background: var(--brand-primary); color: #fff; padding: 12px 16px; z-index: 9999; border-radius: 0 0 var(--radius) 0; }
+      .skip-link:focus { left: 0; }
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+      }
+    </style>
+
+    {{ content_for_header }}
+  </head>
+
+  <body class="template-{{ request.page_type | handle }}">
+    <a href="#MainContent" class="skip-link">{{ 'accessibility.skip_to_text' | t | default: 'Skip to content' }}</a>
+
+    {%- sections 'header-group' -%}
+
+    <main id="MainContent" role="main" tabindex="-1">
+      {{ content_for_layout }}
+    </main>
+
+    {%- sections 'footer-group' -%}
+
+    {%- render 'cart-drawer' -%}
+    {%- render 'bulk-order-popup' -%}
+    {%- render 'store-scripts' -%}
+  </body>
+</html>

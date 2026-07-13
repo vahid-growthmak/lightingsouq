@@ -1,0 +1,222 @@
+{%- comment -%}
+  Global storefront behaviour: wishlist (localStorage), AJAX add-to-cart,
+  cart drawer render from /cart.js, and toasts. Progressive enhancement —
+  if JS fails, product forms still POST to /cart and links still work.
+{%- endcomment -%}
+<script>
+(function () {
+  'use strict';
+  var ADD_URL = '{{ routes.cart_add_url }}.js';
+  var CHANGE_URL = '{{ routes.cart_change_url }}.js';
+  var CART_URL = '{{ routes.cart_url }}.js';
+  var WL_KEY = 'lsq_wishlist';
+
+  /* editable storefront strings (Theme settings › Buttons & labels) */
+  var T = {
+    wlSaved: {{ settings.toast_wishlist_saved | default: 'Saved to wishlist' | json }},
+    wlRemoved: {{ settings.toast_wishlist_removed | default: 'Removed from wishlist' | json }},
+    cartAddError: {{ settings.toast_cart_error | default: 'Could not add to cart' | json }},
+    cartEmpty: {{ settings.cart_empty | default: 'Your cart is empty.' | json }},
+    shopAll: {{ settings.cart_shop_all | default: 'Shop all products' | json }},
+    shopAllLink: {{ settings.cart_shop_all_link | default: routes.all_products_collection_url | json }},
+    subtotal: {{ settings.cart_subtotal | default: 'Subtotal' | json }},
+    taxNote: {{ settings.cart_tax_note | default: 'Shipping & taxes calculated at checkout.' | json }},
+    checkout: {{ settings.cart_checkout | default: 'Checkout' | json }},
+    viewCart: {{ settings.cart_view | default: 'View cart' | json }},
+    remove: {{ settings.label_remove | default: 'Remove' | json }},
+    cartError: {{ settings.cart_error | default: 'Could not load cart.' | json }}
+  };
+
+  /* ---------- helpers ---------- */
+  function money(cents, code) {
+    var v = (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return (code || '{{ cart.currency.iso_code | default: shop.currency }}') + ' ' + v;
+  }
+  function toast(msg) {
+    var t = document.querySelector('[data-toast]');
+    if (!t) return;
+    t.textContent = msg;
+    t.classList.add('is-visible');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('is-visible'); }, 2600);
+  }
+
+  /* ---------- wishlist ---------- */
+  function wlGet() { try { return JSON.parse(localStorage.getItem(WL_KEY)) || []; } catch (e) { return []; } }
+  function wlSet(arr) { localStorage.setItem(WL_KEY, JSON.stringify(arr)); wlUpdateBadge(); }
+  function wlHas(handle) { return wlGet().some(function (i) { return i.handle === handle; }); }
+  function wlUpdateBadge() {
+    var n = wlGet().length;
+    document.querySelectorAll('[data-wishlist-count]').forEach(function (el) {
+      el.textContent = n; el.style.display = n > 0 ? '' : 'none';
+    });
+  }
+  function wlToggle(btn) {
+    var handle = btn.getAttribute('data-handle');
+    if (!handle) return;
+    var arr = wlGet();
+    var idx = arr.findIndex(function (i) { return i.handle === handle; });
+    if (idx > -1) { arr.splice(idx, 1); btn.classList.remove('is-active'); toast(T.wlRemoved); }
+    else {
+      arr.push({
+        handle: handle,
+        id: btn.getAttribute('data-id'),
+        variant: btn.getAttribute('data-variant'),
+        available: btn.getAttribute('data-available') === 'true',
+        title: btn.getAttribute('data-title'),
+        url: btn.getAttribute('data-url'),
+        image: btn.getAttribute('data-image'),
+        price: btn.getAttribute('data-price')
+      });
+      btn.classList.add('is-active'); toast(T.wlSaved);
+    }
+    wlSet(arr);
+    document.dispatchEvent(new CustomEvent('wishlist:change'));
+  }
+  function wlMarkButtons() {
+    document.querySelectorAll('[data-wishlist-toggle]').forEach(function (btn) {
+      if (wlHas(btn.getAttribute('data-handle'))) btn.classList.add('is-active');
+    });
+  }
+
+  /* ---------- cart ---------- */
+  function openDrawer() {
+    var d = document.getElementById('CartDrawer');
+    if (!d) return;
+    d.classList.add('is-open'); d.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    renderCart();
+  }
+  function closeDrawer() {
+    var d = document.getElementById('CartDrawer');
+    if (!d) return;
+    d.classList.remove('is-open'); d.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+  function setCounts(n) {
+    document.querySelectorAll('[data-cart-count]').forEach(function (el) { el.textContent = n; });
+  }
+  function renderCart() {
+    var body = document.querySelector('[data-cart-body]');
+    var foot = document.querySelector('[data-cart-foot]');
+    if (!body) return;
+    fetch(CART_URL, { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        setCounts(cart.item_count);
+        if (!cart.items.length) {
+          body.innerHTML = '<div class="cart-drawer__empty"><span class="material-symbols-outlined">shopping_cart</span><p>' + T.cartEmpty + '</p><a class="btn-primary" href="' + T.shopAllLink + '">' + T.shopAll + '</a></div>';
+          if (foot) foot.hidden = true;
+          return;
+        }
+        var code = cart.currency;
+        body.innerHTML = cart.items.map(function (it) {
+          return '<div class="cd-item" data-key="' + it.key + '">' +
+            '<a class="cd-item__img" href="' + it.url + '"><img src="' + (it.image ? it.image.replace(/(\.[a-z]+)(\?|$)/i, '_120x$1$2') : '') + '" alt="" width="60" height="60" loading="lazy"></a>' +
+            '<div class="cd-item__info">' +
+              '<a class="cd-item__title" href="' + it.url + '">' + it.product_title + '</a>' +
+              (it.variant_title ? '<p class="cd-item__variant">' + it.variant_title + '</p>' : '') +
+              '<div class="cd-item__row">' +
+                '<div class="cd-qty">' +
+                  '<button type="button" class="cd-qty__btn" data-qty-dec aria-label="Decrease">&minus;</button>' +
+                  '<span class="cd-qty__num">' + it.quantity + '</span>' +
+                  '<button type="button" class="cd-qty__btn" data-qty-inc aria-label="Increase">+</button>' +
+                '</div>' +
+                '<span class="cd-item__price">' + money(it.final_line_price, code) + '</span>' +
+              '</div>' +
+              '<button type="button" class="cd-item__remove" data-remove>' + T.remove + '</button>' +
+            '</div></div>';
+        }).join('');
+        if (foot) {
+          foot.hidden = false;
+          foot.innerHTML = '<div class="cd-subtotal"><span>' + T.subtotal + '</span><strong>' + money(cart.total_price, code) + '</strong></div>' +
+            '<p class="cd-note">' + T.taxNote + '</p>' +
+            '<a class="btn-primary cd-checkout" href="/checkout">' + T.checkout + '</a>' +
+            '<a class="cd-viewcart" href="{{ routes.cart_url }}">' + T.viewCart + '</a>';
+        }
+      })
+      .catch(function () { body.innerHTML = '<p style="padding:1.5rem;">' + T.cartError + '</p>'; });
+  }
+  function changeQty(key, qty) {
+    fetch(CHANGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ id: key, quantity: qty })
+    }).then(function (r) { return r.json(); }).then(function () { renderCart(); });
+  }
+  function addToCart(form) {
+    var btn = form.querySelector('[type=submit]');
+    if (btn) { btn.disabled = true; btn.classList.add('is-loading'); }
+    fetch(ADD_URL, {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'X-Requested-With': 'XMLHttpRequest' },
+      body: new FormData(form)
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (res) {
+        if (btn) { btn.disabled = false; btn.classList.remove('is-loading'); }
+        if (!res.ok) { toast(res.d.description || T.cartAddError); return; }
+        openDrawer();
+      })
+      .catch(function () { if (btn) { btn.disabled = false; btn.classList.remove('is-loading'); } form.submit(); });
+  }
+
+  /* ---------- delegated events ---------- */
+  document.addEventListener('click', function (e) {
+    var wl = e.target.closest('[data-wishlist-toggle]');
+    if (wl) { e.preventDefault(); wlToggle(wl); return; }
+
+    if (e.target.closest('[data-cart-close]')) { closeDrawer(); return; }
+    if (e.target.closest('[data-cart-open]')) { e.preventDefault(); openDrawer(); return; }
+
+    var dec = e.target.closest('[data-qty-dec]');
+    var inc = e.target.closest('[data-qty-inc]');
+    var rem = e.target.closest('[data-remove]');
+    var row = e.target.closest('.cd-item');
+    if (row && (dec || inc || rem)) {
+      var key = row.getAttribute('data-key');
+      var cur = parseInt(row.querySelector('.cd-qty__num').textContent, 10) || 1;
+      if (dec) changeQty(key, Math.max(0, cur - 1));
+      else if (inc) changeQty(key, cur + 1);
+      else if (rem) changeQty(key, 0);
+    }
+  });
+
+  document.addEventListener('submit', function (e) {
+    var form = e.target.closest('[data-cart-form]');
+    if (!form) return;
+    /* let "Buy it now" / dynamic checkout submitters POST normally to checkout */
+    var sub = e.submitter;
+    if (sub && (sub.name === 'checkout' || sub.hasAttribute('data-buy-now'))) return;
+    e.preventDefault(); addToCart(form);
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeDrawer();
+  });
+
+  /* open drawer when the header cart icon is clicked (but keep /cart as fallback link) */
+  document.querySelectorAll('.cart-btn').forEach(function (a) {
+    a.addEventListener('click', function (e) { e.preventDefault(); openDrawer(); });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () { wlMarkButtons(); wlUpdateBadge(); });
+  wlMarkButtons(); wlUpdateBadge();
+
+  /* public API for the wishlist page */
+  window.LSQ = {
+    wishlist: wlGet,
+    wishlistSet: wlSet,
+    openDrawer: openDrawer,
+    toast: toast,
+    addVariant: function (variantId, qty) {
+      if (!variantId) return;
+      fetch(ADD_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ id: variantId, quantity: qty || 1 })
+      }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+        .then(function (res) { if (res.ok) openDrawer(); else toast(res.d.description || T.cartAddError); });
+    }
+  };
+})();
+</script>

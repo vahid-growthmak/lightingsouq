@@ -1,0 +1,66 @@
+<section class="section {{ section.settings.bg }}">
+  <div class="container">
+    <h2 class="section-title text-center">{{ section.settings.heading }}</h2>
+    <div class="grid-3 mt-8">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'space' -%}
+          <a href="{{ block.settings.link }}" class="space-card" style="background-image:url({% if block.settings.image != blank %}{{ block.settings.image | image_url: width: 600 }}{% else %}{{ block.settings.fallback | asset_url }}{% endif %})" {{ block.shopify_attributes }}>
+            <div class="space-overlay"></div>
+            <div class="space-content">
+              <h3 class="space-title">{{ block.settings.title }}</h3>
+              <p class="space-desc">{{ block.settings.description }}</p>
+              <span class="btn-browse">{{ block.settings.button_label | default: 'Browse →' }}</span>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Shop Lighting by Space",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Shop Lighting by Space" },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "space",
+      "name": "Space",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Background image" },
+        { "type": "text", "id": "fallback", "label": "Fallback asset filename", "default": "space-home.png" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Space" },
+        { "type": "text", "id": "description", "label": "Description", "default": "Description text" },
+        { "type": "url", "id": "link", "label": "Link", "default": "/collections/all" },
+        { "type": "text", "id": "button_label", "label": "Button label", "default": "Browse →" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop Lighting by Space",
+      "blocks": [
+        { "type": "space", "settings": { "fallback": "space-home.png", "title": "Home Lighting", "description": "Comfortable lighting for every room", "link": "/collections/all" } },
+        { "type": "space", "settings": { "fallback": "space-office.png", "title": "Office Lighting", "description": "Bright and productive workspaces", "link": "/collections/all" } },
+        { "type": "space", "settings": { "fallback": "space-retail.png", "title": "Shop & Retail Lighting", "description": "Attract customers with great lighting", "link": "/collections/all" } },
+        { "type": "space", "settings": { "fallback": "space-outdoor.png", "title": "Villa & Outdoor Lighting", "description": "Elegant exterior lighting solutions", "link": "/collections/all" } },
+        { "type": "space", "settings": { "fallback": "side-banner-accent.png", "title": "Garden & Solar Lighting", "description": "Eco-friendly outdoor illumination", "link": "/collections/all" } },
+        { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Smart Home Lighting", "description": "Control lights from your phone", "link": "/collections/all" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": { "current": "Shop" }
+    },
+    "main": {
+      "type": "main-list-collections",
+      "settings": {}
+    },
+    "brands": {
+      "type": "brand-strip",
+      "settings": {}
+    },
+    "cta": {
+      "type": "featured-banner",
+      "settings": {
+        "title": "Every light, all in one place",
+        "subtitle": "Browse all products or jump to this week's deals.",
+        "button_label": "Shop All Products",
+        "button_link": "/collections/all"
+      }
+    }
+  },
+  "order": ["breadcrumb", "main", "brands", "cta"]
+}

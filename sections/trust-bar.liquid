@@ -1,0 +1,93 @@
+{%- comment -%}
+  Trust strip — premium icon + label row below the hero. Gradient icon medallions,
+  subtle dividers, bold labels. Fully schema-driven; Shopify-valid.
+{%- endcomment -%}
+{%- style -%}
+  #TB--{{ section.id }}.lsq-trust { background: #fff; border-top: 1px solid #eef1f5; border-bottom: 1px solid #eef1f5; padding: 1.5rem 0; }
+  #TB--{{ section.id }} .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem 0; }
+  @media (min-width: 900px) { #TB--{{ section.id }} .trust-grid { grid-template-columns: repeat(4, 1fr); } }
+  #TB--{{ section.id }} .trust-item { display: flex; align-items: center; justify-content: center; gap: 0.85rem; position: relative; padding: 0.25rem 1.25rem; text-align: left; }
+  @media (min-width: 900px) { #TB--{{ section.id }} .trust-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 36px; background: linear-gradient(180deg, transparent, #e2e7ee, transparent); } }
+  #TB--{{ section.id }} .lsq-trust-ic { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(43,96,173,0.12), rgba(38,130,144,0.12)); color: var(--brand-primary); box-shadow: inset 0 0 0 1px rgba(43,96,173,0.08); }
+  #TB--{{ section.id }} .lsq-trust-ic svg { width: 22px; height: 22px; }
+  #TB--{{ section.id }} .lsq-trust-lbl { font-weight: 700; font-size: 0.95rem; color: #1f2937; letter-spacing: -0.01em; line-height: 1.25; }
+  #TB--{{ section.id }} a.trust-item { color: inherit; text-decoration: none; }
+{%- endstyle -%}
+<div class="trust-strip lsq-trust" id="TB--{{ section.id }}">
+  <div class="container trust-grid">
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'item' -%}
+        {%- capture icon_svg -%}
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true">
+          {%- case block.settings.icon -%}
+            {%- when 'truck' -%}<rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+            {%- when 'chat' -%}<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            {%- when 'card' -%}<rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/>
+            {%- when 'shield' -%}<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            {%- when 'star' -%}<polygon points="12 2 15 9 22 9 17 14 19 21 12 17 5 21 7 14 2 9 9 9"/>
+            {%- when 'bolt' -%}<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            {%- when 'return' -%}<polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+            {%- else -%}<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+          {%- endcase -%}
+          </svg>
+        {%- endcapture -%}
+        {%- if block.settings.link != blank -%}
+          <a href="{{ block.settings.link }}" class="trust-item" {{ block.shopify_attributes }}>
+            <span class="lsq-trust-ic">{{ icon_svg }}</span><span class="lsq-trust-lbl">{{ block.settings.label }}</span>
+          </a>
+        {%- else -%}
+          <div class="trust-item" {{ block.shopify_attributes }}>
+            <span class="lsq-trust-ic">{{ icon_svg }}</span><span class="lsq-trust-lbl">{{ block.settings.label }}</span>
+          </div>
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Trust Bar",
+  "tag": "section",
+  "settings": [
+    { "type": "paragraph", "content": "A premium row of trust signals (icon + label). Add or edit items below." }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Trust item",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+          "options": [
+            { "value": "truck", "label": "Delivery truck" },
+            { "value": "chat", "label": "Chat / WhatsApp" },
+            { "value": "card", "label": "Card / payment" },
+            { "value": "shield", "label": "Shield / certified" },
+            { "value": "star", "label": "Star / rating" },
+            { "value": "bolt", "label": "Bolt / fast" },
+            { "value": "return", "label": "Returns" }
+          ],
+          "default": "truck"
+        },
+        { "type": "text", "id": "label", "label": "Label", "default": "Free Delivery Across Qatar" },
+        { "type": "url", "id": "link", "label": "Link (optional)" }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Trust Bar",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "truck", "label": "Free Delivery Across Qatar" } },
+        { "type": "item", "settings": { "icon": "chat", "label": "WhatsApp Support" } },
+        { "type": "item", "settings": { "icon": "card", "label": "Cash on Delivery" } },
+        { "type": "item", "settings": { "icon": "shield", "label": "Theqa Certified Store" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

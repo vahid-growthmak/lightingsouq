@@ -1,0 +1,67 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Showroom"
+      }
+    },
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Visit our Doha showroom",
+        "subtitle": "See the lights in person, get spec advice from the team, and collect online orders in store.",
+        "bg": "bg-gray"
+      }
+    },
+    "map": {
+      "type": "map-embed",
+      "settings": {
+        "bg": "bg-white",
+        "heading": "Find us",
+        "subtitle": "Address, hours and directions to the showroom.",
+        "eyebrow": "Showroom",
+        "showroom_name": "Lighting Souq Showroom",
+        "address": "Street address, Doha, Qatar",
+        "hours": "Sat to Thu, 9am to 9pm · Fri 4pm to 9pm",
+        "phone": "+974 0000 0000",
+        "directions_label": "Get directions",
+        "directions_link": "/",
+        "map_placeholder": "Add a Google Maps embed URL in the theme editor to show the showroom location here.",
+        "show_collect": true,
+        "collect_title": "Click and Collect",
+        "collect_text": "Order online and pick up in store — usually ready the same day."
+      }
+    },
+    "advice": {
+      "type": "feature-columns",
+      "settings": {
+        "heading": "In-store advice and Click & Collect",
+        "subtitle": "Turn the showroom advantage into an easy online-to-store journey.",
+        "grid_class": "grid-3",
+        "bg": "bg-gray"
+      },
+      "blocks": {
+        "a1": { "type": "item", "settings": { "icon": "lightbulb", "title": "See it lit", "text": "View fittings switched on in real rooms before you commit." } },
+        "a2": { "type": "item", "settings": { "icon": "support_agent", "title": "Expert on hand", "text": "Bring your questions — the team confirms fit and compatibility.", "link": "/pages/contact", "link_label": "Ask ahead" } },
+        "a3": { "type": "item", "settings": { "icon": "local_mall", "title": "Collect in store", "text": "Buy online and pick up the same day at the showroom counter." } }
+      },
+      "block_order": ["a1", "a2", "a3"]
+    },
+    "reviews": {
+      "type": "testimonials",
+      "settings": {
+        "heading": "What showroom visitors say",
+        "bg": "bg-white"
+      },
+      "blocks": {
+        "r1": { "type": "review", "settings": { "name": "Ahmed Al-Kuwari", "rating": 5, "text": "Great selection in store and the staff really know lighting. Left with exactly what I needed.", "date": "April 2026" } },
+        "r2": { "type": "review", "settings": { "name": "Sara Abdullah", "rating": 5, "text": "Collected my order in store the same day. Quick, friendly and easy.", "date": "March 2026" } },
+        "r3": { "type": "review", "settings": { "name": "Mohammed Al-Thani", "rating": 5, "text": "Seeing the lights on before buying made the decision simple. Highly recommend a visit.", "date": "March 2026" } }
+      },
+      "block_order": ["r1", "r2", "r3"]
+    }
+  },
+  "order": ["breadcrumb", "hero", "map", "advice", "reviews"]
+}

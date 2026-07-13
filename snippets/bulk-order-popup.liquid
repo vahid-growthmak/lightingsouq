@@ -1,0 +1,402 @@
+{%- comment -%}
+  Bulk Order popup — 100% native, no Admin API / no external server.
+  Opens from any element with class `rbo-open` (pass product context via data-* attrs).
+  On submit it fires TWO native Shopify forms:
+    1. {% form 'customer' %}  -> creates a Customer (Admin -> Customers), tags bulk-lead/trade
+    2. {% form 'contact'  %}  -> emails the full request (products x qty + notes) to the store contact email
+  Then redirects the shopper to WhatsApp with the whole order pre-typed.
+  Render once before </body> in layout/theme.liquid: {%- render 'bulk-order-popup' -%}
+{%- endcomment -%}
+{%- liquid
+  assign wa_num = settings.whatsapp_number | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
+-%}
+<div class="rbo-overlay" id="RboPopup" aria-hidden="true" hidden>
+  <div class="rbo-backdrop" data-rbo-close tabindex="-1"></div>
+  <div class="rbo-dialog" role="dialog" aria-modal="true" aria-labelledby="rbo-title">
+    <button type="button" class="rbo-close" data-rbo-close aria-label="Close"><span class="material-symbols-outlined">close</span></button>
+
+    <div class="rbo-view" data-rbo-view="form">
+      <h2 id="rbo-title" class="rbo-title">{{ settings.rbo_title | default: 'Request a Bulk Order' | escape }}</h2>
+      <p class="rbo-sub">{{ settings.rbo_subtitle | escape }}</p>
+
+      <div class="rbo-items" data-rbo-items></div>
+      <p class="rbo-empty" data-rbo-empty>{{ settings.rbo_empty | default: 'No products added yet — search above to add items.' | escape }}</p>
+
+      <div class="rbo-field rbo-search">
+        <label for="rbo-search-input">{{ settings.rbo_search_label | default: 'Add another product' | escape }}</label>
+        <input type="text" id="rbo-search-input" data-rbo-search placeholder="{{ settings.rbo_search_ph | default: 'Search products…' | escape }}" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="rbo-results">
+        <div class="rbo-results" id="rbo-results" data-rbo-results role="listbox" hidden></div>
+      </div>
+
+      <div class="rbo-grid">
+        <div class="rbo-field">
+          <label for="rbo-name">{{ settings.rbo_name_label | default: 'Your name' | escape }} *</label>
+          <input type="text" id="rbo-name" data-rbo-name autocomplete="name">
+        </div>
+        <div class="rbo-field">
+          <label for="rbo-email">{{ settings.rbo_email_label | default: 'Work email' | escape }} *</label>
+          <input type="email" id="rbo-email" data-rbo-email autocomplete="email">
+        </div>
+        <div class="rbo-field">
+          <label for="rbo-phone">{{ settings.rbo_phone_label | default: 'Phone (optional)' | escape }}</label>
+          <input type="tel" id="rbo-phone" data-rbo-phone autocomplete="tel">
+        </div>
+      </div>
+      <div class="rbo-field">
+        <label for="rbo-notes">{{ settings.rbo_notes_label | default: 'Notes (optional)' | escape }}</label>
+        <textarea id="rbo-notes" data-rbo-notes rows="2" placeholder="{{ settings.rbo_notes_ph | escape }}"></textarea>
+      </div>
+
+      {%- comment -%} honeypot — hidden from humans, catches bots {%- endcomment -%}
+      <div class="rbo-hp" aria-hidden="true"><label>Company website<input type="text" tabindex="-1" autocomplete="off" data-rbo-hp></label></div>
+
+      <p class="rbo-error" data-rbo-error hidden></p>
+      <button type="button" class="rbo-submit" data-rbo-submit>{{ settings.rbo_submit | default: 'Send bulk request' | escape }}</button>
+    </div>
+
+    <div class="rbo-view rbo-success" data-rbo-view="success" hidden>
+      <span class="rbo-success-icon material-symbols-outlined">check_circle</span>
+      <h2 class="rbo-title">{{ settings.rbo_success_title | default: 'Request sent!' | escape }}</h2>
+      <div class="rbo-sub">{{ settings.rbo_success_msg }}</div>
+      <a class="rbo-wa" data-rbo-wa href="#" target="_blank" rel="noopener"><span class="material-symbols-outlined">chat</span> {{ settings.rbo_wa_button | default: 'Continue on WhatsApp' | escape }}</a>
+    </div>
+  </div>
+</div>
+
+{%- comment -%} Native Shopify forms — hidden, submitted by JS. Shopify sets form_type + tokens. {%- endcomment -%}
+<div class="rbo-sink" aria-hidden="true">
+  <iframe name="rbo-sink-c" title="" tabindex="-1" style="width:0;height:0;border:0;"></iframe>
+  <iframe name="rbo-sink-o" title="" tabindex="-1" style="width:0;height:0;border:0;"></iframe>
+  <div data-rbo-customer-form>
+    {%- form 'customer', id: 'RboCustomerForm' -%}
+      <input type="hidden" name="contact[tags]" value="bulk-lead, trade">
+      <input type="email" name="contact[email]" data-fill="email">
+      <input type="text" name="contact[first_name]" data-fill="first_name">
+      <input type="text" name="contact[last_name]" data-fill="last_name">
+      <input type="tel" name="contact[phone]" data-fill="phone">
+    {%- endform -%}
+  </div>
+  <div data-rbo-order-form>
+    {%- form 'contact', id: 'RboOrderForm' -%}
+      <input type="text" name="contact[first_name]" data-fill="first_name">
+      <input type="text" name="contact[last_name]" data-fill="last_name">
+      <input type="email" name="contact[email]" data-fill="email">
+      <input type="tel" name="contact[phone]" data-fill="phone">
+      <textarea name="contact[body]" data-fill="body"></textarea>
+    {%- endform -%}
+  </div>
+</div>
+
+<style>
+  .rbo-sink { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .rbo-overlay { position: fixed; inset: 0; z-index: 10000; display: none; }
+  .rbo-overlay.is-open { display: block; }
+  .rbo-backdrop { position: absolute; inset: 0; background: rgba(15,23,42,.55); backdrop-filter: blur(2px); }
+  .rbo-dialog {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: min(560px, calc(100vw - 2rem)); max-height: calc(100vh - 2rem); overflow-y: auto;
+    background: var(--brand-background, #fff); border-radius: var(--radius, 12px);
+    box-shadow: var(--shadow-lg, 0 8px 32px rgba(0,0,0,.14)); padding: 1.5rem;
+    animation: rbo-in .22s ease-out;
+  }
+  @keyframes rbo-in { from { opacity: 0; transform: translate(-50%, calc(-50% + 14px)); } to { opacity: 1; transform: translate(-50%, -50%); } }
+  .rbo-close { position: absolute; top: .75rem; right: .75rem; width: 38px; height: 38px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: var(--gray-100, #f3f4f6); color: var(--gray-600, #4b5563); }
+  .rbo-close:hover { background: var(--gray-200, #e5e7eb); }
+  .rbo-title { font-size: 1.35rem; font-weight: 700; color: var(--brand-text, #111827); margin: 0 2rem 0 0; }
+  .rbo-sub { font-size: .9rem; color: var(--gray-500, #6b7280); margin: .35rem 0 1rem; }
+  .rbo-items { display: flex; flex-direction: column; gap: .5rem; margin-bottom: .5rem; }
+  .rbo-empty { font-size: .85rem; color: var(--gray-400, #9ca3af); margin: 0 0 .75rem; }
+  .rbo-item { display: flex; align-items: center; gap: .6rem; padding: .5rem; border: 1px solid var(--gray-200, #e5e7eb); border-radius: var(--radius, 10px); }
+  .rbo-item img { width: 46px; height: 46px; object-fit: cover; border-radius: 8px; flex-shrink: 0; background: var(--gray-100,#f3f4f6); }
+  .rbo-item-info { flex: 1; min-width: 0; }
+  .rbo-item-title { font-size: .85rem; font-weight: 600; color: var(--brand-text,#111827); line-height: 1.2; }
+  .rbo-item-meta { font-size: .72rem; color: var(--gray-500,#6b7280); }
+  .rbo-qty { display: inline-flex; align-items: center; border: 1px solid var(--gray-300,#d1d5db); border-radius: 8px; overflow: hidden; }
+  .rbo-qty button { width: 30px; height: 32px; font-size: 1.1rem; line-height: 1; color: var(--gray-700,#374151); background: var(--gray-50,#f9fafb); }
+  .rbo-qty button:hover { background: var(--gray-100,#f3f4f6); }
+  .rbo-qty input { width: 40px; height: 32px; text-align: center; border: none; border-left: 1px solid var(--gray-200,#e5e7eb); border-right: 1px solid var(--gray-200,#e5e7eb); font-size: .85rem; -moz-appearance: textfield; }
+  .rbo-qty input::-webkit-outer-spin-button, .rbo-qty input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .rbo-item-remove { width: 30px; height: 30px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; color: var(--gray-400,#9ca3af); flex-shrink: 0; }
+  .rbo-item-remove:hover { color: var(--danger,#dc2626); background: var(--gray-100,#f3f4f6); }
+  .rbo-item-remove .material-symbols-outlined { font-size: 1.15rem; }
+  .rbo-field { position: relative; margin-bottom: .75rem; }
+  .rbo-field label { display: block; font-size: .8rem; font-weight: 600; color: var(--gray-700,#374151); margin-bottom: .3rem; }
+  .rbo-field input, .rbo-field textarea { width: 100%; padding: .6rem .7rem; border: 1px solid var(--gray-300,#d1d5db); border-radius: var(--radius,10px); font-family: inherit; font-size: .9rem; color: var(--brand-text,#111827); background: #fff; }
+  .rbo-field input:focus, .rbo-field textarea:focus { outline: none; border-color: var(--brand-primary,#2b60ad); box-shadow: 0 0 0 3px rgba(43,96,173,.15); }
+  .rbo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 .75rem; }
+  .rbo-grid .rbo-field:first-child { grid-column: 1 / -1; }
+  .rbo-results { position: absolute; top: 100%; left: 0; right: 0; z-index: 5; background: #fff; border: 1px solid var(--gray-200,#e5e7eb); border-radius: var(--radius,10px); box-shadow: var(--shadow,0 4px 16px rgba(0,0,0,.1)); margin-top: 4px; max-height: 260px; overflow-y: auto; }
+  .rbo-result { display: flex; align-items: center; gap: .6rem; width: 100%; padding: .5rem .6rem; text-align: left; }
+  .rbo-result:hover, .rbo-result.is-active { background: var(--gray-50,#f9fafb); }
+  .rbo-result img { width: 36px; height: 36px; object-fit: cover; border-radius: 6px; background: var(--gray-100,#f3f4f6); }
+  .rbo-result-title { font-size: .82rem; color: var(--brand-text,#111827); line-height: 1.2; }
+  .rbo-result-meta { font-size: .72rem; color: var(--gray-500,#6b7280); }
+  .rbo-result-empty { padding: .7rem; font-size: .82rem; color: var(--gray-500,#6b7280); }
+  .rbo-hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+  .rbo-error { color: var(--danger,#dc2626); font-size: .82rem; margin: .25rem 0 .5rem; }
+  .rbo-submit, .rbo-wa { display: inline-flex; align-items: center; justify-content: center; gap: .4rem; width: 100%; min-height: 48px; border-radius: var(--radius,10px); font-size: 1rem; font-weight: 700; }
+  .rbo-submit { background: var(--brand-primary,#2b60ad); color: #fff; margin-top: .25rem; transition: opacity .15s ease; }
+  .rbo-submit:hover { opacity: .92; }
+  .rbo-submit.is-loading { opacity: .6; pointer-events: none; }
+  .rbo-success { text-align: center; padding: 1rem .5rem; }
+  .rbo-success-icon { font-size: 3.25rem; color: var(--success,#059669); }
+  .rbo-success .rbo-title { margin: .5rem 0 0; }
+  .rbo-success .rbo-sub { margin: .35rem 0 1.25rem; }
+  .rbo-wa { background: #25d366; color: #fff; margin-top: .5rem; }
+  .rbo-wa:hover { filter: brightness(.96); }
+  body.rbo-lock { overflow: hidden; }
+  @media (max-width: 560px) {
+    .rbo-dialog { width: 100vw; max-width: 100vw; height: 100vh; max-height: 100vh; top: 0; left: 0; transform: none; border-radius: 0; }
+    @keyframes rbo-in { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+    .rbo-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+(function () {
+  'use strict';
+  var pop = document.getElementById('RboPopup');
+  if (!pop) return;
+
+  var WA_NUMBER = {{ wa_num | json }};
+  var CURRENCY  = {{ shop.currency | json }};
+  var TEMPLATE_MSG = {{ settings.rbo_template_msg | default: '' | json }};
+
+  var itemsEl   = pop.querySelector('[data-rbo-items]');
+  var emptyEl   = pop.querySelector('[data-rbo-empty]');
+  var searchEl  = pop.querySelector('[data-rbo-search]');
+  var resultsEl = pop.querySelector('[data-rbo-results]');
+  var errorEl   = pop.querySelector('[data-rbo-error]');
+  var submitBtn = pop.querySelector('[data-rbo-submit]');
+  var custForm  = pop.parentNode.querySelector('[data-rbo-customer-form] form') || document.querySelector('[data-rbo-customer-form] form');
+  var orderForm = document.querySelector('[data-rbo-order-form] form');
+  var custFrame = document.querySelector('iframe[name="rbo-sink-c"]');
+  var ordFrame  = document.querySelector('iframe[name="rbo-sink-o"]');
+
+  var items = [];        // { variantId, title, variant, sku, price, image, qty }
+  var lastTrigger = null;
+
+  function money(cents) {
+    if (cents == null || isNaN(cents)) return '';
+    return CURRENCY + ' ' + (cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); }
+
+  /* ---------- items ---------- */
+  function addItem(it) {
+    if (!it || !it.variantId) return;
+    var found = items.filter(function (x) { return String(x.variantId) === String(it.variantId); })[0];
+    if (found) { found.qty += (it.qty || 1); }
+    else { it.qty = it.qty || 1; items.push(it); }
+    renderItems();
+  }
+  function renderItems() {
+    emptyEl.style.display = items.length ? 'none' : '';
+    itemsEl.innerHTML = items.map(function (it, i) {
+      var meta = [it.variant && it.variant !== 'Default Title' ? it.variant : '', it.sku ? it.sku : '', it.price || ''].filter(Boolean).join(' · ');
+      return '<div class="rbo-item" data-i="' + i + '">' +
+        (it.image ? '<img src="' + esc(it.image) + '" alt="" width="46" height="46" loading="lazy">' : '<img alt="" width="46" height="46">') +
+        '<div class="rbo-item-info"><div class="rbo-item-title">' + esc(it.title) + '</div>' + (meta ? '<div class="rbo-item-meta">' + esc(meta) + '</div>' : '') + '</div>' +
+        '<div class="rbo-qty"><button type="button" data-dec aria-label="Decrease">&minus;</button>' +
+        '<input type="number" min="1" value="' + it.qty + '" data-qty aria-label="Quantity">' +
+        '<button type="button" data-inc aria-label="Increase">+</button></div>' +
+        '<button type="button" class="rbo-item-remove" data-remove aria-label="Remove"><span class="material-symbols-outlined">delete</span></button>' +
+        '</div>';
+    }).join('');
+  }
+  itemsEl.addEventListener('click', function (e) {
+    var row = e.target.closest('[data-i]'); if (!row) return;
+    var i = parseInt(row.getAttribute('data-i'), 10);
+    if (e.target.closest('[data-inc]')) { items[i].qty++; renderItems(); }
+    else if (e.target.closest('[data-dec]')) { items[i].qty = Math.max(1, items[i].qty - 1); renderItems(); }
+    else if (e.target.closest('[data-remove]')) { items.splice(i, 1); renderItems(); }
+  });
+  itemsEl.addEventListener('change', function (e) {
+    var row = e.target.closest('[data-i]'); if (!row || !e.target.matches('[data-qty]')) return;
+    var i = parseInt(row.getAttribute('data-i'), 10);
+    items[i].qty = Math.max(1, parseInt(e.target.value, 10) || 1);
+    renderItems();
+  });
+
+  /* ---------- live catalogue search (native Shopify endpoints) ---------- */
+  var searchTimer, searchSeq = 0;
+  function debounceSearch() {
+    clearTimeout(searchTimer);
+    var term = searchEl.value.trim();
+    if (term.length < 2) { hideResults(); return; }
+    searchTimer = setTimeout(function () { runSearch(term); }, 220);
+  }
+  function hideResults() { resultsEl.hidden = true; resultsEl.innerHTML = ''; searchEl.setAttribute('aria-expanded', 'false'); }
+  function runSearch(term) {
+    var seq = ++searchSeq;
+    var url = '/search/suggest.json?q=' + encodeURIComponent(term) + '&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last';
+    fetch(url, { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (data) {
+        if (seq !== searchSeq) return;
+        var products = (data.resources && data.resources.results && data.resources.results.products) || [];
+        if (!products.length) { resultsEl.innerHTML = '<div class="rbo-result-empty">No products found.</div>'; resultsEl.hidden = false; return; }
+        resultsEl.innerHTML = products.map(function (p) {
+          var img = p.image || (p.featured_image && p.featured_image.url) || '';
+          return '<button type="button" class="rbo-result" data-handle="' + esc(p.handle) + '">' +
+            (img ? '<img src="' + esc(img) + '" alt="" width="36" height="36">' : '<img alt="" width="36" height="36">') +
+            '<span><span class="rbo-result-title">' + esc(p.title) + '</span>' + (p.product_type ? '<span class="rbo-result-meta"> ' + esc(p.product_type) + '</span>' : '') + '</span></button>';
+        }).join('');
+        resultsEl.hidden = false; searchEl.setAttribute('aria-expanded', 'true');
+      })
+      .catch(function () { hideResults(); });
+  }
+  resultsEl.addEventListener('click', function (e) {
+    var btn = e.target.closest('[data-handle]'); if (!btn) return;
+    var handle = btn.getAttribute('data-handle');
+    fetch('/products/' + handle + '.js', { headers: { 'Accept': 'application/json' } })
+      .then(function (r) { return r.json(); })
+      .then(function (prod) {
+        var v = (prod.variants || []).filter(function (x) { return x.available; })[0] || prod.variants[0];
+        if (!v) return;
+        addItem({ variantId: v.id, title: prod.title, variant: v.title, sku: v.sku, price: money(v.price), image: (prod.featured_image || (prod.images && prod.images[0]) || '') });
+        searchEl.value = ''; hideResults(); searchEl.focus();
+      })
+      .catch(function () {});
+  });
+  searchEl.addEventListener('input', debounceSearch);
+  document.addEventListener('click', function (e) { if (!e.target.closest('.rbo-search')) hideResults(); });
+
+  /* ---------- open / close ---------- */
+  function open(seed) {
+    showView('form'); errorEl.hidden = true;
+    if (seed && seed.variantId) addItem(seed); else renderItems();
+    pop.hidden = false; pop.classList.add('is-open'); pop.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('rbo-lock');
+    var f = pop.querySelector('input, textarea, button'); if (f) f.focus();
+  }
+  function close() {
+    pop.classList.remove('is-open'); pop.setAttribute('aria-hidden', 'true'); pop.hidden = true;
+    document.body.classList.remove('rbo-lock');
+    if (lastTrigger && lastTrigger.focus) lastTrigger.focus();
+  }
+  function showView(name) {
+    pop.querySelectorAll('[data-rbo-view]').forEach(function (v) { v.hidden = v.getAttribute('data-rbo-view') !== name; });
+  }
+  function seedFromTrigger(trig) {
+    var vid = trig.getAttribute('data-variant-id');
+    if (!vid) return null;
+    return {
+      variantId: vid,
+      title: trig.getAttribute('data-title') || 'This product',
+      variant: trig.getAttribute('data-variant') || '',
+      sku: trig.getAttribute('data-sku') || '',
+      price: trig.getAttribute('data-price') || '',
+      image: trig.getAttribute('data-image') || ''
+    };
+  }
+  /* Fallback: legacy bulk buttons carry no data — read the product straight from the PDP DOM */
+  function seedFromPage() {
+    var idEl = document.querySelector('[data-variant-id]');
+    var wl = document.querySelector('[data-wishlist-toggle][data-variant]');
+    var vid = (idEl && idEl.value) || (wl && wl.getAttribute('data-variant')) || '';
+    if (!vid) return null;
+    var titleEl = document.querySelector('.pdp-title') || document.querySelector('main h1');
+    var imgEl = document.querySelector('.pdp-main-img img');
+    var priceEl = document.querySelector('.pdp-new-price');
+    return {
+      variantId: vid,
+      title: (wl && wl.getAttribute('data-title')) || (titleEl && titleEl.textContent.trim()) || 'This product',
+      variant: '',
+      sku: '',
+      price: (wl && wl.getAttribute('data-price')) || (priceEl && priceEl.textContent.trim()) || '',
+      image: (wl && wl.getAttribute('data-image')) || (imgEl && imgEl.getAttribute('src')) || ''
+    };
+  }
+  document.addEventListener('click', function (e) {
+    var trig = e.target.closest('.rbo-open, a.btn-quote-lg');
+    if (trig) {
+      e.preventDefault(); lastTrigger = trig;
+      var seed = seedFromTrigger(trig) || seedFromPage();
+      if (!seed) items = [];
+      open(seed); return;
+    }
+    if (e.target.closest('[data-rbo-close]')) close();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && pop.classList.contains('is-open')) close();
+    if (e.key === 'Tab' && pop.classList.contains('is-open')) trapFocus(e);
+  });
+  function trapFocus(e) {
+    var focusable = pop.querySelectorAll('button:not([hidden]), [href], input:not([hidden]), textarea:not([hidden]), [tabindex]:not([tabindex="-1"])');
+    var vis = Array.prototype.filter.call(focusable, function (el) { return el.offsetParent !== null; });
+    if (!vis.length) return;
+    var first = vis[0], last = vis[vis.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
+
+  /* ---------- submit (two native Shopify forms + WhatsApp) ---------- */
+  function ref() {
+    var d = new Date();
+    var p = function (n) { return ('0' + n).slice(-2); };
+    return 'BULK-' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '-' + Math.floor(1000 + Math.random() * 9000);
+  }
+  function splitName(name) {
+    var parts = name.trim().split(/\s+/);
+    return { first: parts.shift() || name, last: parts.join(' ') };
+  }
+  function fill(form, map) {
+    if (!form) return;
+    form.querySelectorAll('[data-fill]').forEach(function (el) { if (map[el.getAttribute('data-fill')] != null) el.value = map[el.getAttribute('data-fill')]; });
+  }
+  function bodyText(nm, email, phone, notes, r) {
+    var lines = ['BULK ORDER REQUEST', 'Ref: ' + r, '', 'Items:'];
+    items.forEach(function (it) {
+      lines.push('• ' + it.title + (it.variant && it.variant !== 'Default Title' ? ' — ' + it.variant : '') + (it.sku ? ' (' + it.sku + ')' : '') + ' × ' + it.qty);
+    });
+    lines.push('', 'Name: ' + nm, 'Email: ' + email);
+    if (phone) lines.push('Phone: ' + phone);
+    if (notes) lines.push('Notes: ' + notes);
+    if (TEMPLATE_MSG) lines.push('', TEMPLATE_MSG);
+    return lines.join('\n');
+  }
+  function waURL(text) { return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text); }
+
+  /* Submit a native Shopify form as a REAL POST into a hidden iframe — behaves like a
+     human submitting a contact page, which Shopify processes reliably (fetch does not). */
+  function submitViaFrame(form, frame, onDone) {
+    if (!form || !frame) { onDone(); return; }
+    var handler = function () { frame.removeEventListener('load', handler); onDone(); };
+    frame.addEventListener('load', handler);
+    form.setAttribute('target', frame.getAttribute('name'));
+    form.submit();
+  }
+
+  submitBtn.addEventListener('click', function () {
+    if (pop.querySelector('[data-rbo-hp]').value) { close(); return; } // bot
+    var name = pop.querySelector('[data-rbo-name]').value.trim();
+    var email = pop.querySelector('[data-rbo-email]').value.trim();
+    var phone = pop.querySelector('[data-rbo-phone]').value.trim();
+    var notes = pop.querySelector('[data-rbo-notes]').value.trim();
+    var err = '';
+    if (!items.length) err = 'Please add at least one product.';
+    else if (!name) err = 'Please enter your name.';
+    else if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) err = 'Please enter a valid email.';
+    if (err) { errorEl.textContent = err; errorEl.hidden = false; return; }
+    errorEl.hidden = true;
+
+    var r = ref();
+    var nm = splitName(name);
+    var body = bodyText(name, email, phone, notes, r);
+    fill(custForm,  { email: email, first_name: nm.first, last_name: nm.last, phone: phone });
+    fill(orderForm, { email: email, first_name: nm.first, last_name: nm.last, phone: phone, body: body });
+
+    submitBtn.classList.add('is-loading');
+    var url = waURL(body), done = false;
+    function go() { if (done) return; done = true; pop.querySelector('[data-rbo-wa]').setAttribute('href', url); showView('success'); submitBtn.classList.remove('is-loading'); setTimeout(function () { window.location.href = url; }, 1400); }
+
+    var pending = 0;
+    function settle() { pending--; if (pending <= 0) go(); }
+    if (custForm && custFrame)  { pending++; submitViaFrame(custForm, custFrame, settle); }
+    if (orderForm && ordFrame)  { pending++; submitViaFrame(orderForm, ordFrame, settle); }
+    if (pending === 0) go();
+    setTimeout(go, 3500); // hard fallback so WhatsApp always fires even if a POST stalls
+  });
+})();
+</script>

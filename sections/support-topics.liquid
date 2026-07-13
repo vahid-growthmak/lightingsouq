@@ -1,0 +1,100 @@
+{%- liquid
+  assign bg = section.settings.bg
+  assign grid = section.settings.grid_class
+-%}
+{%- style -%}
+  #ST--{{ section.id }} .st-search { max-width: 560px; margin: 0 auto 2rem; display: flex; gap: 0.5rem; }
+  #ST--{{ section.id }} .st-search input { flex: 1; padding: 0.85rem 1rem; border: 1px solid var(--gray-200); border-radius: var(--radius); font-size: 1rem; }
+  #ST--{{ section.id }} .st-card { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1.5rem; height: 100%; transition: border-color var(--transition), box-shadow var(--transition); }
+  #ST--{{ section.id }} a.st-card:hover { border-color: var(--brand-accent); box-shadow: var(--shadow-sm); }
+  #ST--{{ section.id }} .st-icon { width: 3rem; height: 3rem; border-radius: var(--radius); display: inline-flex; align-items: center; justify-content: center; background: var(--gray-50); margin-bottom: 1rem; }
+  #ST--{{ section.id }} .st-icon .material-symbols-outlined { font-size: 1.6rem; color: var(--brand-primary); font-variation-settings: 'FILL' 1; }
+  #ST--{{ section.id }} .st-title { font-size: 1.1rem; font-weight: 700; color: var(--brand-text); margin: 0 0 0.4rem; }
+  #ST--{{ section.id }} .st-text { color: var(--gray-500); font-size: 0.95rem; line-height: 1.6; margin: 0; }
+{%- endstyle -%}
+<section class="section {{ bg }}" id="ST--{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-title text-center">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtitle != blank -%}
+      <p class="section-sub text-center mb-8">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+    {%- if section.settings.show_search -%}
+      <form class="st-search" action="{{ routes.search_url }}" method="get" role="search">
+        <input type="search" name="q" placeholder="{{ section.settings.search_placeholder }}" aria-label="Search help articles">
+        <button type="submit" class="btn-primary">Search</button>
+      </form>
+    {%- endif -%}
+    <div class="{{ grid }}">
+      {%- for block in section.blocks -%}
+        {%- assign tag = 'div' -%}
+        {%- if block.settings.link != blank -%}{%- assign tag = 'a' -%}{%- endif -%}
+        <{{ tag }} class="st-card"{% if block.settings.link != blank %} href="{{ block.settings.link }}"{% endif %} {{ block.shopify_attributes }}>
+          <span class="st-icon"><span class="material-symbols-outlined">{{ block.settings.icon | default: 'help' }}</span></span>
+          <h3 class="st-title">{{ block.settings.title }}</h3>
+          <p class="st-text">{{ block.settings.text }}</p>
+        </{{ tag }}>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Support Topics",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "How can we help?" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Browse a topic or search for an answer." },
+    { "type": "checkbox", "id": "show_search", "label": "Show search box", "default": true },
+    { "type": "text", "id": "search_placeholder", "label": "Search placeholder", "default": "Search help articles" },
+    {
+      "type": "select",
+      "id": "grid_class",
+      "label": "Columns",
+      "options": [
+        { "value": "grid-2", "label": "2 columns" },
+        { "value": "grid-3", "label": "3 columns" },
+        { "value": "grid-4", "label": "4 columns" }
+      ],
+      "default": "grid-3"
+    },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "topic",
+      "name": "Topic",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon (Material Symbol name)", "default": "help" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Topic title" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Short description of this help topic." },
+        { "type": "url", "id": "link", "label": "Link", "default": "/collections/all" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Support Topics",
+      "blocks": [
+        { "type": "topic", "settings": { "icon": "local_shipping", "title": "Shipping & Delivery", "text": "Delivery times, regions and rates." } },
+        { "type": "topic", "settings": { "icon": "assignment_return", "title": "Returns & Refunds", "text": "How to return an item and get refunded." } },
+        { "type": "topic", "settings": { "icon": "verified_user", "title": "Warranty", "text": "Warranty terms and how to make a claim." } },
+        { "type": "topic", "settings": { "icon": "settings", "title": "Setup Guides", "text": "Get your smart lights running fast." } },
+        { "type": "topic", "settings": { "icon": "location_searching", "title": "Track Order", "text": "Check the status of your delivery." } },
+        { "type": "topic", "settings": { "icon": "quiz", "title": "FAQs", "text": "Quick answers to common questions." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

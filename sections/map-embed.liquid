@@ -1,0 +1,132 @@
+<section class="section {{ section.settings.bg }}" id="Sec--{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-header">
+        <h2 class="section-title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subtitle != blank -%}<p class="section-sub">{{ section.settings.subtitle }}</p>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="me-layout">
+      <div class="me-card">
+        <p class="me-eyebrow">{{ section.settings.eyebrow }}</p>
+        <h3 class="me-name">{{ section.settings.showroom_name }}</h3>
+
+        <ul class="me-details">
+          <li class="me-detail">
+            <span class="material-symbols-outlined">location_on</span>
+            <span>{{ section.settings.address }}</span>
+          </li>
+          <li class="me-detail">
+            <span class="material-symbols-outlined">schedule</span>
+            <span>{{ section.settings.hours }}</span>
+          </li>
+          <li class="me-detail">
+            <span class="material-symbols-outlined">call</span>
+            <span>{{ section.settings.phone }}</span>
+          </li>
+        </ul>
+
+        {%- if section.settings.show_collect -%}
+          <div class="me-collect">
+            <span class="material-symbols-outlined">local_mall</span>
+            <div>
+              <p class="me-collect-title">{{ section.settings.collect_title }}</p>
+              <p class="me-collect-text">{{ section.settings.collect_text }}</p>
+            </div>
+          </div>
+        {%- endif -%}
+
+        <div class="me-actions">
+          <a href="{{ section.settings.directions_link }}" class="btn-primary">{{ section.settings.directions_label }}</a>
+        </div>
+      </div>
+
+      <div class="me-map">
+        {%- if section.settings.map_embed_url != blank -%}
+          <iframe
+            src="{{ section.settings.map_embed_url }}"
+            title="{{ section.settings.showroom_name | escape }} map"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen></iframe>
+        {%- else -%}
+          <div class="me-map-placeholder">
+            <span class="material-symbols-outlined">map</span>
+            <p>{{ section.settings.map_placeholder }}</p>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% style %}
+  #Sec--{{ section.id }} .me-layout { display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: stretch; }
+  @media (min-width: 900px) { #Sec--{{ section.id }} .me-layout { grid-template-columns: 1fr 1.4fr; } }
+  #Sec--{{ section.id }} .me-card {
+    background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius);
+    padding: 1.9rem; display: flex; flex-direction: column; gap: 1rem;
+  }
+  #Sec--{{ section.id }} .me-eyebrow { color: var(--brand-secondary); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.75rem; }
+  #Sec--{{ section.id }} .me-name { font-size: 1.4rem; font-weight: 800; }
+  #Sec--{{ section.id }} .me-details { list-style: none; display: flex; flex-direction: column; gap: 0.85rem; }
+  #Sec--{{ section.id }} .me-detail { display: flex; gap: 0.7rem; align-items: flex-start; color: var(--gray-700); }
+  #Sec--{{ section.id }} .me-detail .material-symbols-outlined { color: var(--brand-primary); }
+  #Sec--{{ section.id }} .me-collect {
+    display: flex; gap: 0.75rem; align-items: flex-start; padding: 1rem 1.15rem;
+    background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius);
+  }
+  #Sec--{{ section.id }} .me-collect .material-symbols-outlined { color: var(--brand-secondary); }
+  #Sec--{{ section.id }} .me-collect-title { font-weight: 800; }
+  #Sec--{{ section.id }} .me-collect-text { font-size: 0.9rem; color: var(--gray-600); }
+  #Sec--{{ section.id }} .me-actions { margin-top: auto; }
+  #Sec--{{ section.id }} .me-map { min-height: 340px; border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200); }
+  #Sec--{{ section.id }} .me-map iframe { width: 100%; height: 100%; min-height: 340px; border: 0; display: block; }
+  #Sec--{{ section.id }} .me-map-placeholder {
+    width: 100%; height: 100%; min-height: 340px; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 0.75rem; text-align: center;
+    background: var(--gray-100); color: var(--gray-500); padding: 2rem;
+  }
+  #Sec--{{ section.id }} .me-map-placeholder .material-symbols-outlined { font-size: 2.5rem; }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Map Embed",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-gray"
+    },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Visit our Doha showroom" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "See the lights in person and get spec advice from the team." },
+    { "type": "header", "content": "Showroom details" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Showroom" },
+    { "type": "text", "id": "showroom_name", "label": "Showroom name", "default": "Lighting Souq Showroom" },
+    { "type": "textarea", "id": "address", "label": "Address", "default": "Street address, Doha, Qatar" },
+    { "type": "text", "id": "hours", "label": "Opening hours", "default": "Sat to Thu, 9am to 9pm · Fri 4pm to 9pm" },
+    { "type": "text", "id": "phone", "label": "Phone", "default": "+974 0000 0000" },
+    { "type": "text", "id": "directions_label", "label": "Directions button label", "default": "Get directions" },
+    { "type": "url", "id": "directions_link", "label": "Directions button link" },
+    { "type": "header", "content": "Map" },
+    { "type": "text", "id": "map_embed_url", "label": "Map embed URL", "info": "Paste a Google Maps embed src URL. Leave blank to show a placeholder." },
+    { "type": "text", "id": "map_placeholder", "label": "Placeholder text", "default": "Add a map embed URL to show the showroom location here." },
+    { "type": "header", "content": "Click and Collect" },
+    { "type": "checkbox", "id": "show_collect", "label": "Show Click and Collect note", "default": true },
+    { "type": "text", "id": "collect_title", "label": "Note title", "default": "Click and Collect" },
+    { "type": "textarea", "id": "collect_text", "label": "Note text", "default": "Order online and pick up in store — usually ready the same day." }
+  ],
+  "presets": [
+    { "name": "Map Embed" }
+  ]
+}
+{% endschema %}

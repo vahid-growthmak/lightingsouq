@@ -1,0 +1,95 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Bulk Orders"
+      }
+    },
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Bulk and trade orders",
+        "subtitle": "GGI-backed sourcing, volume pricing and same-day Doha delivery for cafes, salons, villas and projects.",
+        "bg": "bg-gray"
+      }
+    },
+    "rfq": {
+      "type": "contact-form",
+      "settings": {
+        "bg": "bg-white",
+        "heading": "Request a quote",
+        "subtitle": "Tell us what you need and the quantities — we send volume pricing fast.",
+        "name_label": "Name",
+        "email_label": "Work email",
+        "phone_label": "Phone (optional)",
+        "message_label": "What are you sourcing? Include items and quantities.",
+        "submit_label": "Request quote",
+        "success_title": "Thanks — quote request received",
+        "success_text": "Our trade team will reply with volume pricing shortly. For urgent needs, reach us on WhatsApp.",
+        "show_channels": true,
+        "channels_title": "Prefer to talk it through?",
+        "channels_text": "Relationship-driven buyer? Reach the trade team directly."
+      },
+      "blocks": {
+        "c1": { "type": "channel", "settings": { "icon": "chat", "label": "WhatsApp", "value": "+974 0000 0000" } },
+        "c2": { "type": "channel", "settings": { "icon": "call", "label": "Trade line", "value": "+974 0000 0000" } },
+        "c3": { "type": "channel", "settings": { "icon": "mail", "label": "Email", "value": "trade@lightingsouq.qa" } }
+      },
+      "block_order": ["c1", "c2", "c3"]
+    },
+    "how": {
+      "type": "feature-columns",
+      "settings": {
+        "heading": "How it works",
+        "subtitle": "From cart to quote in three simple steps.",
+        "grid_class": "grid-3",
+        "bg": "bg-gray"
+      },
+      "blocks": {
+        "h1": { "type": "item", "settings": { "step": "1", "title": "Add to quote", "text": "Browse the catalogue and add the items and quantities you need." } },
+        "h2": { "type": "item", "settings": { "step": "2", "title": "Submit request", "text": "Send us your list — no account or commitment required.", "link": "/collections/all", "link_label": "Browse products" } },
+        "h3": { "type": "item", "settings": { "step": "3", "title": "Receive pricing", "text": "Our team replies with volume pricing and delivery options." } }
+      },
+      "block_order": ["h1", "h2", "h3"]
+    },
+    "selector": {
+      "type": "product-collection",
+      "settings": {
+        "heading": "Add products to your quote",
+        "subtitle": "Popular lines for trade buyers — browse the full catalogue for more.",
+        "products_to_show": 8,
+        "bg": "bg-white",
+        "layout": "grid"
+      }
+    },
+    "direct": {
+      "type": "expert-band",
+      "settings": {
+        "heading": "Prefer to deal direct?",
+        "text": "Message our trade team for sourcing, lead times and net-terms enquiries — real people, fast replies.",
+        "button_label": "Chat on WhatsApp",
+        "button_link": "/pages/contact"
+      }
+    },
+    "trusted": {
+      "type": "brand-strip",
+      "settings": {
+        "heading": "Trusted by trade buyers across Qatar",
+        "subtitle": "From value picks to premium ecosystems — sourced through our GGI backbone.",
+        "bg": "bg-gray"
+      },
+      "blocks": {
+        "b1": { "type": "brand", "settings": { "name": "Ledvance" } },
+        "b2": { "type": "brand", "settings": { "name": "Philips Hue" } },
+        "b3": { "type": "brand", "settings": { "name": "Wink" } },
+        "b4": { "type": "brand", "settings": { "name": "Glint" } },
+        "b5": { "type": "brand", "settings": { "name": "Vettam" } },
+        "b6": { "type": "brand", "settings": { "name": "DG Lighting" } }
+      },
+      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"]
+    }
+  },
+  "order": ["breadcrumb", "hero", "rfq", "how", "selector", "direct", "trusted"]
+}

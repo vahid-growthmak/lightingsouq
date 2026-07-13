@@ -1,0 +1,133 @@
+{%- comment -%}
+  Customer order detail: line items, totals, shipping/billing addresses.
+{%- endcomment -%}
+<div class="container" style="padding-top:1.25rem;">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a> / <a href="{{ routes.account_url }}">Account</a> / <span>Order {{ order.name }}</span>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="container lsq-order" style="max-width:1000px;">
+
+    <h1 class="collection-title">Order {{ order.name }}</h1>
+    <p class="collection-intro">Placed on {{ order.created_at | date: "%B %d, %Y" }}</p>
+
+    {%- if order.cancelled -%}
+      <div class="lsq-cancel">This order was cancelled on {{ order.cancelled_at | date: "%B %d, %Y" }}. {{ order.cancel_reason_label }}</div>
+    {%- endif -%}
+
+    <div class="lsq-card" style="margin-top:1.25rem;">
+      <div style="overflow-x:auto;">
+        <table class="lsq-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>SKU</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {%- for line_item in order.line_items -%}
+              <tr>
+                <td>
+                  {%- if line_item.url -%}
+                    <a href="{{ line_item.url }}" class="lsq-link">{{ line_item.title }}</a>
+                  {%- else -%}
+                    {{ line_item.title }}
+                  {%- endif -%}
+                  {%- if line_item.fulfillment -%}
+                    <div class="lsq-fulfilled">Fulfilled {{ line_item.fulfillment.created_at | date: "%b %d, %Y" }}</div>
+                  {%- endif -%}
+                </td>
+                <td>{{ line_item.sku }}</td>
+                <td>{{ line_item.price | money }}</td>
+                <td>{{ line_item.quantity }}</td>
+                <td>{{ line_item.final_line_price | money }}</td>
+              </tr>
+            {%- endfor -%}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="4" class="lsq-tot-label">Subtotal</td>
+              <td>{{ order.line_items_subtotal_price | money }}</td>
+            </tr>
+            {%- for discount_application in order.discount_applications -%}
+              <tr>
+                <td colspan="4" class="lsq-tot-label">Discount ({{ discount_application.title }})</td>
+                <td>-{{ discount_application.total_allocated_amount | money }}</td>
+              </tr>
+            {%- endfor -%}
+            {%- for shipping_method in order.shipping_methods -%}
+              <tr>
+                <td colspan="4" class="lsq-tot-label">Shipping ({{ shipping_method.title }})</td>
+                <td>{{ shipping_method.price | money }}</td>
+              </tr>
+            {%- endfor -%}
+            {%- for tax_line in order.tax_lines -%}
+              <tr>
+                <td colspan="4" class="lsq-tot-label">Tax ({{ tax_line.title }} {{ tax_line.rate | times: 100 }}%)</td>
+                <td>{{ tax_line.price | money }}</td>
+              </tr>
+            {%- endfor -%}
+            <tr class="lsq-tot-grand">
+              <td colspan="4" class="lsq-tot-label">Total</td>
+              <td>{{ order.total_net_amount | money }} {{ order.currency }}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+    </div>
+
+    <div class="lsq-addr-grid">
+      <div class="lsq-card">
+        <h2 class="lsq-card-title">Shipping address</h2>
+        {%- if order.shipping_address -%}
+          <address class="lsq-addr-body">{{ order.shipping_address | format_address }}</address>
+        {%- else -%}
+          <p class="lsq-empty">No shipping address.</p>
+        {%- endif -%}
+      </div>
+      <div class="lsq-card">
+        <h2 class="lsq-card-title">Billing address</h2>
+        {%- if order.billing_address -%}
+          <address class="lsq-addr-body">{{ order.billing_address | format_address }}</address>
+        {%- else -%}
+          <p class="lsq-empty">No billing address.</p>
+        {%- endif -%}
+      </div>
+    </div>
+
+    <p style="margin-top:1.5rem;"><a href="{{ routes.account_url }}" class="lsq-link">&larr; Back to account</a></p>
+
+  </div>
+</section>
+
+<style>
+  .lsq-order .lsq-card { background:#fff; border:1px solid #e5e7eb; border-radius: var(--radius, 10px); padding:1.5rem; }
+  .lsq-card-title { font-size:1.15rem; font-weight:700; margin:0 0 1rem; color: var(--brand-text, #333); }
+  .lsq-table { width:100%; border-collapse:collapse; }
+  .lsq-table th { text-align:left; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.03em; color:#6b7280; padding:0.75rem; border-bottom:1px solid #e5e7eb; font-weight:700; }
+  .lsq-table td { padding:0.75rem; border-bottom:1px solid #e5e7eb; font-size:0.92rem; color: var(--brand-text, #333); }
+  .lsq-table tfoot td { border-bottom:none; }
+  .lsq-tot-label { text-align:right; color:#6b7280; }
+  .lsq-tot-grand td { font-weight:700; font-size:1rem; color: var(--brand-text, #333); border-top:2px solid #e5e7eb; padding-top:0.9rem; }
+  .lsq-link { color: var(--brand-primary, #2B60AD); font-weight:600; text-decoration:none; }
+  .lsq-link:hover { text-decoration:underline; }
+  .lsq-fulfilled { font-size:0.78rem; color:#047857; margin-top:0.2rem; }
+  .lsq-addr-body { font-style:normal; line-height:1.7; color: var(--brand-text, #333); font-size:0.92rem; }
+  .lsq-empty { color:#6b7280; margin:0; }
+  .lsq-addr-grid { display:grid; grid-template-columns:1fr; gap:1.5rem; margin-top:1.5rem; }
+  @media (min-width: 768px) { .lsq-addr-grid { grid-template-columns:1fr 1fr; } }
+  .lsq-cancel { background:#fef2f2; border:1px solid #fecaca; color:#b91c1c; padding:0.85rem 1rem; border-radius: var(--radius, 10px); margin-top:1rem; font-size:0.9rem; }
+</style>
+
+{% schema %}
+{
+  "name": "Customer order",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

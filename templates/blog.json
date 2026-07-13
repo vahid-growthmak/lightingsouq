@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "current": "Learn"
+      }
+    },
+    "main": {
+      "type": "main-blog",
+      "settings": {
+        "heading": "Learn",
+        "intro": "Guides, tips and inspiration to help you light your space."
+      }
+    },
+    "newsletter": {
+      "type": "newsletter",
+      "settings": {
+        "eyebrow": "Stay in the loop",
+        "heading": "Get lighting tips and offers",
+        "subtext": "Buying guides, new arrivals and members-only deals, sent occasionally."
+      }
+    }
+  },
+  "order": ["breadcrumb", "main", "newsletter"]
+}

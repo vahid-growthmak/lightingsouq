@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Track Order"
+      },
+      "blocks": {
+        "help": { "type": "crumb", "settings": { "label": "Help Center", "link": "/pages/help-center" } },
+        "current": { "type": "crumb", "settings": { "label": "Track Order" } }
+      },
+      "block_order": ["help", "current"]
+    },
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Track Your Order",
+        "subtitle": "Check the status of your delivery any time.",
+        "bg": "bg-gray"
+      }
+    },
+    "lookup": {
+      "type": "rich-text",
+      "settings": {
+        "heading": "How to track your order",
+        "content": "<p>The quickest way to check your order is with the tracking link we send by email and SMS once your order ships.</p><ul><li>Open the tracking link from your shipping confirmation.</li><li>Or sign in and view your orders from your <a href='/account'>account</a>.</li><li>Enter your order number and email in the tracking widget below when it is available.</li></ul><p>Order tracking is powered by our tracking app — the live lookup will appear on this page. If you cannot find your order, <a href='/pages/contact'>contact our team</a> and we will locate it for you.</p>",
+        "bg": "bg-white"
+      }
+    }
+  },
+  "order": ["breadcrumb", "hero", "lookup"]
+}

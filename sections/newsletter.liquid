@@ -1,0 +1,122 @@
+{%- comment -%}
+  Newsletter — reusable email signup band. Uses Shopify customer form
+  and tags the subscriber so it flows into your marketing list.
+{%- endcomment -%}
+<section class="section {{ section.settings.bg }}" id="Sec--{{ section.id }}" aria-labelledby="nl-heading-{{ section.id }}">
+  <div class="container">
+    <div class="lsq-nl">
+      <div class="lsq-nl-copy">
+        {%- if section.settings.eyebrow != blank -%}
+          <p class="lsq-nl-eyebrow">{{ section.settings.eyebrow }}</p>
+        {%- endif -%}
+        <h2 class="section-title" id="nl-heading-{{ section.id }}">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subtext != blank -%}
+          <p class="lsq-nl-sub">{{ section.settings.subtext }}</p>
+        {%- endif -%}
+      </div>
+      <div class="lsq-nl-form-wrap">
+        {%- form 'customer' -%}
+          <input type="hidden" name="contact[tags]" value="newsletter">
+          {%- if form.posted_successfully? -%}
+            <p class="lsq-nl-success">{{ section.settings.success_text }}</p>
+          {%- else -%}
+            <div class="lsq-nl-fields">
+              <input
+                type="email"
+                id="nl-email-{{ section.id }}"
+                name="contact[email]"
+                class="lsq-nl-input"
+                placeholder="{{ section.settings.placeholder }}"
+                aria-label="Email address"
+                autocomplete="email"
+                required>
+              <button type="submit" class="btn-primary lsq-nl-btn">{{ section.settings.button }}</button>
+            </div>
+            {%- if section.settings.reassurance != blank -%}
+              <p class="lsq-nl-note">{{ section.settings.reassurance }}</p>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endform -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% style %}
+  #Sec--{{ section.id }} .lsq-nl {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    background: linear-gradient(135deg, var(--brand-primary), var(--brand-secondary));
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 2rem 1.5rem;
+  }
+  #Sec--{{ section.id }} .lsq-nl .section-title { color: #fff; margin-bottom: 0.5rem; }
+  #Sec--{{ section.id }} .lsq-nl-eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.75rem;
+    font-weight: 700;
+    opacity: 0.85;
+    margin-bottom: 0.5rem;
+  }
+  #Sec--{{ section.id }} .lsq-nl-sub { opacity: 0.92; max-width: 46ch; }
+  #Sec--{{ section.id }} .lsq-nl-fields { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  #Sec--{{ section.id }} .lsq-nl-input {
+    flex: 1 1 220px;
+    min-height: 44px;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid rgba(255,255,255,0.6);
+    border-radius: var(--radius);
+    font-size: 1rem;
+    background: #fff;
+    color: #111827;
+  }
+  #Sec--{{ section.id }} .lsq-nl-input:focus { outline: 2px solid #fff; outline-offset: 2px; }
+  #Sec--{{ section.id }} .lsq-nl-btn {
+    background: #fff;
+    color: var(--brand-primary);
+    white-space: nowrap;
+  }
+  #Sec--{{ section.id }} .lsq-nl-btn:hover { opacity: 0.92; }
+  #Sec--{{ section.id }} .lsq-nl-note { font-size: 0.8125rem; opacity: 0.85; margin-top: 0.625rem; }
+  #Sec--{{ section.id }} .lsq-nl-success {
+    font-weight: 600;
+    background: rgba(255,255,255,0.18);
+    padding: 0.875rem 1rem;
+    border-radius: var(--radius);
+  }
+  @media (min-width: 768px) {
+    #Sec--{{ section.id }} .lsq-nl { grid-template-columns: 1.1fr 1fr; padding: 2.5rem 2.5rem; }
+  }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Newsletter",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Stay in the loop" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Get lighting tips and offers" },
+    { "type": "text", "id": "subtext", "label": "Subtext", "default": "Buying guides, new arrivals and members-only deals, sent occasionally." },
+    { "type": "text", "id": "placeholder", "label": "Input placeholder", "default": "Enter your email" },
+    { "type": "text", "id": "button", "label": "Button label", "default": "Subscribe" },
+    { "type": "text", "id": "reassurance", "label": "Reassurance note", "default": "No spam. Unsubscribe anytime." },
+    { "type": "text", "id": "success_text", "label": "Success message", "default": "Thanks for subscribing. Please check your inbox." },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "presets": [
+    { "name": "Newsletter" }
+  ]
+}
+{% endschema %}

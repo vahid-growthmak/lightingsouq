@@ -1,0 +1,596 @@
+{%- liquid
+  assign bg = section.settings.bg
+  assign heading = section.settings.heading
+  assign subtitle = section.settings.subtitle
+  assign center = section.settings.center
+  assign grid_class = section.settings.grid_class
+  assign show_countdown = section.settings.show_countdown
+  assign col = collections[section.settings.collection]
+  assign use_dynamic = false
+  if section.settings.collection != blank and col.products.size > 0
+    assign use_dynamic = true
+  endif
+  assign layout = section.settings.layout | default: 'scroll'
+-%}
+{%- style -%}
+  #PC--{{ section.id }} .pc-container { position: relative; }
+  #PC--{{ section.id }} .pc-scroll { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth; padding: 6px 2px 1.25rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  #PC--{{ section.id }} .pc-scroll::-webkit-scrollbar { display: none; }
+  #PC--{{ section.id }} .pc-scroll > * { flex: 0 0 clamp(230px, 24%, 280px); scroll-snap-align: start; }
+  #PC--{{ section.id }} .pc-arrow { position: absolute; top: 42%; z-index: 6; width: 46px; height: 46px; border-radius: 50%; border: 1px solid #e5e7eb; background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.14); cursor: pointer; display: none; align-items: center; justify-content: center; color: var(--brand-primary); transition: all .15s ease-out; }
+  #PC--{{ section.id }} .pc-arrow:hover { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
+  #PC--{{ section.id }} .pc-arrow svg { width: 22px; height: 22px; }
+  #PC--{{ section.id }} .pc-prev { left: -8px; }
+  #PC--{{ section.id }} .pc-next { right: -8px; }
+  @media (min-width: 1024px) { #PC--{{ section.id }} .pc-has-scroll .pc-arrow { display: inline-flex; } }
+{%- endstyle -%}
+<section class="section {{ bg }}" id="PC--{{ section.id }}">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title{% if center %} text-center{% endif %}">{{ heading }}</h2>
+        {% if subtitle != blank %}<p class="section-sub">{{ subtitle }}</p>{% endif %}
+      </div>
+      {% if show_countdown %}
+      <div class="countdown-wrap">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="var(--brand-secondary)" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <div class="countdown">
+          <span class="count-box" data-h>{{ section.settings.countdown_hours }}</span><span class="count-sep">:</span>
+          <span class="count-box" data-m>{{ section.settings.countdown_minutes }}</span><span class="count-sep">:</span>
+          <span class="count-box" data-s>{{ section.settings.countdown_seconds }}</span>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+    <div class="pc-container{% if layout == 'scroll' %} pc-has-scroll{% endif %}{% if center %} mt-8{% endif %}">
+      {%- if layout == 'scroll' -%}<button class="pc-arrow pc-prev" type="button" aria-label="Previous" data-pc-prev><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>{%- endif -%}
+      <div class="{% if layout == 'scroll' %}pc-scroll{% else %}{{ grid_class }}{% endif %}" data-pc-track>
+      {%- if use_dynamic -%}
+        {%- comment -%} ===== MODE A: whole collection — auto product list ===== {%- endcomment -%}
+        {%- for product in col.products limit: section.settings.products_to_show -%}
+          {%- render 'product-card', product: product -%}
+        {%- endfor -%}
+      {%- else -%}
+        {%- comment -%} ===== MODE B: per-block — hand-picked real product OR demo fallback ===== {%- endcomment -%}
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'product' -%}
+            {%- if block.settings.product != blank -%}
+              {%- comment -%} merchant clicked "Add product" and picked a real one {%- endcomment -%}
+              <div {{ block.shopify_attributes }}>
+                {%- render 'product-card', product: block.settings.product, fallback_image: block.settings.image_default -%}
+              </div>
+            {%- else -%}
+              {%- comment -%} demo/manual card so the section looks complete with no products {%- endcomment -%}
+              {%- assign link = block.settings.link | default: '/collections/all' -%}
+              <div class="product-card" {{ block.shopify_attributes }}>
+                <div class="product-img-wrap">
+                  {%- assign fallback_img = block.settings.image_default | default: 'prod-bulb.png' -%}
+                  <a href="{{ link }}"><img src="{%- if block.settings.image != blank -%}{{ block.settings.image | image_url: width: 800 }}{%- else -%}{{ fallback_img | asset_url }}{%- endif -%}" alt="{{ block.settings.title | escape }}" width="800" height="800" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></a>
+                  {%- if block.settings.badge != blank -%}<span class="product-badge {{ block.settings.badge_style }}">{{ block.settings.badge }}</span>{%- endif -%}
+                  <button class="btn-wishlist" type="button" aria-label="Add to wishlist"><span class="material-symbols-outlined">favorite</span></button>
+                </div>
+                <div class="product-body">
+                  {% if block.settings.type != blank %}<p class="product-type">{{ block.settings.type }}</p>{% endif %}
+                  <h3 class="product-title"><a href="{{ link }}">{{ block.settings.title }}</a></h3>
+                  <div class="product-stars">{% render 'rating-stars', rating: block.settings.rating %}{% if block.settings.reviews != blank and block.settings.reviews != '0' %}<span class="review-count">({{ block.settings.reviews }})</span>{% endif %}</div>
+                  <div class="product-price">{% if block.settings.old_price != blank %}<span class="old-price">QAR {{ block.settings.old_price }}</span>{% endif %}<span class="new-price">QAR {{ block.settings.price }}</span></div>
+                  <button class="btn-cart" type="button"><span class="material-symbols-outlined" style="font-size:1.1rem;">shopping_cart</span> Add to Cart</button>
+                </div>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      </div>
+      {%- if layout == 'scroll' -%}<button class="pc-arrow pc-next" type="button" aria-label="Next" data-pc-next><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>{%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('PC--{{ section.id }}');
+    if (!root) return;
+    var track = root.querySelector('[data-pc-track]');
+    var prev = root.querySelector('[data-pc-prev]');
+    var next = root.querySelector('[data-pc-next]');
+    if (!track || !prev || !next) return;
+    function step() { var c = track.querySelector('.product-card'); return (c ? c.getBoundingClientRect().width + 24 : 280) * 2; }
+    prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+    next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+  })();
+</script>
+
+{% if show_countdown %}
+<script>
+  (function () {
+    var root = document.getElementById('PC--{{ section.id }}');
+    if (!root) return;
+    var h = root.querySelector('[data-h]');
+    var m = root.querySelector('[data-m]');
+    var s = root.querySelector('[data-s]');
+    if (!h || !m || !s) return;
+    var pad = function (n) { return n < 10 ? '0' + n : '' + n; };
+    var total = (parseInt(h.textContent, 10) || 0) * 3600 + (parseInt(m.textContent, 10) || 0) * 60 + (parseInt(s.textContent, 10) || 0);
+    var render = function () {
+      var hh = Math.floor(total / 3600);
+      var mm = Math.floor((total % 3600) / 60);
+      var ss = total % 60;
+      h.textContent = pad(hh);
+      m.textContent = pad(mm);
+      s.textContent = pad(ss);
+    };
+    render();
+    var timer = setInterval(function () {
+      if (total <= 0) { clearInterval(timer); return; }
+      total -= 1;
+      render();
+    }, 1000);
+  })();
+</script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Product Collection",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Best Selling Products"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle"
+    },
+    {
+      "type": "header",
+      "content": "Products source"
+    },
+    {
+      "type": "paragraph",
+      "content": "Pick a collection to show REAL products from your store. Leave empty to show the demo products below."
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Max products",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        {
+          "value": "bg-white",
+          "label": "White"
+        },
+        {
+          "value": "bg-gray",
+          "label": "Gray"
+        }
+      ],
+      "default": "bg-white"
+    },
+    {
+      "type": "checkbox",
+      "id": "center",
+      "label": "Center heading",
+      "default": true
+    },
+    {
+      "type": "select",
+      "id": "grid_class",
+      "label": "Grid columns",
+      "options": [
+        {
+          "value": "grid-4",
+          "label": "4 columns"
+        },
+        {
+          "value": "grid-5",
+          "label": "5 columns"
+        }
+      ],
+      "default": "grid-4"
+    },
+    {
+      "type": "select",
+      "id": "layout",
+      "label": "Product layout",
+      "options": [
+        { "value": "scroll", "label": "Horizontal scroll" },
+        { "value": "grid", "label": "Grid" }
+      ],
+      "default": "scroll"
+    },
+    {
+      "type": "header",
+      "content": "Countdown"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_countdown",
+      "label": "Show countdown",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "countdown_hours",
+      "label": "Hours",
+      "min": 0,
+      "max": 48,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "countdown_minutes",
+      "label": "Minutes",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "default": 34
+    },
+    {
+      "type": "range",
+      "id": "countdown_seconds",
+      "label": "Seconds",
+      "min": 0,
+      "max": 59,
+      "step": 1,
+      "default": 56
+    }
+  ],
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "paragraph",
+          "content": "Pick a real product to show live price/image/add-to-cart. Or leave it empty and fill the demo fields below for a template look."
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Product"
+        },
+        {
+          "type": "header",
+          "content": "Demo fields (used only if no product picked)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "select",
+          "id": "image_default",
+          "label": "Fallback image (if no image chosen)",
+          "options": [
+            {
+              "value": "prod-bulb.png",
+              "label": "Bulb"
+            },
+            {
+              "value": "prod-tube.png",
+              "label": "Tube"
+            },
+            {
+              "value": "prod-solar.png",
+              "label": "Solar"
+            },
+            {
+              "value": "prod-pendant.png",
+              "label": "Pendant"
+            },
+            {
+              "value": "prod-living.png",
+              "label": "Living"
+            },
+            {
+              "value": "space-smart.png",
+              "label": "Smart"
+            }
+          ],
+          "default": "prod-bulb.png"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Product Title"
+        },
+        {
+          "type": "text",
+          "id": "type",
+          "label": "Type / Category"
+        },
+        {
+          "type": "text",
+          "id": "price",
+          "label": "Price",
+          "default": "0"
+        },
+        {
+          "type": "text",
+          "id": "old_price",
+          "label": "Old price"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge text"
+        },
+        {
+          "type": "select",
+          "id": "badge_style",
+          "label": "Badge style",
+          "options": [
+            {
+              "value": "badge-sale",
+              "label": "Sale"
+            },
+            {
+              "value": "badge-hot",
+              "label": "Hot Deal"
+            },
+            {
+              "value": "badge-new",
+              "label": "New"
+            },
+            {
+              "value": "badge-best",
+              "label": "Best Seller"
+            }
+          ],
+          "default": "badge-best"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 0,
+          "max": 5,
+          "step": 0.1,
+          "default": 4.5
+        },
+        {
+          "type": "text",
+          "id": "reviews",
+          "label": "Reviews count",
+          "default": "0"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Today's Lighting Deals",
+      "settings": {
+        "heading": "Today's Lighting Deals",
+        "subtitle": "Limited-time offers on bulbs, tubes, lamps and smart lighting.",
+        "bg": "bg-gray",
+        "center": false,
+        "grid_class": "grid-5",
+        "show_countdown": true,
+        "countdown_hours": 12,
+        "countdown_minutes": 34,
+        "countdown_seconds": 56
+      },
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-bulb.png",
+            "title": "WiFi Smart RGB Bulb 9W",
+            "type": "Smart Lighting",
+            "price": "75",
+            "rating": 4.5,
+            "old_price": "89",
+            "badge": "Sale",
+            "badge_style": "badge-sale"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-tube.png",
+            "title": "LED Tube Light 18W T8",
+            "type": "LED Tubes",
+            "price": "35",
+            "rating": 4.5,
+            "old_price": "45",
+            "badge": "Sale",
+            "badge_style": "badge-sale"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "space-smart.png",
+            "title": "RGB LED Strip 5M Waterproof",
+            "type": "LED Strips",
+            "price": "99",
+            "rating": 4.5,
+            "old_price": "120",
+            "badge": "Hot Deal",
+            "badge_style": "badge-hot"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-solar.png",
+            "title": "Solar Garden Light Set",
+            "type": "Outdoor Lighting",
+            "price": "150",
+            "rating": 4.5,
+            "old_price": "180",
+            "badge": "Sale",
+            "badge_style": "badge-sale"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-pendant.png",
+            "title": "Modern Pendant Lamp Gold",
+            "type": "Decorative Lights",
+            "price": "199",
+            "rating": 4.5,
+            "old_price": "250",
+            "badge": "New",
+            "badge_style": "badge-new"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Best Selling Products",
+      "settings": {
+        "heading": "Best Selling Products",
+        "bg": "bg-white",
+        "grid_class": "grid-4",
+        "center": true
+      },
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-bulb.png",
+            "title": "WiFi Smart RGB Bulb E27 9W",
+            "type": "Smart Bulbs",
+            "price": "75",
+            "rating": 4.8,
+            "badge": "Best Seller",
+            "badge_style": "badge-best",
+            "reviews": "124"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-tube.png",
+            "title": "LED Tube Light 18W T8 4ft",
+            "type": "LED Tubes",
+            "price": "35",
+            "rating": 4.5,
+            "badge": "Best Seller",
+            "badge_style": "badge-best",
+            "reviews": "89"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "space-smart.png",
+            "title": "RGB LED Strip 5M with Remote",
+            "type": "LED Strips",
+            "price": "99",
+            "rating": 4.7,
+            "badge": "Hot",
+            "badge_style": "badge-hot",
+            "reviews": "156"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-solar.png",
+            "title": "Solar Garden Light Stake 6pcs",
+            "type": "Solar Lights",
+            "price": "150",
+            "rating": 4.6,
+            "badge": "New",
+            "badge_style": "badge-new",
+            "reviews": "78"
+          }
+        }
+      ]
+    },
+    {
+      "name": "New Arrivals",
+      "settings": {
+        "heading": "New Arrivals",
+        "bg": "bg-gray",
+        "grid_class": "grid-4",
+        "center": true
+      },
+      "blocks": [
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-bulb.png",
+            "title": "Smart WiFi Filament Bulb E27",
+            "type": "New Arrivals",
+            "price": "95",
+            "rating": 4.5,
+            "badge": "New",
+            "badge_style": "badge-new"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-living.png",
+            "title": "LED Panel Light Square 36W",
+            "type": "New Arrivals",
+            "price": "165",
+            "rating": 4.5,
+            "badge": "New",
+            "badge_style": "badge-new"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-solar.png",
+            "title": "Outdoor Solar Flood Light 50W",
+            "type": "New Arrivals",
+            "price": "220",
+            "rating": 4.5,
+            "badge": "New",
+            "badge_style": "badge-new"
+          }
+        },
+        {
+          "type": "product",
+          "settings": {
+            "image_default": "prod-living.png",
+            "title": "Designer Table Lamp Modern",
+            "type": "New Arrivals",
+            "price": "180",
+            "rating": 4.5,
+            "badge": "New",
+            "badge_style": "badge-new"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,80 @@
+{%- liquid
+  assign bg = section.settings.bg
+-%}
+<section class="section {{ bg }}">
+  <div class="container">
+    <h2 class="section-title text-center">{{ section.settings.heading }}</h2>
+    <p class="section-sub text-center mb-8">{{ section.settings.subtitle }}</p>
+    <div class="persona-grid">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'persona' -%}
+          {%- if block.settings.image != blank -%}
+            {%- assign persona_img = block.settings.image | image_url: width: 800 -%}
+          {%- else -%}
+            {%- assign persona_img = block.settings.fallback | default: 'space-smart.png' | asset_url -%}
+          {%- endif -%}
+          <a href="{{ block.settings.link | default: '/collections/all' }}" class="persona-card" style="background-image:url('{{ persona_img }}')" {{ block.shopify_attributes }}>
+            <span>{{ block.settings.title }}<span class="persona-sub">{{ block.settings.sub }}</span></span>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Persona Grid",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Find Your Lane"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Jump straight to the lighting that fits how you live."
+    },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "persona",
+      "name": "Persona",
+      "settings": [
+        { "type": "image_picker", "id": "image", "label": "Image" },
+        { "type": "text", "id": "fallback", "label": "Fallback asset filename", "default": "space-smart.png" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Persona" },
+        { "type": "text", "id": "sub", "label": "Subtitle" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Persona Grid",
+      "blocks": [
+        { "type": "persona", "settings": { "fallback": "space-smart.png", "title": "Gaming & Creator", "sub": "RGB strips, panels & scenes" } },
+        { "type": "persona", "settings": { "fallback": "space-home.png", "title": "New Home Setup", "sub": "Smart starter kits" } },
+        { "type": "persona", "settings": { "fallback": "space-outdoor.png", "title": "Villa & Garden", "sub": "Solar & outdoor lighting" } },
+        { "type": "persona", "settings": { "fallback": "tubes_bulbs.png", "title": "DIY Fittings", "sub": "Bulbs, tubes & spots" } },
+        { "type": "persona", "settings": { "fallback": "prod-solar.png", "title": "Grow Lights", "sub": "Indoor plants & greens" } },
+        { "type": "persona", "settings": { "fallback": "prod-pendant.png", "title": "Gifts & Decor", "sub": "Lamps & star projectors" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

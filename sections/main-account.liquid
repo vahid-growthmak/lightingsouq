@@ -1,0 +1,117 @@
+{%- comment -%}
+  Customer account dashboard: greeting, logout, default address, order history.
+{%- endcomment -%}
+<div class="container" style="padding-top:1.25rem;">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a> / <span>Account</span>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="container lsq-acct" style="max-width:1000px;">
+
+    <div class="lsq-acct-head">
+      <div>
+        <h1 class="collection-title">Hi{% if customer.first_name != blank %}, {{ customer.first_name }}{% endif %}</h1>
+        <p class="collection-intro">Manage your orders and account details.</p>
+      </div>
+      <a href="{{ routes.account_logout_url }}" class="btn-secondary lsq-logout">
+        <span class="material-symbols-outlined">logout</span> Log out
+      </a>
+    </div>
+
+    <div class="lsq-acct-grid">
+      <div class="lsq-card lsq-orders">
+        <h2 class="lsq-card-title">Order history</h2>
+        {%- paginate customer.orders by 20 -%}
+          {%- if customer.orders.size > 0 -%}
+            <div style="overflow-x:auto;">
+              <table class="lsq-table">
+                <thead>
+                  <tr>
+                    <th>Order</th>
+                    <th>Date</th>
+                    <th>Payment</th>
+                    <th>Fulfillment</th>
+                    <th>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {%- for order in customer.orders -%}
+                    <tr>
+                      <td><a href="{{ order.customer_url }}" class="lsq-link">{{ order.name }}</a></td>
+                      <td>{{ order.created_at | date: "%b %d, %Y" }}</td>
+                      <td><span class="lsq-badge">{{ order.financial_status_label }}</span></td>
+                      <td><span class="lsq-badge">{{ order.fulfillment_status_label }}</span></td>
+                      <td>{{ order.total_net_amount | money }}</td>
+                    </tr>
+                  {%- endfor -%}
+                </tbody>
+              </table>
+            </div>
+
+            {%- if paginate.pages > 1 -%}
+              <nav class="pagination lsq-pagination" aria-label="Pagination">
+                {%- for part in paginate.parts -%}
+                  {%- if part.is_link -%}<a class="page-btn" href="{{ part.url }}">{{ part.title }}</a>
+                  {%- elsif part.title == paginate.current_page -%}<span class="page-btn active">{{ part.title }}</span>
+                  {%- else -%}<span class="page-btn">{{ part.title }}</span>{%- endif -%}
+                {%- endfor -%}
+              </nav>
+            {%- endif -%}
+          {%- else -%}
+            <p class="lsq-empty">You haven't placed any orders yet.</p>
+            <a href="/collections/all" class="btn-primary">Start shopping</a>
+          {%- endif -%}
+        {%- endpaginate -%}
+      </div>
+
+      <aside class="lsq-card lsq-address">
+        <h2 class="lsq-card-title">Default address</h2>
+        {%- if customer.default_address -%}
+          <address class="lsq-addr-body">
+            {%- if customer.default_address.name != blank -%}<strong>{{ customer.default_address.name }}</strong><br>{%- endif -%}
+            {%- if customer.default_address.company != blank -%}{{ customer.default_address.company }}<br>{%- endif -%}
+            {{ customer.default_address.street }}<br>
+            {{ customer.default_address.city }}{% if customer.default_address.province != blank %}, {{ customer.default_address.province }}{% endif %} {{ customer.default_address.zip }}<br>
+            {{ customer.default_address.country }}
+            {%- if customer.default_address.phone != blank -%}<br>{{ customer.default_address.phone }}{%- endif -%}
+          </address>
+        {%- else -%}
+          <p class="lsq-empty">No default address on file.</p>
+        {%- endif -%}
+        <a href="{{ routes.account_addresses_url }}" class="btn-secondary lsq-btn-full">Manage addresses</a>
+      </aside>
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .lsq-acct-head { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .lsq-logout { display:inline-flex; align-items:center; gap:0.4rem; white-space:nowrap; }
+  .lsq-logout .material-symbols-outlined { font-size:1.1rem; }
+  .lsq-acct-grid { display:grid; grid-template-columns: 1fr; gap:1.5rem; }
+  @media (min-width: 768px) { .lsq-acct-grid { grid-template-columns: 2fr 1fr; } }
+  .lsq-card { background:#fff; border:1px solid #e5e7eb; border-radius: var(--radius, 10px); padding:1.5rem; }
+  .lsq-card-title { font-size:1.15rem; font-weight:700; margin:0 0 1rem; color: var(--brand-text, #333); }
+  .lsq-table { width:100%; border-collapse:collapse; }
+  .lsq-table th { text-align:left; text-transform:uppercase; font-size:0.72rem; letter-spacing:0.03em; color:#6b7280; padding:0.75rem; border-bottom:1px solid #e5e7eb; font-weight:700; }
+  .lsq-table td { padding:0.75rem; border-bottom:1px solid #e5e7eb; font-size:0.92rem; color: var(--brand-text, #333); }
+  .lsq-table tr:last-child td { border-bottom:none; }
+  .lsq-link { color: var(--brand-primary, #2B60AD); font-weight:600; text-decoration:none; }
+  .lsq-link:hover { text-decoration:underline; }
+  .lsq-badge { display:inline-block; font-size:0.78rem; padding:0.15rem 0.55rem; border-radius:9999px; background:#f3f4f6; color:#374151; }
+  .lsq-empty { color:#6b7280; margin:0 0 1rem; }
+  .lsq-addr-body { font-style:normal; line-height:1.7; color: var(--brand-text, #333); margin-bottom:1.25rem; font-size:0.92rem; }
+  .lsq-address .lsq-btn-full { width:100%; display:block; text-align:center; }
+  .lsq-pagination { margin-top:1.25rem; }
+</style>
+
+{% schema %}
+{
+  "name": "Customer account",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

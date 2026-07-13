@@ -1,0 +1,528 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "b0": {
+          "type": "spec",
+          "settings": {
+            "icon": "bolt",
+            "key": "Base / Fitting",
+            "value": "E27"
+          }
+        },
+        "b1": {
+          "type": "spec",
+          "settings": {
+            "icon": "light_mode",
+            "key": "Wattage",
+            "value": "9W (60W equivalent)"
+          }
+        },
+        "b2": {
+          "type": "spec",
+          "settings": {
+            "icon": "brightness_high",
+            "key": "Luminous Flux",
+            "value": "806 lumens"
+          }
+        },
+        "b3": {
+          "type": "spec",
+          "settings": {
+            "icon": "thermostat",
+            "key": "Colour Temperature",
+            "value": "2700K–6500K tunable"
+          }
+        },
+        "b4": {
+          "type": "spec",
+          "settings": {
+            "icon": "water_drop",
+            "key": "IP Rating",
+            "value": "IP20 (indoor)"
+          }
+        },
+        "b5": {
+          "type": "spec",
+          "settings": {
+            "icon": "wifi",
+            "key": "Connectivity",
+            "value": "2.4GHz Wi-Fi"
+          }
+        },
+        "b6": {
+          "type": "spec",
+          "settings": {
+            "icon": "verified",
+            "key": "Warranty",
+            "value": "2 years local warranty"
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6"
+      ],
+      "settings": {
+        "fallback_rating": 4.7,
+        "fallback_reviews": "90",
+        "sold_count": "340+",
+        "tax_note": "Price incl. VAT · Free delivery over QAR 150",
+        "show_urgency": true,
+        "stock_label": "Only 6 left in stock",
+        "viewers": "18",
+        "stock_bar_pct": 22,
+        "show_bulk": true,
+        "bulk_label": "Request Bulk Order",
+        "bulk_link": "",
+        "pay_note": "Cash on Delivery available",
+        "assure_1": "<p><strong>Same-day delivery in Doha</strong> if ordered before 4 PM · GCC shipping available</p>",
+        "assure_2": "<p><strong>Secure checkout</strong> · 2-year local warranty · 7-day easy returns</p>",
+        "fallback_desc": "<p>Add a description to this product in Shopify and it will appear here.</p>",
+        "delivery_content": "<p>Pick up from our showroom or get it delivered. <strong>Delivery in 1–2 Days.</strong> Working hours: Sat – Thu 8.00am – 7.30pm.</p>"
+      }
+    },
+    "compatibility": {
+      "type": "product-compatibility",
+      "blocks": {
+        "b0": {
+          "type": "voice",
+          "settings": {
+            "label": "Amazon Alexa",
+            "icon": "check_circle"
+          }
+        },
+        "b1": {
+          "type": "voice",
+          "settings": {
+            "label": "Google Home",
+            "icon": "check_circle"
+          }
+        },
+        "b2": {
+          "type": "voice",
+          "settings": {
+            "label": "Apple Siri",
+            "icon": "check_circle"
+          }
+        },
+        "b3": {
+          "type": "app",
+          "settings": {
+            "label": "Tuya / Smart Life",
+            "icon": "smartphone"
+          }
+        },
+        "b4": {
+          "type": "app",
+          "settings": {
+            "label": "Mi Home",
+            "icon": "smartphone"
+          }
+        },
+        "b5": {
+          "type": "app",
+          "settings": {
+            "label": "Philips Hue",
+            "icon": "smartphone"
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ],
+      "settings": {
+        "smart_only": false,
+        "heading": "Will it work with my setup?",
+        "subtitle": "Retrofits your existing fittings — no rewiring, no electrician.",
+        "group1_title": "Voice Assistants",
+        "group2_title": "Apps",
+        "note": "Screws into your existing E27 socket and connects over 2.4GHz Wi-Fi in about 2 minutes."
+      }
+    },
+    "reviews": {
+      "type": "judgeme-reviews",
+      "settings": {
+        "heading": "Customer Reviews",
+        "subtitle": "Verified reviews from Judge.me and our Google Business profile.",
+        "show_store_reviews": true,
+        "store_heading": "What our customers say",
+        "bg": "bg-white"
+      }
+    },
+    "trust": {
+      "type": "product-trust",
+      "blocks": {
+        "b0": {
+          "type": "card",
+          "settings": {
+            "icon": "local_shipping",
+            "title": "Same-day Doha",
+            "text": "Order before 4 PM for same-day delivery. GCC shipping available.",
+            "link_label": "Details",
+            "link": ""
+          }
+        },
+        "b1": {
+          "type": "card",
+          "settings": {
+            "icon": "assignment_return",
+            "title": "7-day returns",
+            "text": "Changed your mind? Return within 7 days in original packaging.",
+            "link_label": "Policy",
+            "link": ""
+          }
+        },
+        "b2": {
+          "type": "card",
+          "settings": {
+            "icon": "verified",
+            "title": "2-year warranty",
+            "text": "Genuine local warranty — not grey-market imports.",
+            "link_label": "Claim",
+            "link": ""
+          }
+        },
+        "b3": {
+          "type": "card",
+          "settings": {
+            "icon": "storefront",
+            "title": "Visit the showroom",
+            "text": "See it lit in person at our Doha showroom.",
+            "link_label": "Directions",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {
+        "heading": "Buy with confidence",
+        "subtitle": "The local advantages marketplaces can't match."
+      }
+    },
+    "expert": {
+      "type": "expert-band",
+      "settings": {
+        "heading": "Not sure it fits? Ask an expert.",
+        "text": "Message our Doha showroom team for spec & compatibility help — real people, fast replies.",
+        "button_label": "Chat on WhatsApp",
+        "button_link": ""
+      }
+    },
+    "related": {
+      "type": "product-collection",
+      "blocks": {
+        "b0": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image_default": "prod-bulb.png",
+            "title": "WiFi Smart RGB Bulb E27 9W",
+            "type": "Smart Bulbs",
+            "price": "75",
+            "old_price": "",
+            "badge": "Best Seller",
+            "badge_style": "badge-best",
+            "rating": 4.8,
+            "reviews": "124",
+            "link": ""
+          }
+        },
+        "b1": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image_default": "prod-tube.png",
+            "title": "LED Tube Light 18W T8 4ft",
+            "type": "LED Tubes",
+            "price": "35",
+            "old_price": "",
+            "badge": "Best Seller",
+            "badge_style": "badge-best",
+            "rating": 4.5,
+            "reviews": "89",
+            "link": ""
+          }
+        },
+        "b2": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image_default": "space-smart.png",
+            "title": "RGB LED Strip 5M with Remote",
+            "type": "LED Strips",
+            "price": "99",
+            "old_price": "",
+            "badge": "Hot",
+            "badge_style": "badge-hot",
+            "rating": 4.7,
+            "reviews": "156",
+            "link": ""
+          }
+        },
+        "b3": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image_default": "prod-solar.png",
+            "title": "Solar Garden Light Stake 6pcs",
+            "type": "Solar Lights",
+            "price": "150",
+            "old_price": "",
+            "badge": "New",
+            "badge_style": "badge-new",
+            "rating": 4.6,
+            "reviews": "78",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {
+        "heading": "More from this brand",
+        "subtitle": "Limited-time offers on bulbs, tubes, lamps and smart lighting.",
+        "collection": "",
+        "products_to_show": 5,
+        "bg": "bg-white",
+        "center": false,
+        "grid_class": "grid-4",
+        "layout": "grid",
+        "show_countdown": false,
+        "countdown_hours": 12,
+        "countdown_minutes": 34,
+        "countdown_seconds": 56
+      }
+    },
+    "similar": {
+      "type": "product-collection",
+      "blocks": {
+        "b0": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image_default": "prod-bulb.png",
+            "title": "Smart WiFi Filament Bulb E27",
+            "type": "New Arrivals",
+            "price": "95",
+            "old_price": "",
+            "badge": "New",
+            "badge_style": "badge-new",
+            "rating": 4.5,
+            "reviews": "0",
+            "link": ""
+          }
+        },
+        "b1": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image_default": "prod-living.png",
+            "title": "LED Panel Light Square 36W",
+            "type": "New Arrivals",
+            "price": "165",
+            "old_price": "",
+            "badge": "New",
+            "badge_style": "badge-new",
+            "rating": 4.5,
+            "reviews": "0",
+            "link": ""
+          }
+        },
+        "b2": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image_default": "prod-solar.png",
+            "title": "Outdoor Solar Flood Light 50W",
+            "type": "New Arrivals",
+            "price": "220",
+            "old_price": "",
+            "badge": "New",
+            "badge_style": "badge-new",
+            "rating": 4.5,
+            "reviews": "0",
+            "link": ""
+          }
+        },
+        "b3": {
+          "type": "product",
+          "settings": {
+            "product": "",
+            "image_default": "prod-living.png",
+            "title": "Designer Table Lamp Modern",
+            "type": "New Arrivals",
+            "price": "180",
+            "old_price": "",
+            "badge": "New",
+            "badge_style": "badge-new",
+            "rating": 4.5,
+            "reviews": "0",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "b3"
+      ],
+      "settings": {
+        "heading": "Similar products",
+        "subtitle": "Limited-time offers on bulbs, tubes, lamps and smart lighting.",
+        "collection": "",
+        "products_to_show": 5,
+        "bg": "bg-gray",
+        "center": false,
+        "grid_class": "grid-4",
+        "layout": "grid",
+        "show_countdown": false,
+        "countdown_hours": 12,
+        "countdown_minutes": 34,
+        "countdown_seconds": 56
+      }
+    },
+    "faq": {
+      "type": "product-faq",
+      "blocks": {
+        "b0": {
+          "type": "faq",
+          "settings": {
+            "question": "Is this product genuine and does it include a warranty?",
+            "answer": "<p>Yes. Every product we sell is 100% genuine with a <strong>2-year local warranty</strong> — not a grey-market import. Claims are handled locally through our Doha team.</p>"
+          }
+        },
+        "b1": {
+          "type": "faq",
+          "settings": {
+            "question": "How fast is delivery in Qatar?",
+            "answer": "<p>Order before 4 PM for <strong>same-day delivery in Doha</strong>. Elsewhere in Qatar it's 1–2 days, and we also ship across the GCC. Free delivery on orders over QAR 150.</p>"
+          }
+        },
+        "b2": {
+          "type": "faq",
+          "settings": {
+            "question": "Can I pick it up from your showroom?",
+            "answer": "<p>Yes. Collect from our office/showroom during working hours: <strong>Sat – Thu, 8.00am – 7.30pm</strong> (break 1.00–3.00pm). Call +974 4411 3544 or +974 5552 9088 to arrange.</p>"
+          }
+        },
+        "b3": {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "<p>VISA, Mastercard, Apple Pay, Tabby (pay in instalments) and <strong>Cash on Delivery</strong>. All online payments use secure checkout.</p>"
+          }
+        },
+        "b4": {
+          "type": "faq",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>You can return within <strong>7 days</strong> of delivery in the original, unused packaging. See our returns page for the full policy or message us on WhatsApp and we'll help.</p>"
+          }
+        },
+        "b5": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you offer bulk or trade pricing?",
+            "answer": "<p>Yes. For projects, cafes, offices and villas, use <strong>Request Bulk Order</strong> to add items to a quote and our team will send volume pricing.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5"
+      ],
+      "settings": {
+        "heading": "Frequently Asked Questions",
+        "subtitle": "Everything you need to know before you order."
+      }
+    },
+    "bulk": {
+      "type": "bulk-band",
+      "settings": {
+        "title": "Buying in volume for a project, cafe or villa?",
+        "subtitle": "Add items to a quote and our team sends volume pricing — same-day Doha & GCC delivery.",
+        "button_label": "Request a Bulk Quote",
+        "button_link": ""
+      }
+    },
+    "1783331211ed6c28d1": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_review_widget_dbJhEe": {
+          "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {
+            "review_data": "sample_data",
+            "max_width": 1200,
+            "show_shop_reviews": false,
+            "empty_state": "hide_widget"
+          }
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_review_widget_dbJhEe"
+      ],
+      "settings": {}
+    },
+    "178333129199edb92e": {
+      "type": "apps",
+      "blocks": {
+        "judge_me_reviews_preview_badge_LMKdX7": {
+          "type": "shopify://apps/judge-me-reviews/blocks/preview_badge/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "settings": {}
+        }
+      },
+      "block_order": [
+        "judge_me_reviews_preview_badge_LMKdX7"
+      ],
+      "settings": {}
+    }
+  },
+  "order": [
+    "main",
+    "compatibility",
+    "reviews",
+    "trust",
+    "expert",
+    "related",
+    "similar",
+    "faq",
+    "bulk",
+    "1783331211ed6c28d1",
+    "178333129199edb92e"
+  ]
+}

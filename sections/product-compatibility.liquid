@@ -1,0 +1,133 @@
+{%- liquid
+  assign tagstr = product.tags | join: ' '
+  assign hay = product.type | append: ' ' | append: product.title | append: ' ' | append: tagstr | downcase
+  assign is_smart = false
+  if hay contains 'smart' or hay contains 'wifi' or hay contains 'wi-fi' or hay contains 'rgb' or hay contains 'strip' or hay contains 'switch'
+    assign is_smart = true
+  endif
+-%}
+{%- if section.settings.smart_only == false or is_smart -%}
+<section class="pdp-section" id="compatibility">
+  <h2 class="pdp-section-title">{{ section.settings.heading }}</h2>
+  <p class="pdp-section-sub">{{ section.settings.subtitle }}</p>
+  <div class="compat-panel">
+    <div class="compat-groups">
+      <div>
+        <p class="compat-group-title">{{ section.settings.group1_title }}</p>
+        <div class="compat-badges">
+          {% for block in section.blocks %}
+            {% if block.type == 'voice' %}
+              <span class="compat-badge" {{ block.shopify_attributes }}><span class="material-symbols-outlined">{{ block.settings.icon }}</span> {{ block.settings.label }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <div>
+        <p class="compat-group-title">{{ section.settings.group2_title }}</p>
+        <div class="compat-badges">
+          {% for block in section.blocks %}
+            {% if block.type == 'app' %}
+              <span class="compat-badge" {{ block.shopify_attributes }}><span class="material-symbols-outlined">{{ block.settings.icon }}</span> {{ block.settings.label }}</span>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <p class="compat-note">
+      <span class="material-symbols-outlined">bolt</span>
+      <span>{{ section.settings.note }}</span>
+    </p>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "PDP Compatibility",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "smart_only", "label": "Show only on smart products", "default": false },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Will it work with my setup?"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Retrofits your existing fittings — no rewiring, no electrician."
+    },
+    {
+      "type": "text",
+      "id": "group1_title",
+      "label": "Group 1 title",
+      "default": "Voice Assistants"
+    },
+    {
+      "type": "text",
+      "id": "group2_title",
+      "label": "Group 2 title",
+      "default": "Apps"
+    },
+    {
+      "type": "textarea",
+      "id": "note",
+      "label": "Note",
+      "default": "Screws into your existing E27 socket and connects over 2.4GHz Wi-Fi in about 2 minutes."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "voice",
+      "name": "Voice assistant",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Amazon Alexa"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "default": "check_circle"
+        }
+      ]
+    },
+    {
+      "type": "app",
+      "name": "App",
+      "settings": [
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Label",
+          "default": "Tuya / Smart Life"
+        },
+        {
+          "type": "text",
+          "id": "icon",
+          "label": "Icon",
+          "default": "smartphone"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Compatibility",
+      "blocks": [
+        { "type": "voice", "settings": { "label": "Amazon Alexa", "icon": "check_circle" } },
+        { "type": "voice", "settings": { "label": "Google Home", "icon": "check_circle" } },
+        { "type": "voice", "settings": { "label": "Apple Siri", "icon": "check_circle" } },
+        { "type": "app", "settings": { "label": "Tuya / Smart Life", "icon": "smartphone" } },
+        { "type": "app", "settings": { "label": "Mi Home", "icon": "smartphone" } },
+        { "type": "app", "settings": { "label": "Philips Hue", "icon": "smartphone" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

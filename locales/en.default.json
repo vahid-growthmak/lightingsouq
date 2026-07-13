@@ -1,0 +1,24 @@
+{
+  "general": {
+    "meta": {
+      "page": "Page {{ page }}"
+    },
+    "search": {
+      "search": "Search",
+      "placeholder": "Search bulbs, tubes, smart switches..."
+    }
+  },
+  "accessibility": {
+    "skip_to_text": "Skip to content",
+    "menu": "Menu",
+    "close": "Close"
+  },
+  "sections": {
+    "header": {
+      "announcement": "Announcement",
+      "cart": "Cart",
+      "account": "Account",
+      "wishlist": "Wishlist"
+    }
+  }
+}

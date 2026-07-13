@@ -1,0 +1,75 @@
+<section class="section {{ section.settings.bg }}" id="Sec--{{ section.id }}">
+  <div class="container">
+    <div class="tm-split tm-media-{{ section.settings.media_side }}">
+      <div class="tm-media">
+        <img
+          src="{%- if section.settings.image != blank -%}{{ section.settings.image | image_url: width: 900 }}{%- else -%}{{ 'space-smart.png' | asset_url }}{%- endif -%}"
+          alt="{{ section.settings.image_alt | escape }}"
+          width="900" height="675" loading="lazy">
+      </div>
+      <div class="tm-copy">
+        {%- if section.settings.eyebrow != blank -%}<p class="tm-eyebrow">{{ section.settings.eyebrow }}</p>{%- endif -%}
+        {%- if section.settings.title != blank -%}<h2 class="tm-title">{{ section.settings.title }}</h2>{%- endif -%}
+        <div class="tm-body lsq-prose">{{ section.settings.body }}</div>
+        {%- if section.settings.button_label != blank -%}
+          <div class="tm-actions">
+            <a href="{{ section.settings.button_link }}" class="btn-primary">{{ section.settings.button_label }}</a>
+          </div>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% style %}
+  #Sec--{{ section.id }} .tm-split { display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center; }
+  @media (min-width: 900px) { #Sec--{{ section.id }} .tm-split { grid-template-columns: 1fr 1fr; } }
+  @media (min-width: 900px) { #Sec--{{ section.id }} .tm-media-right .tm-media { order: 2; } }
+  #Sec--{{ section.id }} .tm-media img { width: 100%; height: auto; border-radius: var(--radius); display: block; box-shadow: var(--shadow-sm); }
+  #Sec--{{ section.id }} .tm-eyebrow { color: var(--brand-secondary); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; font-size: 0.78rem; margin-bottom: 0.5rem; }
+  #Sec--{{ section.id }} .tm-title { font-size: 1.9rem; font-weight: 800; line-height: 1.2; margin-bottom: 0.9rem; }
+  #Sec--{{ section.id }} .tm-body { color: var(--gray-600); }
+  #Sec--{{ section.id }} .tm-actions { margin-top: 1.5rem; }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Text Media",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    },
+    {
+      "type": "select",
+      "id": "media_side",
+      "label": "Image side",
+      "options": [
+        { "value": "left", "label": "Left" },
+        { "value": "right", "label": "Right" }
+      ],
+      "default": "left"
+    },
+    { "type": "header", "content": "Media" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Lighting Souq showroom interior" },
+    { "type": "header", "content": "Copy" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Our story" },
+    { "type": "text", "id": "title", "label": "Title", "default": "Lighting specialists, not a marketplace" },
+    { "type": "richtext", "id": "body", "label": "Body", "default": "<p>We curate every fitting we sell and back it with local warranty and real advice — the guidance generalists and marketplaces simply cannot offer.</p>" },
+    { "type": "header", "content": "Button" },
+    { "type": "text", "id": "button_label", "label": "Button label", "default": "Learn more" },
+    { "type": "url", "id": "button_link", "label": "Button link" }
+  ],
+  "presets": [
+    { "name": "Text Media" }
+  ]
+}
+{% endschema %}

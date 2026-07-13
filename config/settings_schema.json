@@ -1,0 +1,128 @@
+[
+  {
+    "name": "theme_info",
+    "theme_name": "Lighting Souq",
+    "theme_version": "1.0.0",
+    "theme_author": "Growthmak",
+    "theme_documentation_url": "https://lighting-souq-v2.vercel.app/",
+    "theme_support_url": "https://lighting-souq-v2.vercel.app/"
+  },
+  {
+    "name": "Logo",
+    "settings": [
+      { "type": "paragraph", "content": "One logo for the whole site (header + footer). Upload once here." },
+      { "type": "image_picker", "id": "logo_image", "label": "Logo image" },
+      { "type": "range", "id": "logo_height", "label": "Logo height", "min": 28, "max": 90, "step": 2, "unit": "px", "default": 52 }
+    ]
+  },
+  {
+    "name": "Brand colors",
+    "settings": [
+      { "type": "color", "id": "brand_primary", "label": "Primary", "default": "#2B60AD" },
+      { "type": "color", "id": "brand_secondary", "label": "Secondary", "default": "#268290" },
+      { "type": "color", "id": "brand_accent", "label": "Accent", "default": "#337AB7" },
+      { "type": "color", "id": "brand_text", "label": "Body text", "default": "#333333" },
+      { "type": "color", "id": "brand_background", "label": "Background", "default": "#FFFFFF" }
+    ]
+  },
+  {
+    "name": "Layout",
+    "settings": [
+      { "type": "range", "id": "corner_radius", "label": "Corner radius", "min": 0, "max": 24, "step": 1, "unit": "px", "default": 10 }
+    ]
+  },
+  {
+    "name": "Typography",
+    "settings": [
+      { "type": "paragraph", "content": "Leave 'Use custom fonts' off to keep the current clean system font. Turn it on to pick your own heading and body fonts." },
+      { "type": "checkbox", "id": "use_custom_fonts", "label": "Use custom fonts", "default": false },
+      { "type": "font_picker", "id": "heading_font", "label": "Heading font", "default": "assistant_n4" },
+      { "type": "font_picker", "id": "body_font", "label": "Body font", "default": "assistant_n4" }
+    ]
+  },
+  {
+    "name": "Reviews",
+    "settings": [
+      { "type": "paragraph", "content": "The Google reviews badge across the site links here. Paste your Google reviews deep link." },
+      { "type": "text", "id": "google_reviews_url", "label": "Google reviews link", "default": "https://www.google.com/search?q=lighting+souq+google+reviews#lrd=0x3e45c534e898e44d:0xedec4b7dd8d36eb2,1,,,," },
+      { "type": "text", "id": "google_rating", "label": "Google rating", "default": "4.9" },
+      { "type": "text", "id": "google_count", "label": "Google review count", "default": "84" },
+      { "type": "text", "id": "google_reviews_label", "label": "\"Google reviews\" wording", "default": "Google reviews" }
+    ]
+  },
+  {
+    "name": "Trust badges",
+    "settings": [
+      { "type": "paragraph", "content": "Upload your Theqa certificate once — it shows in the hero and the footer." },
+      { "type": "image_picker", "id": "theqa_image", "label": "Theqa badge image" },
+      { "type": "url", "id": "theqa_link", "label": "Theqa link (verification page)" },
+      { "type": "text", "id": "theqa_alt", "label": "Theqa alt text", "default": "Theqa Certified Store" }
+    ]
+  },
+  {
+    "name": "Brand assets",
+    "settings": [
+      { "type": "image_picker", "id": "favicon", "label": "Favicon" },
+      { "type": "image_picker", "id": "default_product_image", "label": "Default product image (fallback)" }
+    ]
+  },
+  {
+    "name": "Buttons & labels",
+    "settings": [
+      { "type": "paragraph", "content": "Storefront button text and messages shared across product cards, the cart drawer and search. Defaults match the current wording." },
+      { "type": "header", "content": "Buttons" },
+      { "type": "text", "id": "label_add_to_cart", "label": "Add to cart button", "default": "Add to Cart" },
+      { "type": "text", "id": "label_sold_out", "label": "Sold out button", "default": "Sold Out" },
+      { "type": "text", "id": "label_view_product", "label": "View product button", "default": "View Product" },
+      { "type": "text", "id": "label_remove", "label": "Remove (cart item)", "default": "Remove" },
+      { "type": "text", "id": "aria_add_wishlist", "label": "Add to wishlist (accessibility label)", "default": "Add to wishlist" },
+      { "type": "text", "id": "aria_remove_wishlist", "label": "Remove from wishlist (accessibility label)", "default": "Remove from wishlist" },
+      { "type": "header", "content": "Cart drawer" },
+      { "type": "text", "id": "cart_drawer_title", "label": "Cart drawer title", "default": "Your Cart" },
+      { "type": "text", "id": "cart_loading", "label": "Loading message", "default": "Loading…" },
+      { "type": "text", "id": "cart_empty", "label": "Empty cart message", "default": "Your cart is empty." },
+      { "type": "text", "id": "cart_shop_all", "label": "Empty cart button", "default": "Shop all products" },
+      { "type": "url", "id": "cart_shop_all_link", "label": "Empty cart button link (defaults to all products)" },
+      { "type": "text", "id": "cart_subtotal", "label": "Subtotal label", "default": "Subtotal" },
+      { "type": "text", "id": "cart_tax_note", "label": "Tax / shipping note", "default": "Shipping & taxes calculated at checkout." },
+      { "type": "text", "id": "cart_checkout", "label": "Checkout button", "default": "Checkout" },
+      { "type": "text", "id": "cart_view", "label": "View cart link", "default": "View cart" },
+      { "type": "text", "id": "cart_error", "label": "Cart load error", "default": "Could not load cart." },
+      { "type": "header", "content": "Toasts" },
+      { "type": "text", "id": "toast_wishlist_saved", "label": "Saved to wishlist toast", "default": "Saved to wishlist" },
+      { "type": "text", "id": "toast_wishlist_removed", "label": "Removed from wishlist toast", "default": "Removed from wishlist" },
+      { "type": "text", "id": "toast_cart_error", "label": "Add to cart error toast", "default": "Could not add to cart" },
+      { "type": "header", "content": "Predictive search" },
+      { "type": "text", "id": "search_no_results", "label": "No results text", "default": "No products found for" },
+      { "type": "text", "id": "search_see_all", "label": "See all results text", "default": "See all results for" }
+    ]
+  },
+  {
+    "name": "Contact / WhatsApp",
+    "settings": [
+      { "type": "paragraph", "content": "Your WhatsApp business number in international format, digits only — no +, spaces or leading zeros (Qatar +974 5000 0000 → 97450000000). Used by the header and the bulk-order popup." },
+      { "type": "text", "id": "whatsapp_number", "label": "WhatsApp number (digits only)", "default": "97412345678" }
+    ]
+  },
+  {
+    "name": "Bulk order popup",
+    "settings": [
+      { "type": "paragraph", "content": "Opens from any \"Request Bulk Order\" button. Submissions create a Customer (Admin → Customers) and email the full request to your store contact email; the customer is redirected to WhatsApp." },
+      { "type": "text", "id": "rbo_title", "label": "Title", "default": "Request a Bulk Order" },
+      { "type": "text", "id": "rbo_subtitle", "label": "Subtitle", "default": "Add your products and quantities — we'll send you a trade quote." },
+      { "type": "text", "id": "rbo_search_label", "label": "Add-product label", "default": "Add another product" },
+      { "type": "text", "id": "rbo_search_ph", "label": "Search placeholder", "default": "Search products…" },
+      { "type": "text", "id": "rbo_name_label", "label": "Name label", "default": "Your name" },
+      { "type": "text", "id": "rbo_email_label", "label": "Email label", "default": "Work email" },
+      { "type": "text", "id": "rbo_phone_label", "label": "Phone label", "default": "Phone (optional)" },
+      { "type": "text", "id": "rbo_notes_label", "label": "Notes label", "default": "Notes (optional)" },
+      { "type": "text", "id": "rbo_notes_ph", "label": "Notes placeholder", "default": "Delivery details, colour temperature, anything not in the catalogue…" },
+      { "type": "text", "id": "rbo_submit", "label": "Submit button", "default": "Send bulk request" },
+      { "type": "text", "id": "rbo_empty", "label": "Empty items message", "default": "No products added yet — search above to add items." },
+      { "type": "text", "id": "rbo_success_title", "label": "Success title", "default": "Request sent!" },
+      { "type": "richtext", "id": "rbo_success_msg", "label": "Success message", "default": "<p>Thanks — our trade team will prepare your quote and reply shortly.</p>" },
+      { "type": "text", "id": "rbo_wa_button", "label": "WhatsApp button", "default": "Continue on WhatsApp" },
+      { "type": "text", "id": "rbo_template_msg", "label": "Quote template message", "default": "Our team will review your bulk request and send you a custom trade quote shortly." }
+    ]
+  }
+]

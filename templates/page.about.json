@@ -1,0 +1,70 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "About"
+      }
+    },
+    "story": {
+      "type": "text-media",
+      "settings": {
+        "bg": "bg-white",
+        "media_side": "left",
+        "image_alt": "Lighting Souq showroom interior in Doha",
+        "eyebrow": "Life in Light",
+        "title": "Lighting specialists, not a marketplace",
+        "body": "<p>Lighting Souq curates every fitting we sell and backs it with local warranty and real advice. We are the smart-lighting specialist generalists and marketplaces cannot match — from a single bulb to a whole home.</p>",
+        "button_label": "Visit the showroom",
+        "button_link": "/pages/showroom"
+      }
+    },
+    "why": {
+      "type": "feature-columns",
+      "settings": {
+        "heading": "Why LightingSouq",
+        "subtitle": "The difference you feel from the first message to the final fitting.",
+        "grid_class": "grid-3",
+        "bg": "bg-gray"
+      },
+      "blocks": {
+        "w1": { "type": "item", "settings": { "icon": "verified", "title": "Local warranty", "text": "Genuine stock with warranty you can claim in Qatar — not grey-market imports." } },
+        "w2": { "type": "item", "settings": { "icon": "support_agent", "title": "Real advice", "text": "Talk to specialists who confirm compatibility before you buy." } },
+        "w3": { "type": "item", "settings": { "icon": "local_shipping", "title": "Fast delivery", "text": "Same-day Doha delivery and GCC shipping, with showroom pickup." } }
+      },
+      "block_order": ["w1", "w2", "w3"]
+    },
+    "team": {
+      "type": "text-media",
+      "settings": {
+        "bg": "bg-white",
+        "media_side": "right",
+        "image_alt": "The Lighting Souq showroom team",
+        "eyebrow": "Showroom and team",
+        "title": "Real people behind every order",
+        "body": "<p>Our Doha showroom team lives and breathes lighting. Drop in to see fittings lit in person, or message the team for spec help — the same experts answer online and in store.</p>",
+        "button_label": "Meet us in store",
+        "button_link": "/pages/showroom"
+      }
+    },
+    "ggi": {
+      "type": "rich-text",
+      "settings": {
+        "heading": "Backed by GGI Lighting",
+        "content": "<p>Lighting Souq is the consumer face of <strong>GGI Lighting</strong>, our B2B parent and importer. That backbone means direct sourcing, genuine stock and volume pricing for projects.</p><p>Running a project or trade order? We can route you to the right pricing and lead times.</p>",
+        "bg": "bg-gray"
+      }
+    },
+    "contact": {
+      "type": "expert-band",
+      "settings": {
+        "heading": "Questions about a project or product?",
+        "text": "Message our team for spec, compatibility or sourcing help — real people, fast replies.",
+        "button_label": "Contact us",
+        "button_link": "/pages/contact"
+      }
+    }
+  },
+  "order": ["breadcrumb", "story", "why", "team", "ggi", "contact"]
+}

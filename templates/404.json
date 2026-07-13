@@ -1,0 +1,16 @@
+{
+  "sections": {
+    "main": {
+      "type": "section-404",
+      "settings": {},
+      "blocks": {
+        "link-1": { "type": "link", "settings": { "label": "Smart Lights", "url": "/collections/all" } },
+        "link-2": { "type": "link", "settings": { "label": "LED Bulbs", "url": "/collections/all" } },
+        "link-3": { "type": "link", "settings": { "label": "Deals", "url": "/collections/all" } },
+        "link-4": { "type": "link", "settings": { "label": "Contact", "url": "/collections/all" } }
+      },
+      "block_order": ["link-1", "link-2", "link-3", "link-4"]
+    }
+  },
+  "order": ["main"]
+}

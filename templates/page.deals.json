@@ -1,0 +1,49 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Today's Deals"
+      }
+    },
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Today's Deals",
+        "subtitle": "Price-led picks refreshed weekly — bulbs, smart kits and outdoor lighting at their best value.",
+        "bg": "bg-gray"
+      }
+    },
+    "deal_week": {
+      "type": "product-collection",
+      "settings": {
+        "heading": "Deal of the week",
+        "subtitle": "Our sharpest single-item price this week — while stock lasts.",
+        "products_to_show": 4,
+        "bg": "bg-white",
+        "layout": "grid"
+      }
+    },
+    "bundles": {
+      "type": "product-collection",
+      "settings": {
+        "heading": "Best value bundles",
+        "subtitle": "Curated kits that cost less together — smart starters, room sets and more.",
+        "products_to_show": 4,
+        "bg": "bg-gray",
+        "layout": "grid"
+      }
+    },
+    "bulk": {
+      "type": "bulk-band",
+      "settings": {
+        "title": "Buying in volume for a project, cafe or villa?",
+        "subtitle": "Add items to a quote and our team sends volume pricing — same-day Doha and GCC delivery.",
+        "button_label": "Request a Bulk Quote",
+        "button_link": "/pages/bulk-orders"
+      }
+    }
+  },
+  "order": ["breadcrumb", "hero", "deal_week", "bundles", "bulk"]
+}

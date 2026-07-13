@@ -1,0 +1,358 @@
+{%- comment -%}
+  Main product — PDP core. Replicates the mockup as an editable TEMPLATE: title,
+  price, compare-at, images, variants and description come from the real product;
+  rating, sold count, stock urgency, specs, delivery copy etc. are editable
+  placeholder values that always render (like the mockup) so the merchant fills them
+  in. Real reviews metafield / real inventory override the placeholders when present.
+  Shopify-safe schema (names <=25 chars, no empty/url/step violations, plain product form).
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign cur = product.selected_or_first_available_variant
+  assign on_sale = false
+  if cur.compare_at_price > cur.price
+    assign on_sale = true
+  endif
+  assign rating = product.metafields.reviews.rating.value | default: s.fallback_rating
+  assign review_count = product.metafields.reviews.rating_count.value | default: s.fallback_reviews
+  assign specs = product.metafields.custom.specs.value
+  assign bc = blank
+  comment
+    Prefer the collection matching the product TYPE (e.g. "Grow Lights"), so the
+    category crumb is meaningful and never duplicates the vendor crumb below.
+  endcomment
+  for c in product.collections
+    if c.handle != 'frontpage' and c.title == product.type
+      assign bc = c
+      break
+    endif
+  endfor
+  if bc == blank
+    for c in product.collections
+      if c.handle != 'frontpage' and c.title != product.vendor and bc == blank
+        assign bc = c
+      endif
+    endfor
+  endif
+  if bc == blank
+    for c in product.collections
+      if c.handle != 'frontpage' and bc == blank
+        assign bc = c
+      endif
+    endfor
+  endif
+-%}
+
+<section class="section" style="padding-top:1.25rem;" id="MainProduct--{{ section.id }}">
+  <div class="container">
+
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      {%- if bc != blank %} / <a href="{{ bc.url }}">{{ bc.title }}</a>{% elsif product.type != blank %} / <a href="{{ routes.all_products_collection_url }}">{{ product.type }}</a>{% endif -%}
+      {%- if product.vendor != blank and product.vendor != bc.title %} / <a href="{{ product.vendor | url_for_vendor }}">{{ product.vendor }}</a>{% endif %} /
+      <span>{{ product.title }}</span>
+    </nav>
+
+    <div class="pdp-layout">
+      <div class="pdp-gallery">
+        <div class="pdp-main-img">
+          {%- if on_sale -%}
+            {%- assign pct = cur.compare_at_price | minus: cur.price | times: 100.0 | divided_by: cur.compare_at_price | round -%}
+            <span class="pdp-gallery-badge">Save {{ pct }}%</span>
+          {%- endif -%}
+          <div class="pdp-gallery-tools">
+            <button class="pdp-tool-btn" type="button" aria-label="Add to wishlist" data-wishlist-toggle
+              data-handle="{{ product.handle }}"
+              data-id="{{ product.id }}"
+              data-variant="{{ cur.id }}"
+              data-available="{{ product.available }}"
+              data-title="{{ product.title | escape }}"
+              data-url="{{ product.url }}"
+              data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 400 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}"
+              data-price="{{ cur.price | money }}"><span class="material-symbols-outlined">favorite</span></button>
+            <button class="pdp-tool-btn" type="button" aria-label="Share" data-share><span class="material-symbols-outlined">share</span></button>
+          </div>
+          <img id="MainImg--{{ section.id }}" src="{% if product.featured_image %}{{ product.featured_image | image_url: width: 900 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}" alt="{{ product.featured_image.alt | default: product.title | escape }}" width="900" height="900">
+        </div>
+        {%- if product.images.size > 1 -%}
+          <div class="pdp-thumbs">
+            {%- for image in product.images limit: 6 -%}
+              <div class="pdp-thumb{% if forloop.first %} active{% endif %}" data-thumb="{{ image | image_url: width: 900 }}">
+                <img src="{{ image | image_url: width: 160 }}" alt="{{ product.title | escape }} view {{ forloop.index }}" width="160" height="160" loading="lazy">
+              </div>
+            {%- endfor -%}
+          </div>
+        {%- endif -%}
+      </div>
+
+      <div class="buy-box">
+        {%- if product.vendor != blank -%}<p class="pdp-vendor">{{ product.vendor }}</p>{%- endif -%}
+        <h1 class="pdp-title">{{ product.title }}</h1>
+
+        <div class="pdp-rating-row">
+          {%- assign g_rating = settings.google_rating | default: rating -%}
+          <div class="stars">{% render 'rating-stars', rating: g_rating %}</div>
+          <a href="{{ settings.google_reviews_url | default: '#reviews' }}"{% if settings.google_reviews_url != blank %} target="_blank" rel="noopener nofollow"{% endif %} class="pdp-rating-link">{{ g_rating }} · {{ settings.google_count | default: review_count }} Google reviews</a>
+          {%- if s.sold_count != blank -%}<span class="pdp-sold">· {{ s.sold_count }} sold</span>{%- endif -%}
+        </div>
+
+        <div class="pdp-price-row">
+          <span class="pdp-new-price" data-price>{{ cur.price | money }}</span>
+          {%- if on_sale -%}
+            <span class="pdp-old-price">{{ cur.compare_at_price | money }}</span>
+            {%- assign pct = cur.compare_at_price | minus: cur.price | times: 100.0 | divided_by: cur.compare_at_price | round -%}
+            <span class="pdp-discount">-{{ pct }}%</span>
+          {%- endif -%}
+        </div>
+        {%- if on_sale -%}<p class="pdp-save">You save {{ cur.compare_at_price | minus: cur.price | money }} today</p>{%- endif -%}
+        {%- if s.tax_note != blank -%}<p class="pdp-tax-note">{{ s.tax_note }}</p>{%- endif -%}
+
+        {%- if s.show_urgency -%}
+          {%- assign stock_txt = s.stock_label -%}
+          {%- if cur.inventory_management != blank and cur.inventory_quantity > 0 -%}
+            {%- assign stock_txt = 'Only ' | append: cur.inventory_quantity | append: ' left in stock' -%}
+          {%- endif -%}
+          <div class="pdp-stock-row">
+            <span class="pdp-stock low"><span class="dot"></span> {{ stock_txt }}</span>
+            {%- if s.viewers != blank -%}<span class="pdp-viewers"><span class="material-symbols-outlined">visibility</span> {{ s.viewers }} people viewing now</span>{%- endif -%}
+          </div>
+          <div class="pdp-stock-bar"><span style="width:{{ s.stock_bar_pct }}%"></span></div>
+        {%- endif -%}
+
+        <form method="post" action="{{ routes.cart_add_url }}" id="ProductForm--{{ section.id }}" class="pdp-form" accept-charset="UTF-8" enctype="multipart/form-data" data-cart-form>
+          <input type="hidden" name="form_type" value="product">
+          <input type="hidden" name="utf8" value="✓">
+
+          {%- unless product.has_only_default_variant -%}
+            <div class="pdp-options">
+              {%- for option in product.options_with_values -%}
+                <span class="option-label">{{ option.name }}</span>
+                <div class="option-grid" data-option-index="{{ forloop.index0 }}">
+                  {%- for value in option.values -%}
+                    <button class="option-btn{% if option.selected_value == value %} active{% endif %}" type="button" data-option-value="{{ value | escape }}">{{ value }}</button>
+                  {%- endfor -%}
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+
+          <input type="hidden" name="id" value="{{ cur.id }}" data-variant-id>
+
+          <div class="pdp-actions">
+            <div class="pdp-qty-cta">
+              <div class="qty-control">
+                <button type="button" data-qty-minus aria-label="Decrease">−</button>
+                <span data-qty>1</span>
+                <button type="button" data-qty-plus aria-label="Increase">+</button>
+              </div>
+              <input type="hidden" name="quantity" value="1" data-qty-input>
+              <button class="btn-atc" type="submit" data-atc {% unless cur.available %}disabled{% endunless %}>{% if cur.available %}ADD TO CART{% else %}SOLD OUT{% endif %}</button>
+            </div>
+            {%- if cur.available -%}<button class="btn-buy-now" type="submit" name="checkout" data-buy-now>BUY IT NOW</button>{%- endif -%}
+            {%- if s.show_bulk -%}<a class="btn-quote-lg" href="{{ s.bulk_link | default: '/' }}"><span class="material-symbols-outlined" style="font-size:1.1rem;">request_quote</span> {{ s.bulk_label }}</a>{%- endif -%}
+          </div>
+        </form>
+
+        <div class="pdp-pay-under">
+          <span class="pdp-pay-label"><strong>Pay your way</strong>{% if s.pay_note != blank %} — {{ s.pay_note }}{% endif %}</span>
+          <div class="pay-methods">
+            <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Visa"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><text x="20" y="17.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="800" font-style="italic" fill="#1A1F71" letter-spacing="0.5">VISA</text></svg>
+            <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Mastercard"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><circle cx="17" cy="13" r="6.4" fill="#EB001B"/><circle cx="24" cy="13" r="6.4" fill="#F79E1B"/><path d="M20.5 8.1a6.4 6.4 0 0 0 0 9.8 6.4 6.4 0 0 0 0-9.8z" fill="#FF5F00"/></svg>
+            <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Apple Pay"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><g fill="#000"><path d="M11.9 9.6c.3-.4.5-.9.45-1.45-.46.02-1.02.3-1.35.7-.3.35-.55.9-.48 1.42.52.04 1.05-.27 1.38-.67z"/><path d="M12.35 10.35c-.75-.05-1.38.42-1.74.42-.36 0-.9-.4-1.48-.39-.76.01-1.46.44-1.85 1.12-.79 1.37-.2 3.4.56 4.52.37.54.82 1.15 1.41 1.13.56-.02.78-.36 1.46-.36.68 0 .87.36 1.46.35.61-.01.99-.55 1.36-1.09.43-.62.6-1.22.61-1.25-.01-.01-1.17-.46-1.18-1.81-.01-1.13.92-1.67.96-1.7-.53-.77-1.34-.86-1.63-.87z"/></g><text x="26" y="16.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#000">Pay</text></svg>
+            <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Cash on Delivery"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><rect x="7" y="9.5" width="12" height="7.5" rx="1.3" fill="none" stroke="#059669" stroke-width="1.2"/><circle cx="13" cy="13.2" r="1.9" fill="#059669"/><text x="29" y="16.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-weight="800" fill="#059669">COD</text></svg>
+          </div>
+        </div>
+
+        <div class="pdp-assurance">
+          {%- if s.assure_1 != blank -%}<div class="pdp-assure-item"><span class="material-symbols-outlined">local_shipping</span><span>{{ s.assure_1 }}</span></div>{%- endif -%}
+          {%- if s.assure_2 != blank -%}<div class="pdp-assure-item"><span class="material-symbols-outlined">verified_user</span><span>{{ s.assure_2 }}</span></div>{%- endif -%}
+        </div>
+      </div>
+    </div>
+
+    <div class="pdp-accordions">
+      <div class="collapsible-row active">
+        <button class="collapsible-trigger" type="button" data-accordion>Description <span class="material-symbols-outlined">expand_more</span></button>
+        <div class="collapsible-content"><div class="pdp-desc">{% if product.description != blank %}{{ product.description }}{% else %}{{ s.fallback_desc }}{% endif %}</div></div>
+      </div>
+
+      <div class="collapsible-row" id="specs">
+        <button class="collapsible-trigger" type="button" data-accordion>Key Specifications <span class="material-symbols-outlined">expand_more</span></button>
+        <div class="collapsible-content">
+          <div class="spec-grid">
+            {%- if specs != blank -%}
+              {%- for row in specs -%}
+                {%- assign parts = row | split: '|' -%}
+                <div class="spec-item"><span class="spec-key"><span class="material-symbols-outlined">check</span>{{ parts[0] | strip }}</span><span class="spec-val">{{ parts[1] | default: parts[0] | strip }}</span></div>
+              {%- endfor -%}
+            {%- else -%}
+              {%- for block in section.blocks -%}
+                {%- if block.type == 'spec' -%}
+                  <div class="spec-item" {{ block.shopify_attributes }}><span class="spec-key"><span class="material-symbols-outlined">{{ block.settings.icon }}</span>{{ block.settings.key }}</span><span class="spec-val">{{ block.settings.value }}</span></div>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- endif -%}
+          </div>
+        </div>
+      </div>
+
+      {%- if s.delivery_content != blank -%}
+        <div class="collapsible-row">
+          <button class="collapsible-trigger" type="button" data-accordion>Delivery &amp; Pick-up <span class="material-symbols-outlined">expand_more</span></button>
+          <div class="collapsible-content"><div class="delivery-content">{{ s.delivery_content }}</div></div>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<div class="sticky-atc" data-sticky>
+  <div class="container sticky-atc-inner">
+    <div class="sticky-atc-left">
+      <img class="sticky-atc-thumb" src="{% if product.featured_image %}{{ product.featured_image | image_url: width: 120 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}" alt="{{ product.title | escape }}" width="60" height="60">
+      <div class="sticky-atc-info">
+        <div class="sticky-atc-title">{{ product.title }}</div>
+        <div class="sticky-atc-meta">
+          <span class="sticky-atc-price">{{ cur.price | money }}</span>
+          {%- if on_sale -%}<span class="sticky-atc-old">{{ cur.compare_at_price | money }}</span>{%- endif -%}
+        </div>
+      </div>
+    </div>
+    <div class="sticky-atc-actions">
+      <button class="btn-atc" type="button" data-sticky-atc {% unless cur.available %}disabled{% endunless %}>{% if cur.available %}Add to Cart{% else %}Sold Out{% endif %}</button>
+      {%- if cur.available -%}<button class="btn-buy-now" type="button" data-sticky-buy>Buy it Now</button>{%- endif -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    var root = document.getElementById('MainProduct--{{ section.id }}');
+    if (!root) return;
+    var variants = {{ product.variants | json }};
+    var optionGrids = root.querySelectorAll('.option-grid');
+    var idInput = root.querySelector('[data-variant-id]');
+    var priceEl = root.querySelector('[data-price]');
+    var atc = root.querySelector('[data-atc]');
+    var form = root.querySelector('.pdp-form');
+    var moneyFormat = {{ shop.money_format | json }};
+    function money(cents) {
+      var v = (cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return moneyFormat.replace(/\{\{\s*amount\s*\}\}/, v);
+    }
+    function selectedOptions() {
+      var opts = [];
+      optionGrids.forEach(function (g) {
+        var a = g.querySelector('.option-btn.active');
+        opts[parseInt(g.getAttribute('data-option-index'), 10)] = a ? a.getAttribute('data-option-value') : null;
+      });
+      return opts;
+    }
+    function updateVariant() {
+      var sel = selectedOptions();
+      var match = variants.find(function (v) { return v.options.every(function (o, i) { return o === sel[i]; }); });
+      if (!match) return;
+      if (idInput) idInput.value = match.id;
+      if (priceEl) priceEl.textContent = money(match.price);
+      if (atc) { atc.disabled = !match.available; atc.textContent = match.available ? 'ADD TO CART' : 'SOLD OUT'; }
+    }
+    optionGrids.forEach(function (g) {
+      g.querySelectorAll('.option-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          g.querySelectorAll('.option-btn').forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          updateVariant();
+        });
+      });
+    });
+    var mainImg = document.getElementById('MainImg--{{ section.id }}');
+    root.querySelectorAll('.pdp-thumb').forEach(function (t) {
+      t.addEventListener('click', function () {
+        root.querySelectorAll('.pdp-thumb').forEach(function (x) { x.classList.remove('active'); });
+        t.classList.add('active');
+        if (mainImg) mainImg.src = t.getAttribute('data-thumb');
+      });
+    });
+    var qtyEl = root.querySelector('[data-qty]');
+    var qtyInput = root.querySelector('[data-qty-input]');
+    var qty = 1;
+    function setQty(n) { qty = Math.max(1, n); if (qtyEl) qtyEl.textContent = qty; if (qtyInput) qtyInput.value = qty; }
+    var minus = root.querySelector('[data-qty-minus]'); var plus = root.querySelector('[data-qty-plus]');
+    if (minus) minus.addEventListener('click', function () { setQty(qty - 1); });
+    if (plus) plus.addEventListener('click', function () { setQty(qty + 1); });
+    root.querySelectorAll('[data-accordion]').forEach(function (b) {
+      b.addEventListener('click', function () { b.parentElement.classList.toggle('active'); });
+    });
+    var share = root.querySelector('[data-share]');
+    if (share) share.addEventListener('click', function () {
+      if (navigator.share) { navigator.share({ title: document.title, url: location.href }).catch(function(){}); }
+      else if (navigator.clipboard) { navigator.clipboard.writeText(location.href); }
+    });
+    var sticky = document.querySelector('[data-sticky]');
+    var actions = root.querySelector('.pdp-actions');
+    if (sticky && actions) {
+      new IntersectionObserver(function (e) { sticky.classList.toggle('show', !e[0].isIntersecting); }, { threshold: 0 }).observe(actions);
+      var stickyBtn = sticky.querySelector('[data-sticky-atc]');
+      if (stickyBtn && form) stickyBtn.addEventListener('click', function () { form.requestSubmit ? form.requestSubmit() : form.submit(); });
+      var stickyBuy = sticky.querySelector('[data-sticky-buy]');
+      var buyNow = root.querySelector('[data-buy-now]');
+      if (stickyBuy && buyNow) stickyBuy.addEventListener('click', function () { buyNow.click(); });
+      document.body.classList.add('has-sticky-atc');
+    }
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product",
+  "tag": "section",
+  "settings": [
+    { "type": "header", "content": "Rating (placeholder until a reviews app)" },
+    { "type": "range", "id": "fallback_rating", "label": "Rating", "min": 0, "max": 5, "step": 0.1, "default": 4.7 },
+    { "type": "text", "id": "fallback_reviews", "label": "Review count", "default": "90" },
+    { "type": "text", "id": "sold_count", "label": "Sold count", "default": "340+" },
+    { "type": "text", "id": "tax_note", "label": "Price note", "default": "Price incl. VAT · Free delivery over QAR 150" },
+    { "type": "header", "content": "Stock urgency" },
+    { "type": "checkbox", "id": "show_urgency", "label": "Show stock urgency", "default": true },
+    { "type": "text", "id": "stock_label", "label": "Stock label", "default": "Only 6 left in stock" },
+    { "type": "text", "id": "viewers", "label": "Viewers count", "default": "18" },
+    { "type": "range", "id": "stock_bar_pct", "label": "Stock bar fill", "min": 0, "max": 100, "step": 1, "default": 22 },
+    { "type": "header", "content": "Actions" },
+    { "type": "checkbox", "id": "show_bulk", "label": "Show bulk order button", "default": true },
+    { "type": "text", "id": "bulk_label", "label": "Bulk button label", "default": "Request Bulk Order" },
+    { "type": "url", "id": "bulk_link", "label": "Bulk link" },
+    { "type": "header", "content": "Payment / assurance" },
+    { "type": "text", "id": "pay_note", "label": "Payment note", "default": "Cash on Delivery available" },
+    { "type": "richtext", "id": "assure_1", "label": "Assurance 1", "default": "<p><strong>Same-day delivery in Doha</strong> if ordered before 4 PM · GCC shipping available</p>" },
+    { "type": "richtext", "id": "assure_2", "label": "Assurance 2", "default": "<p><strong>Secure checkout</strong> · 2-year local warranty · 7-day easy returns</p>" },
+    { "type": "header", "content": "Fallbacks" },
+    { "type": "richtext", "id": "fallback_desc", "label": "Description fallback", "default": "<p>Add a description to this product in Shopify and it will appear here.</p>" },
+    { "type": "richtext", "id": "delivery_content", "label": "Delivery content", "default": "<p>Pick up from our showroom or get it delivered. <strong>Delivery in 1–2 Days.</strong> Working hours: Sat – Thu 8.00am – 7.30pm.</p>" }
+  ],
+  "blocks": [
+    {
+      "type": "spec",
+      "name": "Specification",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon", "default": "bolt" },
+        { "type": "text", "id": "key", "label": "Label", "default": "Base / Fitting" },
+        { "type": "text", "id": "value", "label": "Value", "default": "E27" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product",
+      "blocks": [
+        { "type": "spec", "settings": { "icon": "bolt", "key": "Base / Fitting", "value": "E27" } },
+        { "type": "spec", "settings": { "icon": "light_mode", "key": "Wattage", "value": "9W (60W equivalent)" } },
+        { "type": "spec", "settings": { "icon": "brightness_high", "key": "Luminous Flux", "value": "806 lumens" } },
+        { "type": "spec", "settings": { "icon": "thermostat", "key": "Colour Temperature", "value": "2700K–6500K tunable" } },
+        { "type": "spec", "settings": { "icon": "water_drop", "key": "IP Rating", "value": "IP20 (indoor)" } },
+        { "type": "spec", "settings": { "icon": "wifi", "key": "Connectivity", "value": "2.4GHz Wi-Fi" } },
+        { "type": "spec", "settings": { "icon": "verified", "key": "Warranty", "value": "2 years local warranty" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

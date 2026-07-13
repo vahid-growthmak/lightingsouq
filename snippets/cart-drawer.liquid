@@ -1,0 +1,20 @@
+{%- comment -%}
+  Slide-in cart drawer. Shell only — body/footer are rendered client-side from
+  /cart.js by store-scripts.liquid so it always reflects live cart state.
+{%- endcomment -%}
+<div class="cart-drawer" id="CartDrawer" aria-hidden="true">
+  <div class="cart-drawer__overlay" data-cart-close tabindex="-1"></div>
+  <aside class="cart-drawer__panel" role="dialog" aria-modal="true" aria-label="{{ settings.cart_drawer_title | default: 'Your Cart' | escape }}">
+    <header class="cart-drawer__head">
+      <h2 class="cart-drawer__title">{{ settings.cart_drawer_title | default: 'Your Cart' | escape }} <span class="cart-drawer__count" data-cart-count>{{ cart.item_count }}</span></h2>
+      <button class="cart-drawer__close" type="button" data-cart-close aria-label="Close cart">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </header>
+    <div class="cart-drawer__body" data-cart-body>
+      <div class="cart-drawer__loading">{{ settings.cart_loading | default: 'Loading…' | escape }}</div>
+    </div>
+    <footer class="cart-drawer__foot" data-cart-foot hidden></footer>
+  </aside>
+</div>
+<div class="lsq-toast" data-toast aria-live="polite"></div>

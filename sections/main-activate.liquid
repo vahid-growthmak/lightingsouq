@@ -1,0 +1,59 @@
+{%- comment -%}
+  Activate customer account (from invitation link). OS 2.0 main section.
+{%- endcomment -%}
+<div class="container" style="padding-top:1.25rem;">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a> / <span>Activate account</span>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="container lsq-auth" style="max-width:560px;">
+    <h1 class="collection-title">Activate your account</h1>
+    <p class="collection-intro">Create a password to finish setting up your Lighting Souq account.</p>
+
+    {%- form 'activate_customer_password' -%}
+      {%- if form.errors -%}
+        <div class="form-errors">{{ form.errors | default_errors }}</div>
+      {%- endif -%}
+
+      <div class="lsq-field">
+        <label for="activate_password">Password</label>
+        <input type="password" name="customer[password]" id="activate_password" autocomplete="new-password" required>
+      </div>
+
+      <div class="lsq-field">
+        <label for="activate_password_confirm">Confirm password</label>
+        <input type="password" name="customer[password_confirmation]" id="activate_password_confirm" autocomplete="new-password" required>
+      </div>
+
+      <button type="submit" class="btn-primary lsq-btn-full">Activate account</button>
+      <button type="submit" name="decline" class="btn-secondary lsq-btn-full" style="margin-top:0.75rem;">Decline invitation</button>
+    {%- endform -%}
+  </div>
+</section>
+
+<style>
+  .lsq-auth .lsq-field { margin-bottom: 1rem; }
+  .lsq-auth label { display:block; font-weight:600; margin-bottom:0.4rem; font-size:0.9rem; color: var(--brand-text, #333); }
+  .lsq-auth input[type="password"] {
+    width:100%; padding:0.7rem 0.9rem; border:1px solid #e5e7eb;
+    border-radius: var(--radius, 10px); font-size:1rem; box-sizing:border-box;
+    background:#fff; color: var(--brand-text, #333);
+  }
+  .lsq-auth input:focus { outline:2px solid var(--brand-primary, #2B60AD); outline-offset:1px; border-color: var(--brand-primary, #2B60AD); }
+  .lsq-auth .lsq-btn-full { width:100%; margin-top:0.5rem; }
+  .lsq-auth .form-errors {
+    background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;
+    padding:0.85rem 1rem; border-radius: var(--radius, 10px); margin-bottom:1.25rem; font-size:0.9rem;
+  }
+  .lsq-auth .form-errors ul { margin:0; padding-left:1.1rem; }
+</style>
+
+{% schema %}
+{
+  "name": "Activate account",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,182 @@
+<section class="section {{ section.settings.bg }}" id="Sec--{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <div class="section-header">
+        <h2 class="section-title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.subtitle != blank -%}<p class="section-sub">{{ section.settings.subtitle }}</p>{%- endif -%}
+      </div>
+    {%- endif -%}
+
+    <div class="cf-layout">
+      <div class="cf-form-col">
+        {%- if form.posted_successfully? -%}
+          <div class="cf-success" role="status">
+            <span class="material-symbols-outlined">check_circle</span>
+            <div>
+              <p class="cf-success-title">{{ section.settings.success_title }}</p>
+              <p class="cf-success-text">{{ section.settings.success_text }}</p>
+            </div>
+          </div>
+        {%- endif -%}
+
+        {%- form 'contact', class: 'cf-form' -%}
+          {%- if form.errors -%}
+            <div class="cf-errors" role="alert">
+              {{ form.errors | default_errors }}
+            </div>
+          {%- endif -%}
+
+          <div class="cf-field">
+            <label for="cf-name-{{ section.id }}">{{ section.settings.name_label }}</label>
+            <input type="text" id="cf-name-{{ section.id }}" name="contact[name]" value="{{ form.name }}" autocomplete="name" required>
+          </div>
+
+          <div class="cf-row">
+            <div class="cf-field">
+              <label for="cf-email-{{ section.id }}">{{ section.settings.email_label }}</label>
+              <input type="email" id="cf-email-{{ section.id }}" name="contact[email]" value="{{ form.email }}" autocomplete="email" required>
+            </div>
+            <div class="cf-field">
+              <label for="cf-phone-{{ section.id }}">{{ section.settings.phone_label }}</label>
+              <input type="tel" id="cf-phone-{{ section.id }}" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="cf-field">
+            <label for="cf-message-{{ section.id }}">{{ section.settings.message_label }}</label>
+            <textarea id="cf-message-{{ section.id }}" name="contact[body]" rows="5" required>{{ form.body }}</textarea>
+          </div>
+
+          <button type="submit" class="btn-primary">{{ section.settings.submit_label }}</button>
+        {%- endform -%}
+      </div>
+
+      {%- if section.settings.show_channels -%}
+        <aside class="cf-channels">
+          <h3 class="cf-channels-title">{{ section.settings.channels_title }}</h3>
+          {%- if section.settings.channels_text != blank -%}<p class="cf-channels-text">{{ section.settings.channels_text }}</p>{%- endif -%}
+          <ul class="cf-channels-list">
+            {%- for block in section.blocks -%}
+              {%- if block.type == 'channel' -%}
+                <li class="cf-channel" {{ block.shopify_attributes }}>
+                  <a href="{{ block.settings.link }}" class="cf-channel-link">
+                    <span class="material-symbols-outlined">{{ block.settings.icon }}</span>
+                    <span class="cf-channel-body">
+                      <span class="cf-channel-label">{{ block.settings.label }}</span>
+                      <span class="cf-channel-value">{{ block.settings.value }}</span>
+                    </span>
+                  </a>
+                </li>
+              {%- endif -%}
+            {%- endfor -%}
+          </ul>
+        </aside>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% style %}
+  #Sec--{{ section.id }} .cf-layout { display: grid; grid-template-columns: 1fr; gap: 2.5rem; }
+  @media (min-width: 900px) { #Sec--{{ section.id }} .cf-layout { grid-template-columns: 1.4fr 1fr; } }
+  #Sec--{{ section.id }} .cf-form { display: flex; flex-direction: column; gap: 1rem; }
+  #Sec--{{ section.id }} .cf-row { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+  @media (min-width: 560px) { #Sec--{{ section.id }} .cf-row { grid-template-columns: 1fr 1fr; } }
+  #Sec--{{ section.id }} .cf-field { display: flex; flex-direction: column; gap: 0.4rem; }
+  #Sec--{{ section.id }} .cf-field label { font-size: 0.85rem; font-weight: 700; color: var(--gray-700); }
+  #Sec--{{ section.id }} .cf-field input,
+  #Sec--{{ section.id }} .cf-field textarea {
+    width: 100%; padding: 0.75rem 0.9rem; border: 1px solid var(--gray-300);
+    border-radius: var(--radius); font: inherit; color: var(--brand-text); background: #fff;
+    transition: border-color var(--transition), box-shadow var(--transition);
+  }
+  #Sec--{{ section.id }} .cf-field input:focus,
+  #Sec--{{ section.id }} .cf-field textarea:focus {
+    outline: none; border-color: var(--brand-accent); box-shadow: 0 0 0 3px rgba(51,122,183,0.15);
+  }
+  #Sec--{{ section.id }} .cf-form .btn-primary { align-self: flex-start; margin-top: 0.25rem; }
+  #Sec--{{ section.id }} .cf-errors {
+    padding: 0.9rem 1rem; border-radius: var(--radius); background: #FEF2F2;
+    border: 1px solid #FECACA; color: var(--danger); font-size: 0.9rem;
+  }
+  #Sec--{{ section.id }} .cf-success {
+    display: flex; gap: 0.75rem; align-items: flex-start; padding: 1rem 1.15rem; margin-bottom: 1.5rem;
+    border-radius: var(--radius); background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46;
+  }
+  #Sec--{{ section.id }} .cf-success .material-symbols-outlined { color: var(--success); }
+  #Sec--{{ section.id }} .cf-success-title { font-weight: 800; }
+  #Sec--{{ section.id }} .cf-success-text { font-size: 0.9rem; color: #047857; }
+  #Sec--{{ section.id }} .cf-channels {
+    background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1.75rem;
+  }
+  #Sec--{{ section.id }} .cf-channels-title { font-size: 1.15rem; font-weight: 800; margin-bottom: 0.5rem; }
+  #Sec--{{ section.id }} .cf-channels-text { font-size: 0.92rem; color: var(--gray-600); margin-bottom: 1.25rem; }
+  #Sec--{{ section.id }} .cf-channels-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+  #Sec--{{ section.id }} .cf-channel-link {
+    display: flex; gap: 0.85rem; align-items: center; padding: 0.85rem 1rem; text-decoration: none;
+    background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius);
+    transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+  }
+  #Sec--{{ section.id }} .cf-channel-link:hover { border-color: var(--brand-accent); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
+  #Sec--{{ section.id }} .cf-channel-link .material-symbols-outlined { color: var(--brand-primary); }
+  #Sec--{{ section.id }} .cf-channel-body { display: flex; flex-direction: column; }
+  #Sec--{{ section.id }} .cf-channel-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--gray-500); font-weight: 700; }
+  #Sec--{{ section.id }} .cf-channel-value { font-weight: 700; color: var(--brand-text); }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Contact Form",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    },
+    { "type": "header", "content": "Heading" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Send us a message" },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Tell us what you need and our Doha team replies fast — usually the same day." },
+    { "type": "header", "content": "Field labels" },
+    { "type": "text", "id": "name_label", "label": "Name label", "default": "Your name" },
+    { "type": "text", "id": "email_label", "label": "Email label", "default": "Email address" },
+    { "type": "text", "id": "phone_label", "label": "Phone label", "default": "Phone (optional)" },
+    { "type": "text", "id": "message_label", "label": "Message label", "default": "How can we help?" },
+    { "type": "text", "id": "submit_label", "label": "Submit button label", "default": "Send message" },
+    { "type": "header", "content": "Success message" },
+    { "type": "text", "id": "success_title", "label": "Success title", "default": "Thanks — message received" },
+    { "type": "textarea", "id": "success_text", "label": "Success text", "default": "We will get back to you shortly. For urgent help, reach us on WhatsApp." },
+    { "type": "header", "content": "Direct channels" },
+    { "type": "checkbox", "id": "show_channels", "label": "Show direct channels column", "default": true },
+    { "type": "text", "id": "channels_title", "label": "Channels title", "default": "Prefer to talk now?" },
+    { "type": "textarea", "id": "channels_text", "label": "Channels text", "default": "Skip the form and reach the showroom team directly." }
+  ],
+  "blocks": [
+    {
+      "type": "channel",
+      "name": "Direct channel",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Material Symbol icon name", "default": "chat" },
+        { "type": "text", "id": "label", "label": "Label", "default": "WhatsApp" },
+        { "type": "text", "id": "value", "label": "Value", "default": "+974 0000 0000" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Contact Form",
+      "blocks": [
+        { "type": "channel", "settings": { "icon": "chat", "label": "WhatsApp", "value": "+974 0000 0000" } },
+        { "type": "channel", "settings": { "icon": "call", "label": "Call us", "value": "+974 0000 0000" } },
+        { "type": "channel", "settings": { "icon": "mail", "label": "Email", "value": "hello@lightingsouq.qa" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

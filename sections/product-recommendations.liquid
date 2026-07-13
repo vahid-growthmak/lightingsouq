@@ -1,0 +1,92 @@
+{%- comment -%}
+  Product recommendations — real products related to the current product, pulled
+  dynamically from its collection (or a picked collection). Horizontal scroll with
+  arrows. Hides itself when there aren't enough products. Shopify-safe schema.
+{%- endcomment -%}
+{%- liquid
+  assign bg = section.settings.bg
+  assign limit = section.settings.limit
+  assign source = collections[section.settings.collection]
+  if section.settings.collection == blank
+    assign source = product.collections.first
+  endif
+  assign avail = 0
+  if source
+    for p in source.products
+      if p.id != product.id
+        assign avail = avail | plus: 1
+      endif
+    endfor
+  endif
+-%}
+{%- if avail > 0 -%}
+{%- style -%}
+  #PR--{{ section.id }} .pr-container { position: relative; }
+  #PR--{{ section.id }} .pr-scroll { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth; padding: 6px 2px 1.25rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  #PR--{{ section.id }} .pr-scroll::-webkit-scrollbar { display: none; }
+  #PR--{{ section.id }} .pr-scroll > * { flex: 0 0 clamp(230px, 24%, 280px); scroll-snap-align: start; }
+  #PR--{{ section.id }} .pr-arrow { position: absolute; top: 42%; z-index: 6; width: 46px; height: 46px; border-radius: 50%; border: 1px solid #e5e7eb; background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.14); cursor: pointer; display: none; align-items: center; justify-content: center; color: var(--brand-primary); transition: all .15s ease-out; }
+  #PR--{{ section.id }} .pr-arrow:hover { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
+  #PR--{{ section.id }} .pr-arrow svg { width: 22px; height: 22px; }
+  #PR--{{ section.id }} .pr-prev { left: -8px; }
+  #PR--{{ section.id }} .pr-next { right: -8px; }
+  @media (min-width: 1024px) { #PR--{{ section.id }} .pr-arrow { display: inline-flex; } }
+{%- endstyle -%}
+<section class="section {{ bg }}" id="PR--{{ section.id }}">
+  <div class="container">
+    <h2 class="section-title">{{ section.settings.heading }}</h2>
+    <div class="pr-container mt-8">
+      <button class="pr-arrow pr-prev" type="button" aria-label="Previous" data-pr-prev><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <div class="pr-scroll" data-pr-track>
+        {%- assign shown = 0 -%}
+        {%- for p in source.products -%}
+          {%- if p.id != product.id and shown < limit -%}
+            {%- render 'product-card', product: p -%}
+            {%- assign shown = shown | plus: 1 -%}
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <button class="pr-arrow pr-next" type="button" aria-label="Next" data-pr-next><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></button>
+    </div>
+  </div>
+</section>
+<script>
+  (function () {
+    var root = document.getElementById('PR--{{ section.id }}');
+    if (!root) return;
+    var track = root.querySelector('[data-pr-track]');
+    var prev = root.querySelector('[data-pr-prev]');
+    var next = root.querySelector('[data-pr-next]');
+    if (!track || !prev || !next) return;
+    function step() { var c = track.querySelector('.product-card'); return (c ? c.getBoundingClientRect().width + 24 : 280) * 2; }
+    prev.addEventListener('click', function () { track.scrollBy({ left: -step(), behavior: 'smooth' }); });
+    next.addEventListener('click', function () { track.scrollBy({ left: step(), behavior: 'smooth' }); });
+  })();
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Product Recommendations",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "You may also like" },
+    { "type": "paragraph", "content": "Shows real products from the current product's collection. Pick a specific collection below to override." },
+    { "type": "collection", "id": "collection", "label": "Collection (optional override)" },
+    { "type": "range", "id": "limit", "label": "Max products", "min": 2, "max": 12, "step": 1, "default": 8 },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "presets": [
+    { "name": "Product Recommendations" }
+  ]
+}
+{% endschema %}

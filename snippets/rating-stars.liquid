@@ -1,0 +1,17 @@
+{%- comment -%}
+  Renders 5 star icons for a given rating.
+  Usage: {% render 'rating-stars', rating: 4.5 %}
+  Mirrors the mockup's createStars(): filled / half / empty (Material Symbols).
+{%- endcomment -%}
+{%- assign _r = rating | default: 0 | times: 1.0 -%}
+{%- for i in (1..5) -%}
+  {%- assign _full = i | times: 1.0 -%}
+  {%- assign _half = _full | minus: 0.5 -%}
+  {%- if _r >= _full -%}
+    <span class="material-symbols-outlined" style="font-size: 1rem; color: #ffc107; font-variation-settings: 'FILL' 1;">star</span>
+  {%- elsif _r >= _half -%}
+    <span class="material-symbols-outlined" style="font-size: 1rem; color: #ffc107; font-variation-settings: 'FILL' 1;">star_half</span>
+  {%- else -%}
+    <span class="material-symbols-outlined" style="font-size: 1rem; color: #ccc;">star</span>
+  {%- endif -%}
+{%- endfor -%}

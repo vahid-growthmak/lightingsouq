@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Shipping & Delivery"
+      },
+      "blocks": {
+        "help": { "type": "crumb", "settings": { "label": "Help Center", "link": "/pages/help-center" } },
+        "current": { "type": "crumb", "settings": { "label": "Shipping & Delivery" } }
+      },
+      "block_order": ["help", "current"]
+    },
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Shipping & Delivery",
+        "subtitle": "Same-day delivery in Doha and fast shipping across Qatar, the GCC and the UK.",
+        "bg": "bg-gray"
+      }
+    },
+    "options": {
+      "type": "feature-columns",
+      "settings": {
+        "heading": "Delivery options & times",
+        "subtitle": "Choose the option that suits you — real rates only, no surprises at checkout.",
+        "grid_class": "grid-3",
+        "bg": "bg-white"
+      },
+      "blocks": {
+        "sameday": { "type": "item", "settings": { "icon": "bolt", "title": "Same-day in Doha", "text": "Order before 4 PM and get it the same day inside Doha. Free on orders over QAR 150." } },
+        "qatar": { "type": "item", "settings": { "icon": "local_shipping", "title": "Across Qatar", "text": "1–2 working days to all other areas in Qatar with full tracking." } },
+        "gcc": { "type": "item", "settings": { "icon": "public", "title": "GCC & UK", "text": "We ship across the GCC and to the UK. Timelines and rates are shown at checkout.", "link": "/pages/returns-refunds", "link_label": "See returns policy" } }
+      },
+      "block_order": ["sameday", "qatar", "gcc"]
+    },
+    "regions": {
+      "type": "rich-text",
+      "settings": {
+        "heading": "Regions & tracking",
+        "content": "<p>We deliver across Qatar, the wider GCC and the UK. Once your order ships you will receive a tracking link by email and SMS.</p><p>You can also check your delivery status any time from our <a href='/pages/track-order'>Track Order</a> page. For anything urgent, message our Doha team and we will help.</p>",
+        "bg": "bg-gray"
+      }
+    }
+  },
+  "order": ["breadcrumb", "hero", "options", "regions"]
+}

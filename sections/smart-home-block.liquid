@@ -1,0 +1,77 @@
+<section class="section {{ section.settings.bg }}">
+  <div class="container">
+    <div class="smart-home-block">
+      <div class="smart-home-media">
+        <img src="{%- if section.settings.image != blank -%}{{ section.settings.image | image_url: width: 800 }}{%- else -%}{{ 'space-smart.png' | asset_url }}{%- endif -%}" alt="{{ section.settings.image_alt | escape }}" width="800" height="600" loading="lazy">
+      </div>
+      <div class="smart-home-copy">
+        <p class="smart-home-eyebrow">{{ section.settings.eyebrow }}</p>
+        <h2 class="smart-home-title">{{ section.settings.title }}</h2>
+        <p class="smart-home-text">{{ section.settings.text }}</p>
+        <div class="smart-home-features">
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'feature' -%}
+              <div class="smart-home-feature" {{ block.shopify_attributes }}><span class="material-symbols-outlined">{{ block.settings.icon }}</span> {{ block.settings.label }}</div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+        <div class="hero-btns">
+          <a href="{{ section.settings.btn1_link }}" class="btn-primary">{{ section.settings.btn1_label }}</a>
+          <a href="{{ section.settings.btn2_link }}" class="btn-outline">{{ section.settings.btn2_label }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Smart Home Block",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-gray"
+    },
+    { "type": "header", "content": "Media" },
+    { "type": "image_picker", "id": "image", "label": "Image" },
+    { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Smart-lit living room controlled from a phone" },
+    { "type": "header", "content": "Copy" },
+    { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Smart Lighting Specialists" },
+    { "type": "text", "id": "title", "label": "Title", "default": "A smart home in an afternoon — no rewiring" },
+    { "type": "textarea", "id": "text", "label": "Text", "default": "Retrofit your existing fittings with app-controlled bulbs, strips and switches. Set scenes, schedules and colour from your phone or voice — the way generalists and marketplaces simply can't guide you." },
+    { "type": "header", "content": "Buttons" },
+    { "type": "text", "id": "btn1_label", "label": "Primary button label", "default": "Shop Smart Lights" },
+    { "type": "url", "id": "btn1_link", "label": "Primary button link" },
+    { "type": "text", "id": "btn2_label", "label": "Secondary button label", "default": "Explore Smart Home Hub" },
+    { "type": "url", "id": "btn2_link", "label": "Secondary button link" }
+  ],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Material Symbol icon name", "default": "bolt" },
+        { "type": "text", "id": "label", "label": "Label", "default": "No rewiring needed" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Smart Home Block",
+      "blocks": [
+        { "type": "feature", "settings": { "icon": "bolt", "label": "No rewiring needed" } },
+        { "type": "feature", "settings": { "icon": "mic", "label": "Alexa · Google · Siri" } },
+        { "type": "feature", "settings": { "icon": "smartphone", "label": "Tuya · Mi · Hue apps" } },
+        { "type": "feature", "settings": { "icon": "palette", "label": "16M colours & scenes" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

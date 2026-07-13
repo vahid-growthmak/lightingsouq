@@ -1,0 +1,124 @@
+{%- liquid
+  assign bg = section.settings.bg
+  assign initial_count = section.settings.initial_count
+  assign more_link = section.settings.view_more_link
+-%}
+<section class="section {{ bg }}" id="Rev--{{ section.id }}">
+  <div class="container">
+    <div class="text-center mb-8">
+      <h2 class="section-title">{{ section.settings.heading }}</h2>
+      <div class="reviews-badge-center">
+        {%- render 'google-reviews', rating: settings.google_rating, count: settings.google_count, link: settings.google_reviews_url -%}
+      </div>
+    </div>
+    <div class="grid-4">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'review' -%}
+          <div class="review-card{% if forloop.index > initial_count %} review-hidden{% endif %}" {{ block.shopify_attributes }}>
+            <div class="review-stars">{% render 'rating-stars', rating: block.settings.rating %}</div>
+            <p class="review-text">{{ block.settings.text }}</p>
+            <p class="reviewer-name">{{ block.settings.name }}</p>
+            <p class="review-date">{{ block.settings.date }}</p>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+    <div class="reviews-actions" style="justify-content:center;">
+      {%- if more_link != blank -%}
+        <a class="btn-view-more" href="{{ more_link }}">{{ section.settings.view_more_label }} <span class="material-symbols-outlined">arrow_forward</span></a>
+      {%- else -%}
+        <button class="btn-view-more" type="button" data-reviews-more>
+          <span class="material-symbols-outlined">expand_more</span> {{ section.settings.view_more_label }}
+        </button>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('Rev--{{ section.id }}');
+    if (!root) return;
+    var btn = root.querySelector('[data-reviews-more]');
+    if (!btn) return;
+    var hidden = root.querySelectorAll('.review-hidden');
+    if (!hidden.length) {
+      btn.style.display = 'none';
+      return;
+    }
+    btn.addEventListener('click', function () {
+      root.querySelectorAll('.review-hidden').forEach(function (el) {
+        el.classList.remove('review-hidden');
+      });
+      btn.style.display = 'none';
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Testimonials",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Trusted by Buyers in Qatar"
+    },
+    {
+      "type": "range",
+      "id": "initial_count",
+      "label": "Reviews shown before View more",
+      "min": 2,
+      "max": 12,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "text",
+      "id": "view_more_label",
+      "label": "View more button label",
+      "default": "View more reviews"
+    },
+    { "type": "url", "id": "view_more_link", "label": "\"View more\" page (e.g. Reviews page)" },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "review",
+      "name": "Review",
+      "settings": [
+        { "type": "text", "id": "name", "label": "Name", "default": "Customer Name" },
+        { "type": "range", "id": "rating", "label": "Rating", "min": 0, "max": 5, "step": 0.5, "default": 5 },
+        { "type": "textarea", "id": "text", "label": "Review text" },
+        { "type": "text", "id": "date", "label": "Date" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Testimonials",
+      "blocks": [
+        { "type": "review", "settings": { "name": "Ahmed Al-Kuwari", "rating": 5, "text": "Great selection of lighting products. Fast delivery and excellent quality.", "date": "April 2026" } },
+        { "type": "review", "settings": { "name": "Fatima Hassan", "rating": 5, "text": "Best lighting store in Qatar. WhatsApp support was very helpful.", "date": "April 2026" } },
+        { "type": "review", "settings": { "name": "Mohammed Al-Thani", "rating": 5, "text": "Ordered solar lights for my garden. Very satisfied with the purchase.", "date": "March 2026" } },
+        { "type": "review", "settings": { "name": "Sara Abdullah", "rating": 4, "text": "Good prices and wide variety. Delivery was on time.", "date": "March 2026" } },
+        { "type": "review", "settings": { "name": "Khalid Al-Marri", "rating": 5, "text": "Bought smart bulbs for the whole majlis. Setup was quick and they look great.", "date": "March 2026" } },
+        { "type": "review", "settings": { "name": "Noora Ibrahim", "rating": 4, "text": "Nice range and the showroom pickup was convenient. Staff were very helpful.", "date": "February 2026" } },
+        { "type": "review", "settings": { "name": "Yousef Al-Sulaiti", "rating": 5, "text": "Ordered LED tubes for the office. Bright, even light and fast delivery.", "date": "February 2026" } },
+        { "type": "review", "settings": { "name": "Maryam Al-Naimi", "rating": 5, "text": "Great prices on solar lights and they actually last through the night.", "date": "January 2026" } }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,46 @@
+<section class="pdp-section" style="border-bottom:1px solid var(--gray-200);">
+  <div class="expert-band">
+    <div>
+      <h3>{{ section.settings.heading }}</h3>
+      <p>{{ section.settings.text }}</p>
+    </div>
+    <a href="{{ section.settings.button_link }}" class="btn-whatsapp"><span class="material-symbols-outlined">chat</span> {{ section.settings.button_label }}</a>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "PDP Expert Band",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Not sure it fits? Ask an expert."
+    },
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Text",
+      "default": "Message our Doha showroom team for spec & compatibility help — real people, fast replies."
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button label",
+      "default": "Chat on WhatsApp"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "PDP Expert Band"
+    }
+  ]
+}
+{% endschema %}

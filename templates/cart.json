@@ -1,0 +1,24 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-cart",
+      "settings": {}
+    },
+    "crosssell": {
+      "type": "product-collection",
+      "settings": {
+        "heading": "Complete the setup",
+        "subtitle": "Popular add-ons that pair well with your picks."
+      }
+    },
+    "bulk": {
+      "type": "bulk-band",
+      "settings": {}
+    },
+    "trust": {
+      "type": "trust-bar",
+      "settings": {}
+    }
+  },
+  "order": ["main", "crosssell", "bulk", "trust"]
+}

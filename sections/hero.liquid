@@ -1,0 +1,321 @@
+{%- liquid
+  assign autoplay = section.settings.autoplay_seconds
+-%}
+
+<section class="hero-section">
+  <div class="container hero-grid">
+
+    {%- comment -%} Hero Slider {%- endcomment -%}
+    <div class="hero-slider" id="heroSlider" data-autoplay="{{ autoplay }}">
+      <div class="hero-slides">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'slide' -%}
+            {%- if block.settings.image != blank -%}
+              {%- assign slide_url = block.settings.image | image_url: width: 1600 -%}
+            {%- else -%}
+              {%- assign slide_url = block.settings.fallback_asset | asset_url -%}
+            {%- endif -%}
+            <div class="hero-slide" style="background-image: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.5)), url('{{ slide_url }}');" {{ block.shopify_attributes }}>
+              {%- if block.settings.badge != blank -%}
+                <div class="hero-badge">{{ block.settings.badge }}</div>
+              {%- endif -%}
+              <h1 class="hero-title">{{ block.settings.title }}</h1>
+              <p class="hero-subtitle">{{ block.settings.subtitle }}</p>
+              <div class="hero-btns">
+                {%- if block.settings.btn1_label != blank -%}
+                  <a href="{{ block.settings.btn1_link | default: '#' }}" class="btn-primary">{{ block.settings.btn1_label }}</a>
+                {%- endif -%}
+                {%- if block.settings.btn2_label != blank -%}
+                  <a href="{{ block.settings.btn2_link | default: '#' }}" class="btn-ghost">{{ block.settings.btn2_label }}</a>
+                {%- endif -%}
+              </div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+      <button class="hero-arrow hero-prev" aria-label="Previous slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>
+      <button class="hero-arrow hero-next" aria-label="Next slide"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+      <div class="hero-dots">
+        {%- for block in section.blocks -%}
+          {%- if block.type == 'slide' -%}
+            <button class="hero-dot{% if forloop.first %} active{% endif %}" aria-label="Go to slide {{ forloop.index }}"></button>
+          {%- endif -%}
+        {%- endfor -%}
+      </div>
+    </div>
+
+    {%- comment -%} Side Banners {%- endcomment -%}
+    <div class="hero-side-banners">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'promo' -%}
+          <a href="{{ block.settings.button_link | default: '/collections/all' }}" class="side-banner side-banner-{{ block.settings.color }}" {{ block.shopify_attributes }}>
+            <h3>{{ block.settings.title }}</h3>
+            <p>{{ block.settings.subtitle }}</p>
+            {%- if block.settings.button_label != blank -%}
+              {%- if block.settings.color == 'accent' -%}
+                {%- assign promo_btn_class = 'btn-white-sm' -%}
+              {%- else -%}
+                {%- assign promo_btn_class = 'btn-primary-sm' -%}
+              {%- endif -%}
+              <span class="{{ promo_btn_class }}">{{ block.settings.button_label }}</span>
+            {%- endif -%}
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('heroSlider');
+    if (!root) return;
+
+    var slidesWrap = root.querySelector('.hero-slides');
+    var slides = root.querySelectorAll('.hero-slide');
+    var dots = root.querySelectorAll('.hero-dot');
+    var prevBtn = root.querySelector('.hero-prev');
+    var nextBtn = root.querySelector('.hero-next');
+    if (!slides.length) return;
+
+    var current = 0;
+    var count = slides.length;
+    var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var autoplaySeconds = parseInt(root.getAttribute('data-autoplay'), 10);
+    if (isNaN(autoplaySeconds)) autoplaySeconds = 0;
+    var timer = null;
+
+    function goTo(index) {
+      current = (index + count) % count;
+      if (slidesWrap) {
+        slidesWrap.style.transform = 'translateX(' + (-100 * current) + '%)';
+      }
+      for (var i = 0; i < dots.length; i++) {
+        if (i === current) {
+          dots[i].classList.add('active');
+        } else {
+          dots[i].classList.remove('active');
+        }
+      }
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+
+    function startAuto() {
+      if (reduceMotion || autoplaySeconds <= 0 || count < 2) return;
+      stopAuto();
+      timer = setInterval(next, autoplaySeconds * 1000);
+    }
+
+    function stopAuto() {
+      if (timer) { clearInterval(timer); timer = null; }
+    }
+
+    if (nextBtn) nextBtn.addEventListener('click', function () { next(); startAuto(); });
+    if (prevBtn) prevBtn.addEventListener('click', function () { prev(); startAuto(); });
+
+    for (var d = 0; d < dots.length; d++) {
+      (function (idx) {
+        dots[idx].addEventListener('click', function () { goTo(idx); startAuto(); });
+      })(d);
+    }
+
+    root.addEventListener('mouseenter', stopAuto);
+    root.addEventListener('mouseleave', startAuto);
+
+    goTo(0);
+    startAuto();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Hero",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "range",
+      "id": "autoplay_seconds",
+      "label": "Autoplay seconds (0 = off)",
+      "min": 0,
+      "max": 12,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    { "type": "paragraph", "content": "The Theqa certificate badge is set once in Theme settings > Trust badges (shows here and in the footer)." }
+  ],
+  "blocks": [
+    {
+      "type": "slide",
+      "name": "Slide",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background image"
+        },
+        {
+          "type": "select",
+          "id": "fallback_asset",
+          "label": "Fallback image (if no image set)",
+          "options": [
+            { "value": "hero-banner.png", "label": "Hero banner" },
+            { "value": "hero-alt.png", "label": "Hero alt" },
+            { "value": "space-smart.png", "label": "Smart space" },
+            { "value": "space-outdoor.png", "label": "Outdoor space" },
+            { "value": "space-home.png", "label": "Home space" },
+            { "value": "space-office.png", "label": "Office space" },
+            { "value": "space-retail.png", "label": "Retail space" }
+          ],
+          "default": "hero-banner.png"
+        },
+        {
+          "type": "text",
+          "id": "badge",
+          "label": "Badge"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "text",
+          "id": "btn1_label",
+          "label": "Primary button label"
+        },
+        {
+          "type": "url",
+          "id": "btn1_link",
+          "label": "Primary button link"
+        },
+        {
+          "type": "text",
+          "id": "btn2_label",
+          "label": "Secondary button label"
+        },
+        {
+          "type": "url",
+          "id": "btn2_link",
+          "label": "Secondary button link"
+        }
+      ]
+    },
+    {
+      "type": "promo",
+      "name": "Side promo card",
+      "settings": [
+        {
+          "type": "select",
+          "id": "color",
+          "label": "Color",
+          "options": [
+            { "value": "teal", "label": "Teal" },
+            { "value": "accent", "label": "Accent" }
+          ],
+          "default": "teal"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Background image (optional)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle"
+        },
+        {
+          "type": "text",
+          "id": "button_label",
+          "label": "Button label"
+        },
+        {
+          "type": "url",
+          "id": "button_link",
+          "label": "Button link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero",
+      "blocks": [
+        {
+          "type": "slide",
+          "settings": {
+            "fallback_asset": "hero-banner.png",
+            "badge": "Up to 15% Off",
+            "title": "Qatar's Lighting Supermarket",
+            "subtitle": "Bulbs, tubes, lamps, solar lights, smart switches & more — all in one place.",
+            "btn1_label": "Shop Now",
+            "btn1_link": "/collections/all",
+            "btn2_label": "View Offers",
+            "btn2_link": "/collections/all"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "fallback_asset": "space-smart.png",
+            "badge": "New · Smart Home",
+            "title": "Control Every Light From Your Phone",
+            "subtitle": "Smart bulbs, strips & switches that work with Alexa, Google & Siri — no rewiring needed.",
+            "btn1_label": "Shop Smart Lights",
+            "btn1_link": "/collections/all",
+            "btn2_label": "Explore Smart Home",
+            "btn2_link": "/collections/all"
+          }
+        },
+        {
+          "type": "slide",
+          "settings": {
+            "fallback_asset": "space-outdoor.png",
+            "badge": "Solar & Outdoor",
+            "title": "Light Up Your Garden & Villa",
+            "subtitle": "Solar street, garden & flood lights — brighten every outdoor space, bill-free.",
+            "btn1_label": "Shop Outdoor",
+            "btn1_link": "/collections/all",
+            "btn2_label": "View Deals",
+            "btn2_link": "/collections/all"
+          }
+        },
+        {
+          "type": "promo",
+          "settings": {
+            "color": "teal",
+            "title": "LED Tubes & Bulbs",
+            "subtitle": "Daily essentials from QAR 10",
+            "button_label": "Shop Essentials",
+            "button_link": "/collections/all"
+          }
+        },
+        {
+          "type": "promo",
+          "settings": {
+            "color": "accent",
+            "title": "Solar & Outdoor Lights",
+            "subtitle": "Brighten your outdoor spaces",
+            "button_label": "Explore Outdoor",
+            "button_link": "/collections/all"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

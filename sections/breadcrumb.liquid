@@ -1,0 +1,52 @@
+{%- comment -%}
+  Breadcrumb — reused on every template. Auto-derives from the current
+  collection / article / page context; or add crumb blocks to override.
+{%- endcomment -%}
+<div class="container" style="padding-top:1.25rem;">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">{{ section.settings.home_label }}</a>
+    {%- if section.blocks.size > 0 -%}
+      {%- for block in section.blocks -%}
+        {%- if forloop.last -%}
+           / <span {{ block.shopify_attributes }}>{{ block.settings.label }}</span>
+        {%- elsif block.settings.link != blank -%}
+           / <a href="{{ block.settings.link }}" {{ block.shopify_attributes }}>{{ block.settings.label }}</a>
+        {%- else -%}
+           / <span {{ block.shopify_attributes }}>{{ block.settings.label }}</span>
+        {%- endif -%}
+      {%- endfor -%}
+    {%- elsif collection and collection.title != blank -%}
+       / <span>{{ collection.title }}</span>
+    {%- elsif article and article.title != blank -%}
+       / <a href="{{ blog.url }}">{{ blog.title }}</a> / <span>{{ article.title }}</span>
+    {%- elsif page and page.title != blank -%}
+       / <span>{{ page.title }}</span>
+    {%- elsif section.settings.current != blank -%}
+       / <span>{{ section.settings.current }}</span>
+    {%- endif -%}
+  </nav>
+</div>
+
+{% schema %}
+{
+  "name": "Breadcrumb",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "home_label", "label": "Home label", "default": "Home" },
+    { "type": "text", "id": "current", "label": "Current page label (if not auto)", "default": "Page" }
+  ],
+  "blocks": [
+    {
+      "type": "crumb",
+      "name": "Crumb",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Label", "default": "Section" },
+        { "type": "url", "id": "link", "label": "Link" }
+      ]
+    }
+  ],
+  "presets": [
+    { "name": "Breadcrumb" }
+  ]
+}
+{% endschema %}

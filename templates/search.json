@@ -1,0 +1,15 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "current": "Search"
+      }
+    },
+    "main": {
+      "type": "main-search",
+      "settings": {}
+    }
+  },
+  "order": ["breadcrumb", "main"]
+}

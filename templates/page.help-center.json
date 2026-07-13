@@ -1,0 +1,68 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Help Center"
+      },
+      "blocks": {
+        "current": { "type": "crumb", "settings": { "label": "Help Center" } }
+      },
+      "block_order": ["current"]
+    },
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Help Center",
+        "subtitle": "Find answers on shipping, returns, warranty, setup and order tracking.",
+        "bg": "bg-gray"
+      }
+    },
+    "topics": {
+      "type": "support-topics",
+      "settings": {
+        "heading": "How can we help?",
+        "subtitle": "Browse a topic or search for an answer.",
+        "show_search": true,
+        "search_placeholder": "Search help articles",
+        "grid_class": "grid-3",
+        "bg": "bg-white"
+      },
+      "blocks": {
+        "ship": { "type": "topic", "settings": { "icon": "local_shipping", "title": "Shipping & Delivery", "text": "Delivery times, regions and rates.", "link": "/pages/shipping-delivery" } },
+        "returns": { "type": "topic", "settings": { "icon": "assignment_return", "title": "Returns & Refunds", "text": "How to return an item and get refunded.", "link": "/pages/returns-refunds" } },
+        "warranty": { "type": "topic", "settings": { "icon": "verified_user", "title": "Warranty", "text": "Warranty terms and how to make a claim.", "link": "/pages/warranty" } },
+        "setup": { "type": "topic", "settings": { "icon": "menu_book", "title": "Guides & How-tos", "text": "Read our lighting setup and how-to guides.", "link": "/blogs/news" } },
+        "track": { "type": "topic", "settings": { "icon": "location_searching", "title": "Track Order", "text": "Check the status of your delivery.", "link": "/pages/track-order" } },
+        "faqs": { "type": "topic", "settings": { "icon": "quiz", "title": "FAQs", "text": "Quick answers to common questions.", "link": "/pages/faqs" } }
+      },
+      "block_order": ["ship", "returns", "warranty", "setup", "track", "faqs"]
+    },
+    "orderhelp": {
+      "type": "feature-columns",
+      "settings": {
+        "heading": "Order help",
+        "subtitle": "Everything you need after you buy.",
+        "grid_class": "grid-3",
+        "bg": "bg-gray"
+      },
+      "blocks": {
+        "track": { "type": "item", "settings": { "icon": "location_searching", "title": "Track my order", "text": "See where your delivery is right now.", "link": "/pages/track-order", "link_label": "Track order" } },
+        "orders": { "type": "item", "settings": { "icon": "receipt_long", "title": "My orders", "text": "View past orders and details from your account.", "link": "/account", "link_label": "View orders" } },
+        "returns": { "type": "item", "settings": { "icon": "assignment_return", "title": "Start a return", "text": "Return an item within 7 days of delivery.", "link": "/pages/returns-refunds", "link_label": "Start a return" } }
+      },
+      "block_order": ["track", "orders", "returns"]
+    },
+    "stillhelp": {
+      "type": "expert-band",
+      "settings": {
+        "heading": "Still need help?",
+        "text": "Message our Doha team on WhatsApp for fast, real answers — or contact us by email.",
+        "button_label": "Chat on WhatsApp",
+        "button_link": "/pages/contact"
+      }
+    }
+  },
+  "order": ["breadcrumb", "hero", "topics", "orderhelp", "stillhelp"]
+}

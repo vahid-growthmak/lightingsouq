@@ -1,0 +1,101 @@
+{%- comment -%}
+  Wishlist page — renders items saved in localStorage by store-scripts.liquid.
+  No app required. Editable heading/intro + empty-state copy.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<div class="container" style="padding-top:1.25rem;">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a> / <span>{{ s.heading | default: 'Wishlist' }}</span>
+  </nav>
+</div>
+
+<div class="collection-header">
+  <div class="container">
+    <h1 class="collection-title">{{ s.heading | default: 'My Wishlist' }}</h1>
+    {%- if s.intro != blank -%}<p class="collection-intro">{{ s.intro }}</p>{%- endif -%}
+  </div>
+</div>
+
+<section class="section" style="padding-top:1rem;">
+  <div class="container">
+    <div class="wishlist-empty" data-wishlist-empty hidden>
+      <span class="material-symbols-outlined">favorite</span>
+      <h2>{{ s.empty_title | default: 'Your wishlist is empty' }}</h2>
+      <p>{{ s.empty_text | default: 'Tap the heart on any product to save it here for later.' }}</p>
+      <a class="btn-primary" href="{{ s.empty_link | default: '/collections/all' }}">{{ s.empty_btn | default: 'Start shopping' }}</a>
+    </div>
+    <div class="grid-4" data-wishlist-grid></div>
+  </div>
+</section>
+
+<script>
+(function () {
+  var WT = {
+    addToCart: {{ settings.label_add_to_cart | default: 'Add to Cart' | json }},
+    viewProduct: {{ settings.label_view_product | default: 'View Product' | json }},
+    removed: {{ settings.toast_wishlist_removed | default: 'Removed from wishlist' | json }},
+    ariaRemove: {{ settings.aria_remove_wishlist | default: 'Remove from wishlist' | json }}
+  };
+  var grid = document.querySelector('[data-wishlist-grid]');
+  var empty = document.querySelector('[data-wishlist-empty]');
+  if (!grid) return;
+
+  function render() {
+    var items = (window.LSQ && window.LSQ.wishlist()) || [];
+    if (!items.length) { grid.innerHTML = ''; empty.hidden = false; return; }
+    empty.hidden = true;
+    grid.innerHTML = items.map(function (it) {
+      var addBtn = (it.available && it.variant)
+        ? '<button class="btn-cart" type="button" data-wl-add="' + it.variant + '"><span class="material-symbols-outlined" style="font-size:1.1rem;">shopping_cart</span> ' + WT.addToCart + '</button>'
+        : '<a class="btn-cart" href="' + it.url + '"><span class="material-symbols-outlined" style="font-size:1.1rem;">visibility</span> ' + WT.viewProduct + '</a>';
+      return '<div class="product-card" data-wl-card="' + it.handle + '">' +
+        '<div class="product-img-wrap">' +
+          '<a href="' + it.url + '"><img src="' + (it.image || '') + '" alt="" width="800" height="800" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></a>' +
+          '<button class="btn-wishlist is-active" type="button" aria-label="' + WT.ariaRemove + '" data-wl-remove="' + it.handle + '"><span class="material-symbols-outlined">favorite</span></button>' +
+        '</div>' +
+        '<div class="product-body">' +
+          '<h3 class="product-title"><a href="' + it.url + '">' + it.title + '</a></h3>' +
+          '<div class="product-price"><span class="new-price">' + (it.price || '') + '</span></div>' +
+          addBtn +
+        '</div></div>';
+    }).join('');
+  }
+
+  grid.addEventListener('click', function (e) {
+    var rem = e.target.closest('[data-wl-remove]');
+    var add = e.target.closest('[data-wl-add]');
+    if (rem) {
+      var handle = rem.getAttribute('data-wl-remove');
+      var arr = (window.LSQ.wishlist() || []).filter(function (i) { return i.handle !== handle; });
+      window.LSQ.wishlistSet(arr);
+      window.LSQ.toast(WT.removed);
+      render();
+    } else if (add) {
+      window.LSQ.addVariant(add.getAttribute('data-wl-add'), 1);
+    }
+  });
+
+  document.addEventListener('wishlist:change', render);
+  if (document.readyState !== 'loading') render();
+  else document.addEventListener('DOMContentLoaded', render);
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Wishlist",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "My Wishlist" },
+    { "type": "text", "id": "intro", "label": "Intro", "default": "Everything you've saved, ready when you are." },
+    { "type": "header", "content": "Empty state" },
+    { "type": "text", "id": "empty_title", "label": "Empty title", "default": "Your wishlist is empty" },
+    { "type": "text", "id": "empty_text", "label": "Empty text", "default": "Tap the heart on any product to save it here for later." },
+    { "type": "text", "id": "empty_btn", "label": "Empty button label", "default": "Start shopping" },
+    { "type": "url", "id": "empty_link", "label": "Empty button link" }
+  ],
+  "presets": [
+    { "name": "Wishlist" }
+  ]
+}
+{% endschema %}

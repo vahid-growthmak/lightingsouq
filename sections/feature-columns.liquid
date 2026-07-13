@@ -1,0 +1,97 @@
+{%- liquid
+  assign bg = section.settings.bg
+  assign grid = section.settings.grid_class
+-%}
+{%- style -%}
+  #FC--{{ section.id }} .fc-card { background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1.5rem; height: 100%; display: flex; flex-direction: column; }
+  #FC--{{ section.id }} .fc-icon { width: 3rem; height: 3rem; border-radius: var(--radius); display: inline-flex; align-items: center; justify-content: center; background: var(--gray-50); margin-bottom: 1rem; }
+  #FC--{{ section.id }} .fc-icon .material-symbols-outlined { font-size: 1.6rem; color: var(--brand-primary); font-variation-settings: 'FILL' 1; }
+  #FC--{{ section.id }} .fc-step { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 99px; background: var(--brand-primary); color: #fff; font-weight: 700; margin-bottom: 1rem; }
+  #FC--{{ section.id }} .fc-title { font-size: 1.1rem; font-weight: 700; color: var(--brand-text); margin: 0 0 0.4rem; }
+  #FC--{{ section.id }} .fc-text { color: var(--gray-500); font-size: 0.95rem; line-height: 1.6; margin: 0; }
+  #FC--{{ section.id }} .fc-link { margin-top: auto; padding-top: 0.9rem; color: var(--brand-link); font-weight: 600; font-size: 0.9rem; display: inline-flex; align-items: center; gap: 0.25rem; }
+{%- endstyle -%}
+<section class="section {{ bg }}" id="FC--{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-title text-center">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtitle != blank -%}
+      <p class="section-sub text-center mb-8">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+    <div class="{{ grid }} mt-8">
+      {%- for block in section.blocks -%}
+        {%- assign fc_tag = 'div' -%}
+        {%- if block.settings.link != blank -%}{%- assign fc_tag = 'a' -%}{%- endif -%}
+        <{{ fc_tag }} class="fc-card"{% if block.settings.link != blank %} href="{{ block.settings.link }}"{% endif %} {{ block.shopify_attributes }}>
+          {%- if block.settings.step != blank -%}
+            <span class="fc-step">{{ block.settings.step }}</span>
+          {%- elsif block.settings.icon != blank -%}
+            <span class="fc-icon"><span class="material-symbols-outlined">{{ block.settings.icon }}</span></span>
+          {%- endif -%}
+          <h3 class="fc-title">{{ block.settings.title }}</h3>
+          <p class="fc-text">{{ block.settings.text }}</p>
+          {%- if block.settings.link != blank and block.settings.link_label != blank -%}
+            <span class="fc-link">{{ block.settings.link_label }} <span class="material-symbols-outlined" style="font-size:1.1rem;">arrow_forward</span></span>
+          {%- endif -%}
+        </{{ fc_tag }}>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Feature Columns",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "What you get" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle" },
+    {
+      "type": "select",
+      "id": "grid_class",
+      "label": "Columns",
+      "options": [
+        { "value": "grid-2", "label": "2 columns" },
+        { "value": "grid-3", "label": "3 columns" },
+        { "value": "grid-4", "label": "4 columns" }
+      ],
+      "default": "grid-3"
+    },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-gray"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "item",
+      "name": "Column",
+      "settings": [
+        { "type": "text", "id": "icon", "label": "Icon (Material Symbol name)", "default": "star" },
+        { "type": "text", "id": "step", "label": "Step number (optional, replaces icon)" },
+        { "type": "text", "id": "title", "label": "Title", "default": "Feature title" },
+        { "type": "textarea", "id": "text", "label": "Text", "default": "Describe this feature in a sentence or two." },
+        { "type": "url", "id": "link", "label": "Link" },
+        { "type": "text", "id": "link_label", "label": "Link label" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Feature Columns",
+      "blocks": [
+        { "type": "item", "settings": { "icon": "bolt", "title": "Feature one", "text": "Describe this feature in a sentence or two." } },
+        { "type": "item", "settings": { "icon": "verified", "title": "Feature two", "text": "Describe this feature in a sentence or two." } },
+        { "type": "item", "settings": { "icon": "local_shipping", "title": "Feature three", "text": "Describe this feature in a sentence or two." } }
+      ]
+    }
+  ]
+}
+{% endschema %}

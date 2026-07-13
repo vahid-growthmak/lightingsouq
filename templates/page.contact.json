@@ -1,0 +1,45 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Contact"
+      }
+    },
+    "contact": {
+      "type": "contact-form",
+      "settings": {
+        "bg": "bg-white",
+        "heading": "Get in touch",
+        "subtitle": "Tell us what you need and our Doha team replies fast — usually the same day.",
+        "name_label": "Your name",
+        "email_label": "Email address",
+        "phone_label": "Phone (optional)",
+        "message_label": "How can we help?",
+        "submit_label": "Send message",
+        "success_title": "Thanks — message received",
+        "success_text": "We will get back to you shortly. For urgent help, reach us on WhatsApp.",
+        "show_channels": true,
+        "channels_title": "Prefer to talk now?",
+        "channels_text": "Skip the form and reach the showroom team directly."
+      },
+      "blocks": {
+        "c1": { "type": "channel", "settings": { "icon": "chat", "label": "WhatsApp", "value": "+974 0000 0000" } },
+        "c2": { "type": "channel", "settings": { "icon": "call", "label": "Call us", "value": "+974 0000 0000" } },
+        "c3": { "type": "channel", "settings": { "icon": "mail", "label": "Email", "value": "hello@lightingsouq.qa" } }
+      },
+      "block_order": ["c1", "c2", "c3"]
+    },
+    "bulk": {
+      "type": "bulk-band",
+      "settings": {
+        "title": "Volume enquiry for a project or business?",
+        "subtitle": "Add items to a quote and our trade team sends volume pricing — same-day Doha and GCC delivery.",
+        "button_label": "Request a Bulk Quote",
+        "button_link": "/pages/bulk-orders"
+      }
+    }
+  },
+  "order": ["breadcrumb", "contact", "bulk"]
+}

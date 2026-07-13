@@ -1,0 +1,141 @@
+<section class="section bg-white" id="FAQ--{{ section.id }}">
+  <div class="container">
+    <h2 class="section-title text-center">{{ section.settings.heading }}</h2>
+    <p class="section-sub text-center mb-8">{{ section.settings.subtitle }}</p>
+    <div class="faq-wrap">
+      {%- assign mf_faqs = product.metafields.custom.faqs.value -%}
+      {%- assign faq_rendered = false -%}
+      {%- if mf_faqs != blank and mf_faqs contains 'A:' -%}
+        {%- comment -%} Per-product FAQ from metafield "Q: ... A: ..." — rendered as the theme's native accordion {%- endcomment -%}
+        {%- assign faq_pairs = mf_faqs | split: 'Q:' -%}
+        {%- assign fi = 0 -%}
+        {%- for pair in faq_pairs -%}
+          {%- assign pair = pair | strip -%}
+          {%- if pair contains 'A:' -%}
+            {%- assign fq = pair | split: 'A:' | first | strip -%}
+            {%- assign fa = pair | remove_first: fq | remove_first: 'A:' | strip -%}
+            {%- if fq != blank and fa != blank -%}
+              {%- assign fi = fi | plus: 1 -%}
+              {%- assign faq_rendered = true -%}
+              <div class="collapsible-row{% if fi == 1 %} active{% endif %}">
+                <button class="collapsible-trigger" type="button" data-accordion>{{ fq }} <span class="material-symbols-outlined">expand_more</span></button>
+                <div class="collapsible-content"><p>{{ fa }}</p></div>
+              </div>
+            {%- endif -%}
+          {%- endif -%}
+        {%- endfor -%}
+      {%- endif -%}
+      {%- unless faq_rendered -%}
+        {% for block in section.blocks %}
+        <div class="collapsible-row{% if forloop.first %} active{% endif %}" {{ block.shopify_attributes }}>
+          <button class="collapsible-trigger" type="button" data-accordion>{{ block.settings.question }} <span class="material-symbols-outlined">expand_more</span></button>
+          <div class="collapsible-content">{{ block.settings.answer }}</div>
+        </div>
+        {% endfor %}
+      {%- endunless -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('FAQ--{{ section.id }}');
+    if (!root) return;
+    root.addEventListener('click', function (e) {
+      var trigger = e.target.closest('[data-accordion]');
+      if (!trigger || !root.contains(trigger)) return;
+      var row = trigger.closest('.collapsible-row');
+      if (row) row.classList.toggle('active');
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Product FAQ",
+  "tag": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Frequently Asked Questions"
+    },
+    {
+      "type": "text",
+      "id": "subtitle",
+      "label": "Subtitle",
+      "default": "Everything you need to know before you order."
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Is this product genuine and does it include a warranty?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Yes.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Is this product genuine and does it include a warranty?",
+            "answer": "<p>Yes. Every product we sell is 100% genuine with a <strong>2-year local warranty</strong> — not a grey-market import. Claims are handled locally through our Doha team.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How fast is delivery in Qatar?",
+            "answer": "<p>Order before 4 PM for <strong>same-day delivery in Doha</strong>. Elsewhere in Qatar it's 1–2 days, and we also ship across the GCC. Free delivery on orders over QAR 150.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Can I pick it up from your showroom?",
+            "answer": "<p>Yes. Collect from our office/showroom during working hours: <strong>Sat – Thu, 8.00am – 7.30pm</strong> (break 1.00–3.00pm). Call +974 4411 3544 or +974 5552 9088 to arrange.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "<p>VISA, Mastercard, Apple Pay, Tabby (pay in instalments) and <strong>Cash on Delivery</strong>. All online payments use secure checkout.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>You can return within <strong>7 days</strong> of delivery in the original, unused packaging. See our returns page for the full policy or message us on WhatsApp and we'll help.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Do you offer bulk or trade pricing?",
+            "answer": "<p>Yes. For projects, cafes, offices and villas, use <strong>Request Bulk Order</strong> to add items to a quote and our team will send volume pricing.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

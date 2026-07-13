@@ -1,0 +1,253 @@
+{%- comment -%}
+  Customer addresses: add new + list existing with edit/delete.
+  Uses standard Shopify country-select pattern.
+{%- endcomment -%}
+<div class="container" style="padding-top:1.25rem;">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a> / <a href="{{ routes.account_url }}">Account</a> / <span>Addresses</span>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="container lsq-addr-page" style="max-width:1000px;">
+
+    <div class="lsq-acct-head">
+      <div>
+        <h1 class="collection-title">Your addresses</h1>
+        <p class="collection-intro">Add and manage the addresses saved to your account.</p>
+      </div>
+      <a href="{{ routes.account_url }}" class="btn-secondary">Back to account</a>
+    </div>
+
+    {%- comment -%} ===== ADD NEW ADDRESS ===== {%- endcomment -%}
+    <div class="lsq-card">
+      <h2 class="lsq-card-title">Add a new address</h2>
+      {%- form 'customer_address', customer.new_address -%}
+        {%- if form.errors -%}
+          <div class="form-errors">{{ form.errors | default_errors }}</div>
+        {%- endif -%}
+
+        <div class="lsq-row">
+          <div class="lsq-field">
+            <label for="new_first">First name</label>
+            <input type="text" id="new_first" name="address[first_name]" autocomplete="given-name">
+          </div>
+          <div class="lsq-field">
+            <label for="new_last">Last name</label>
+            <input type="text" id="new_last" name="address[last_name]" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="lsq-field">
+          <label for="new_company">Company</label>
+          <input type="text" id="new_company" name="address[company]" autocomplete="organization">
+        </div>
+
+        <div class="lsq-field">
+          <label for="new_address1">Address</label>
+          <input type="text" id="new_address1" name="address[address1]" autocomplete="address-line1">
+        </div>
+
+        <div class="lsq-field">
+          <label for="new_address2">Apartment, suite, etc.</label>
+          <input type="text" id="new_address2" name="address[address2]" autocomplete="address-line2">
+        </div>
+
+        <div class="lsq-row">
+          <div class="lsq-field">
+            <label for="new_city">City</label>
+            <input type="text" id="new_city" name="address[city]" autocomplete="address-level2">
+          </div>
+          <div class="lsq-field">
+            <label for="new_zip">Postal / ZIP code</label>
+            <input type="text" id="new_zip" name="address[zip]" autocomplete="postal-code">
+          </div>
+        </div>
+
+        <div class="lsq-row">
+          <div class="lsq-field">
+            <label for="AddressCountryNew">Country / region</label>
+            <select id="AddressCountryNew" name="address[country]" data-default="{{ form.country }}"></select>
+          </div>
+          <div class="lsq-field" id="AddressProvinceContainerNew" style="display:none;">
+            <label for="AddressProvinceNew">Province / state</label>
+            <select id="AddressProvinceNew" name="address[province]" data-default="{{ form.province }}"></select>
+          </div>
+        </div>
+
+        <div class="lsq-field">
+          <label for="new_phone">Phone</label>
+          <input type="tel" id="new_phone" name="address[phone]" autocomplete="tel">
+        </div>
+
+        <div class="lsq-field lsq-check">
+          <input type="checkbox" id="new_default" name="address[default]" value="1">
+          <label for="new_default" style="display:inline; font-weight:400;">Set as default address</label>
+        </div>
+
+        <button type="submit" class="btn-primary">Add address</button>
+      {%- endform -%}
+    </div>
+
+    {%- comment -%} ===== EXISTING ADDRESSES ===== {%- endcomment -%}
+    <h2 class="lsq-section-h" style="margin-top:2rem;">Saved addresses ({{ customer.addresses_count }})</h2>
+
+    {%- if customer.addresses.size == 0 -%}
+      <p class="lsq-empty">You have no saved addresses yet.</p>
+    {%- else -%}
+      <div class="lsq-addr-list">
+        {%- for address in customer.addresses -%}
+          <div class="lsq-card lsq-addr-item">
+            {%- if address == customer.default_address -%}
+              <span class="lsq-badge lsq-default-badge">Default</span>
+            {%- endif -%}
+            <address class="lsq-addr-body">{{ address | format_address }}</address>
+            <div class="lsq-addr-actions">
+              <button type="button" class="btn-secondary lsq-sm" onclick="document.getElementById('EditAddress_{{ address.id }}').style.display='block';return false;">Edit</button>
+              {%- form 'customer_address', address -%}
+                <input type="hidden" name="_method" value="delete">
+                <button type="submit" class="lsq-delete" onclick="return confirm('Delete this address?');">Delete</button>
+              {%- endform -%}
+            </div>
+
+            {%- comment -%} EDIT FORM (hidden until toggled) {%- endcomment -%}
+            <div id="EditAddress_{{ address.id }}" class="lsq-edit" style="display:none;">
+              {%- form 'customer_address', address -%}
+                {%- if form.errors -%}
+                  <div class="form-errors">{{ form.errors | default_errors }}</div>
+                {%- endif -%}
+
+                <div class="lsq-row">
+                  <div class="lsq-field">
+                    <label for="edit_first_{{ address.id }}">First name</label>
+                    <input type="text" id="edit_first_{{ address.id }}" name="address[first_name]" value="{{ address.first_name }}" autocomplete="given-name">
+                  </div>
+                  <div class="lsq-field">
+                    <label for="edit_last_{{ address.id }}">Last name</label>
+                    <input type="text" id="edit_last_{{ address.id }}" name="address[last_name]" value="{{ address.last_name }}" autocomplete="family-name">
+                  </div>
+                </div>
+
+                <div class="lsq-field">
+                  <label for="edit_company_{{ address.id }}">Company</label>
+                  <input type="text" id="edit_company_{{ address.id }}" name="address[company]" value="{{ address.company }}" autocomplete="organization">
+                </div>
+
+                <div class="lsq-field">
+                  <label for="edit_address1_{{ address.id }}">Address</label>
+                  <input type="text" id="edit_address1_{{ address.id }}" name="address[address1]" value="{{ address.address1 }}" autocomplete="address-line1">
+                </div>
+
+                <div class="lsq-field">
+                  <label for="edit_address2_{{ address.id }}">Apartment, suite, etc.</label>
+                  <input type="text" id="edit_address2_{{ address.id }}" name="address[address2]" value="{{ address.address2 }}" autocomplete="address-line2">
+                </div>
+
+                <div class="lsq-row">
+                  <div class="lsq-field">
+                    <label for="edit_city_{{ address.id }}">City</label>
+                    <input type="text" id="edit_city_{{ address.id }}" name="address[city]" value="{{ address.city }}" autocomplete="address-level2">
+                  </div>
+                  <div class="lsq-field">
+                    <label for="edit_zip_{{ address.id }}">Postal / ZIP code</label>
+                    <input type="text" id="edit_zip_{{ address.id }}" name="address[zip]" value="{{ address.zip }}" autocomplete="postal-code">
+                  </div>
+                </div>
+
+                <div class="lsq-row">
+                  <div class="lsq-field">
+                    <label for="AddressCountry_{{ address.id }}">Country / region</label>
+                    <select id="AddressCountry_{{ address.id }}" name="address[country]" data-default="{{ address.country }}"></select>
+                  </div>
+                  <div class="lsq-field" id="AddressProvinceContainer_{{ address.id }}" style="display:none;">
+                    <label for="AddressProvince_{{ address.id }}">Province / state</label>
+                    <select id="AddressProvince_{{ address.id }}" name="address[province]" data-default="{{ address.province }}"></select>
+                  </div>
+                </div>
+
+                <div class="lsq-field">
+                  <label for="edit_phone_{{ address.id }}">Phone</label>
+                  <input type="tel" id="edit_phone_{{ address.id }}" name="address[phone]" value="{{ address.phone }}" autocomplete="tel">
+                </div>
+
+                <div class="lsq-field lsq-check">
+                  <input type="checkbox" id="edit_default_{{ address.id }}" name="address[default]" value="1" {% if address == customer.default_address %}checked{% endif %}>
+                  <label for="edit_default_{{ address.id }}" style="display:inline; font-weight:400;">Set as default address</label>
+                </div>
+
+                <div class="lsq-addr-actions">
+                  <button type="submit" class="btn-primary lsq-sm">Update address</button>
+                  <button type="button" class="btn-secondary lsq-sm" onclick="document.getElementById('EditAddress_{{ address.id }}').style.display='none';return false;">Cancel</button>
+                </div>
+              {%- endform -%}
+            </div>
+          </div>
+        {%- endfor -%}
+      </div>
+    {%- endif -%}
+
+  </div>
+</section>
+
+{{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+{{ 'customer_area.js' | shopify_asset_url | script_tag }}
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    if (typeof Shopify === 'undefined' || !Shopify.CountryProvinceSelector) return;
+    new Shopify.CountryProvinceSelector('AddressCountryNew', 'AddressProvinceNew', {
+      hideElement: 'AddressProvinceContainerNew'
+    });
+    {%- for address in customer.addresses -%}
+      new Shopify.CountryProvinceSelector('AddressCountry_{{ address.id }}', 'AddressProvince_{{ address.id }}', {
+        hideElement: 'AddressProvinceContainer_{{ address.id }}'
+      });
+    {%- endfor -%}
+  });
+</script>
+
+<style>
+  .lsq-addr-page .lsq-acct-head { display:flex; justify-content:space-between; align-items:flex-start; gap:1rem; flex-wrap:wrap; margin-bottom:1.5rem; }
+  .lsq-addr-page .lsq-card { background:#fff; border:1px solid #e5e7eb; border-radius: var(--radius, 10px); padding:1.5rem; }
+  .lsq-card-title { font-size:1.15rem; font-weight:700; margin:0 0 1.25rem; color: var(--brand-text, #333); }
+  .lsq-section-h { font-size:1.15rem; font-weight:700; margin-bottom:1rem; color: var(--brand-text, #333); }
+  .lsq-addr-page .lsq-field { margin-bottom:1rem; }
+  .lsq-addr-page label { display:block; font-weight:600; margin-bottom:0.4rem; font-size:0.9rem; color: var(--brand-text, #333); }
+  .lsq-addr-page input[type="text"],
+  .lsq-addr-page input[type="tel"],
+  .lsq-addr-page select {
+    width:100%; padding:0.7rem 0.9rem; border:1px solid #e5e7eb;
+    border-radius: var(--radius, 10px); font-size:1rem; box-sizing:border-box;
+    background:#fff; color: var(--brand-text, #333);
+  }
+  .lsq-addr-page input:focus, .lsq-addr-page select:focus { outline:2px solid var(--brand-primary, #2B60AD); outline-offset:1px; border-color: var(--brand-primary, #2B60AD); }
+  .lsq-row { display:grid; grid-template-columns:1fr; gap:0 1rem; }
+  @media (min-width:640px) { .lsq-row { grid-template-columns:1fr 1fr; } }
+  .lsq-check { display:flex; align-items:center; gap:0.5rem; }
+  .lsq-check input { width:auto; }
+  .lsq-addr-list { display:grid; grid-template-columns:1fr; gap:1.25rem; }
+  @media (min-width:768px) { .lsq-addr-list { grid-template-columns:1fr 1fr; } }
+  .lsq-addr-item { position:relative; }
+  .lsq-addr-body { font-style:normal; line-height:1.7; color: var(--brand-text, #333); font-size:0.92rem; margin-bottom:1rem; }
+  .lsq-addr-actions { display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; }
+  .lsq-addr-actions form { margin:0; }
+  .lsq-sm { padding:0.45rem 0.9rem; font-size:0.85rem; min-height:auto; }
+  .lsq-delete { background:none; border:none; color:#b91c1c; font-weight:600; cursor:pointer; padding:0.45rem 0; font-size:0.85rem; }
+  .lsq-delete:hover { text-decoration:underline; }
+  .lsq-badge { display:inline-block; font-size:0.78rem; padding:0.15rem 0.55rem; border-radius:9999px; background:#f3f4f6; color:#374151; }
+  .lsq-default-badge { background: var(--brand-primary, #2B60AD); color:#fff; margin-bottom:0.75rem; }
+  .lsq-empty { color:#6b7280; }
+  .lsq-edit { margin-top:1.25rem; padding-top:1.25rem; border-top:1px solid #e5e7eb; }
+  .lsq-addr-page .form-errors {
+    background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;
+    padding:0.85rem 1rem; border-radius: var(--radius, 10px); margin-bottom:1.25rem; font-size:0.9rem;
+  }
+  .lsq-addr-page .form-errors ul { margin:0; padding-left:1.1rem; }
+</style>
+
+{% schema %}
+{
+  "name": "Customer addresses",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

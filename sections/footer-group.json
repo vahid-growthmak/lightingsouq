@@ -1,0 +1,191 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "type": "footer",
+  "name": "Footer group",
+  "sections": {
+    "footer": {
+      "type": "footer",
+      "blocks": {
+        "b0": {
+          "type": "social",
+          "settings": {
+            "network": "facebook",
+            "url": "https://www.facebook.com/lightingsouq/",
+            "aria": "Facebook"
+          }
+        },
+        "b1": {
+          "type": "social",
+          "settings": {
+            "network": "instagram",
+            "url": "https://www.instagram.com/lightingsouq/",
+            "aria": "Instagram"
+          }
+        },
+        "b10": {
+          "type": "social",
+          "settings": {
+            "network": "youtube",
+            "url": "https://www.youtube.com/channel/UCZd_RTwF2TNVAy84akkZIIg",
+            "aria": "YouTube"
+          }
+        },
+        "b11": {
+          "type": "social",
+          "settings": {
+            "network": "linkedin",
+            "url": "https://www.linkedin.com/company/lightingsouq/",
+            "aria": "LinkedIn"
+          }
+        },
+        "b2": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Shop",
+            "label_1": "Smart Lights",
+            "url_1": "/collections/smart-lights",
+            "label_2": "LED Bulbs",
+            "url_2": "/collections/led-bulbs",
+            "label_3": "LED Tubes",
+            "url_3": "/collections/led-tubes",
+            "label_4": "Ceiling Panels",
+            "url_4": "/collections/ceiling-panels",
+            "label_5": "Downlights",
+            "url_5": "/collections/downlights",
+            "label_6": "Solar & Outdoor",
+            "url_6": "/collections/solar-outdoor",
+            "label_7": "Today's Deals",
+            "url_7": "/collections/deals"
+          }
+        },
+        "b9": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Company",
+            "label_1": "About Us",
+            "url_1": "/pages/about",
+            "label_2": "Smart Home Hub",
+            "url_2": "/pages/smart-home-hub",
+            "label_3": "Bulk Orders",
+            "url_3": "/pages/bulk-orders",
+            "label_4": "Blog / News",
+            "url_4": "/blogs/news",
+            "label_5": "Showroom",
+            "url_5": "/pages/showroom",
+            "label_6": "Contact Us",
+            "url_6": "/pages/contact",
+            "label_7": "",
+            "url_7": ""
+          }
+        },
+        "b3": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Customer Support",
+            "label_1": "Help Center",
+            "url_1": "/pages/help-center",
+            "label_2": "FAQs",
+            "url_2": "/pages/faqs",
+            "label_3": "Shipping & Delivery",
+            "url_3": "/pages/shipping-delivery",
+            "label_4": "Returns & Refunds",
+            "url_4": "/pages/returns-refunds",
+            "label_5": "Warranty",
+            "url_5": "/pages/warranty",
+            "label_6": "Track Order",
+            "url_6": "/pages/track-order",
+            "label_7": "",
+            "url_7": ""
+          }
+        },
+        "b4": {
+          "type": "link_column",
+          "settings": {
+            "heading": "Account",
+            "label_1": "My Account",
+            "url_1": "/account",
+            "label_2": "Order History",
+            "url_2": "/account",
+            "label_3": "Wishlist",
+            "url_3": "/pages/wishlist",
+            "label_4": "Cart",
+            "url_4": "/cart",
+            "label_5": "",
+            "url_5": "",
+            "label_6": "",
+            "url_6": "",
+            "label_7": "",
+            "url_7": ""
+          }
+        },
+        "b5": {
+          "type": "payment",
+          "settings": {
+            "label": "VISA"
+          }
+        },
+        "b6": {
+          "type": "payment",
+          "settings": {
+            "label": "MC"
+          }
+        },
+        "b7": {
+          "type": "payment",
+          "settings": {
+            "label": "Apple Pay"
+          }
+        },
+        "b8": {
+          "type": "payment",
+          "settings": {
+            "label": "COD"
+          }
+        }
+      },
+      "block_order": [
+        "b0",
+        "b1",
+        "b10",
+        "b11",
+        "b2",
+        "b9",
+        "b3",
+        "b4",
+        "b5",
+        "b6",
+        "b7",
+        "b8"
+      ],
+      "settings": {
+        "logo_text": "LIGHTING",
+        "logo_accent": "SOUQ",
+        "description": "Lighting Souq is Qatar's online lighting supermarket for bulbs, lamps, tubes, solar lights, smart switches and more.",
+        "newsletter_heading": "Newsletter",
+        "newsletter_desc": "Get offers and new product updates",
+        "newsletter_placeholder": "Your email",
+        "newsletter_button": "Subscribe",
+        "phone": "+974 1234 5678",
+        "email": "info@lightingsouq.qa",
+        "hours": "Sat-Thu: 9AM-9PM",
+        "reviews_show": true,
+        "reviews_rating": "4.9",
+        "reviews_count": "84",
+        "reviews_link": "",
+        "copyright": "© 2026 Lighting Souq. All rights reserved.",
+        "accept_label": "We Accept:"
+      }
+    }
+  },
+  "order": [
+    "footer"
+  ]
+}

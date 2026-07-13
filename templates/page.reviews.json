@@ -1,0 +1,53 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Customer Reviews",
+        "subtitle": "Real feedback from lighting shoppers across Qatar.",
+        "bg": "bg-gray"
+      }
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "settings": {
+        "heading": "What our customers say",
+        "big_rating": "4.9★",
+        "rating_label": "Google Rating from 84 Reviews",
+        "initial_count": 9,
+        "view_more_label": "View more reviews",
+        "bg": "bg-white"
+      },
+      "blocks": {
+        "r1": { "type": "review", "settings": { "name": "Ahmed Al-Kuwari", "rating": 5, "text": "Great selection of lighting products. Fast delivery and excellent quality.", "date": "April 2026" } },
+        "r2": { "type": "review", "settings": { "name": "Fatima Hassan", "rating": 5, "text": "Best lighting store in Qatar. WhatsApp support was very helpful.", "date": "April 2026" } },
+        "r3": { "type": "review", "settings": { "name": "Mohammed Al-Thani", "rating": 5, "text": "Ordered solar lights for my garden. Very satisfied with the purchase.", "date": "March 2026" } },
+        "r4": { "type": "review", "settings": { "name": "Sara Abdullah", "rating": 4, "text": "Good prices and wide variety. Delivery was on time.", "date": "March 2026" } },
+        "r5": { "type": "review", "settings": { "name": "Khalid Al-Marri", "rating": 5, "text": "Bought smart bulbs for the whole majlis. Setup was quick and they look great.", "date": "March 2026" } },
+        "r6": { "type": "review", "settings": { "name": "Noora Ibrahim", "rating": 4, "text": "Nice range and the showroom pickup was convenient. Staff were very helpful.", "date": "February 2026" } },
+        "r7": { "type": "review", "settings": { "name": "Yousef Al-Sulaiti", "rating": 5, "text": "Genuine products with local warranty. Ordered LED panels for the office, all perfect.", "date": "February 2026" } },
+        "r8": { "type": "review", "settings": { "name": "Maryam Al-Ansari", "rating": 5, "text": "The team helped me plan lighting for my villa. Great advice and quick delivery.", "date": "January 2026" } }
+      },
+      "block_order": ["r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8"]
+    },
+    "cta": {
+      "type": "featured-banner",
+      "settings": {
+        "title": "See all our reviews on Google",
+        "subtitle": "Rated 4.9★ from 84 verified Google reviews.",
+        "button_label": "Read Google reviews",
+        "button_link": "https://www.google.com/search?q=lighting+souq+google+reviews"
+      }
+    }
+  },
+  "order": ["hero", "testimonials", "cta"]
+}

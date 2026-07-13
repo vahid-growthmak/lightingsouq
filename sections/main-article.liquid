@@ -1,0 +1,148 @@
+{%- comment -%}
+  Main Article — header (title, byline, hero), prose body, related articles.
+{%- endcomment -%}
+<section class="section bg-white" id="Sec--{{ section.id }}" aria-labelledby="article-heading-{{ section.id }}">
+  <div class="container">
+    <article class="lsq-article">
+      <header class="lsq-article-head">
+        {%- if article.tags.size > 0 -%}
+          <a class="lsq-a-chip" href="{{ blog.url }}?tag={{ article.tags.first | url_encode }}">{{ article.tags.first }}</a>
+        {%- endif -%}
+        <h1 class="lsq-article-title" id="article-heading-{{ section.id }}">{{ article.title }}</h1>
+        <p class="lsq-article-byline">
+          {%- if section.settings.show_author and article.author != blank -%}
+            <span>{{ article.author }}</span>
+            <span aria-hidden="true"> · </span>
+          {%- endif -%}
+          <span>{{ article.published_at | date: "%B %d, %Y" }}</span>
+        </p>
+      </header>
+
+      {%- if article.image -%}
+        <figure class="lsq-article-hero">
+          <img
+            src="{{ article.image | image_url: width: 1400 }}"
+            alt="{{ article.image.alt | default: article.title | escape }}"
+            width="1400" height="787" loading="eager">
+        </figure>
+      {%- endif -%}
+
+      <div class="lsq-prose lsq-article-body">
+        {{ article.content }}
+      </div>
+
+      {%- if section.settings.show_back -%}
+        <p class="lsq-article-back">
+          <a href="{{ blog.url }}">
+            <span class="material-symbols-outlined" aria-hidden="true">arrow_back</span>
+            {{ section.settings.back_label }}
+          </a>
+        </p>
+      {%- endif -%}
+    </article>
+
+    {%- comment -%} Related articles — up to 3 others from this blog {%- endcomment -%}
+    {%- assign related_count = 0 -%}
+    {%- capture related_html -%}
+      {%- for a in blog.articles -%}
+        {%- unless a.id == article.id or related_count >= 3 -%}
+          {%- assign related_count = related_count | plus: 1 -%}
+          <article class="lsq-r-card">
+            <a class="lsq-r-media" href="{{ a.url }}" aria-label="{{ a.title | escape }}">
+              {%- if a.image -%}
+                <img src="{{ a.image | image_url: width: 640 }}" alt="{{ a.image.alt | default: a.title | escape }}" width="640" height="400" loading="lazy">
+              {%- else -%}
+                <span class="lsq-noimg" aria-hidden="true"><span class="material-symbols-outlined">image</span></span>
+              {%- endif -%}
+            </a>
+            <div class="lsq-r-body">
+              {%- if a.tags.size > 0 -%}<span class="lsq-a-chip lsq-a-chip-sm">{{ a.tags.first }}</span>{%- endif -%}
+              <h3 class="lsq-r-title"><a href="{{ a.url }}">{{ a.title }}</a></h3>
+              <span class="lsq-meta">{{ a.published_at | date: "%b %d, %Y" }}</span>
+            </div>
+          </article>
+        {%- endunless -%}
+      {%- endfor -%}
+    {%- endcapture -%}
+
+    {%- if related_count > 0 -%}
+      <div class="lsq-related">
+        <h2 class="section-title">{{ section.settings.related_heading }}</h2>
+        <div class="grid-3 lsq-related-grid">{{ related_html }}</div>
+      </div>
+    {%- endif -%}
+  </div>
+</section>
+
+{% style %}
+  #Sec--{{ section.id }} .lsq-article { max-width: 760px; margin: 0 auto; }
+  #Sec--{{ section.id }} .lsq-article-head { margin-bottom: 1.5rem; }
+  #Sec--{{ section.id }} .lsq-a-chip {
+    display: inline-block;
+    padding: 0.3125rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    text-decoration: none;
+    background: var(--brand-secondary);
+    color: #fff;
+    margin-bottom: 0.875rem;
+  }
+  #Sec--{{ section.id }} .lsq-a-chip:hover { opacity: 0.9; }
+  #Sec--{{ section.id }} .lsq-a-chip-sm { background: #f3f4f6; color: var(--gray-500); }
+  #Sec--{{ section.id }} .lsq-article-title { font-size: clamp(1.75rem, 5vw, 2.75rem); font-weight: 700; line-height: 1.15; margin-bottom: 0.75rem; }
+  #Sec--{{ section.id }} .lsq-article-byline { color: var(--gray-500); font-size: 0.9375rem; }
+  #Sec--{{ section.id }} .lsq-article-hero {
+    margin: 0 auto 2rem;
+    max-width: 900px;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 6px 24px rgba(17,24,39,0.10);
+  }
+  #Sec--{{ section.id }} .lsq-article-hero img { width: 100%; height: auto; display: block; }
+  #Sec--{{ section.id }} .lsq-article-body { margin: 0 auto; }
+  #Sec--{{ section.id }} .lsq-article-back { margin-top: 2rem; }
+  #Sec--{{ section.id }} .lsq-article-back a { display: inline-flex; align-items: center; gap: 0.375rem; color: var(--brand-primary); font-weight: 600; text-decoration: none; }
+  #Sec--{{ section.id }} .lsq-article-back a:hover { text-decoration: underline; }
+
+  #Sec--{{ section.id }} .lsq-related { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--gray-200, #E5E7EB); }
+  #Sec--{{ section.id }} .lsq-related .section-title { margin-bottom: 1.25rem; }
+  #Sec--{{ section.id }} .lsq-r-card {
+    display: flex; flex-direction: column;
+    background: #fff;
+    border: 1px solid var(--gray-200, #E5E7EB);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(17,24,39,0.06);
+    transition: box-shadow 150ms ease-out, transform 150ms ease-out;
+  }
+  #Sec--{{ section.id }} .lsq-r-card:hover { box-shadow: 0 10px 28px rgba(17,24,39,0.12); transform: translateY(-2px); }
+  #Sec--{{ section.id }} .lsq-r-media { display: block; aspect-ratio: 16 / 10; overflow: hidden; background: #f3f4f6; }
+  #Sec--{{ section.id }} .lsq-r-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  #Sec--{{ section.id }} .lsq-r-body { padding: 1rem 1.125rem 1.25rem; display: flex; flex-direction: column; gap: 0.5rem; }
+  #Sec--{{ section.id }} .lsq-r-title { font-size: 1.0625rem; font-weight: 700; line-height: 1.3; }
+  #Sec--{{ section.id }} .lsq-r-title a { color: inherit; text-decoration: none; }
+  #Sec--{{ section.id }} .lsq-r-title a:hover { color: var(--brand-primary); }
+  #Sec--{{ section.id }} .lsq-meta { color: var(--gray-500); font-size: 0.8125rem; }
+  #Sec--{{ section.id }} .lsq-noimg {
+    display: flex; align-items: center; justify-content: center;
+    width: 100%; height: 100%; background: #f3f4f6; color: #9ca3af;
+  }
+  #Sec--{{ section.id }} .lsq-noimg .material-symbols-outlined { font-size: 2.5rem; }
+{% endstyle %}
+
+{% schema %}
+{
+  "name": "Article",
+  "tag": "section",
+  "settings": [
+    { "type": "checkbox", "id": "show_author", "label": "Show author", "default": true },
+    { "type": "checkbox", "id": "show_back", "label": "Show back link", "default": true },
+    { "type": "text", "id": "back_label", "label": "Back link label", "default": "Back to all articles" },
+    { "type": "text", "id": "related_heading", "label": "Related heading", "default": "Related articles" }
+  ],
+  "presets": [
+    { "name": "Article" }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,17 @@
+{
+  "sections": {
+    "main": {
+      "type": "main-wishlist",
+      "settings": {}
+    },
+    "recommend": {
+      "type": "product-collection",
+      "settings": {
+        "heading": "Popular right now",
+        "collection": "best-sellers",
+        "layout": "scroll"
+      }
+    }
+  },
+  "order": ["main", "recommend"]
+}

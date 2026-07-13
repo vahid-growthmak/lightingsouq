@@ -1,0 +1,24 @@
+{%- comment -%}
+  Renders one brand logo tile. Uses an uploaded image if set, else the bundled
+  brand-<slug>.png asset, and if that 404s the onerror handler swaps to a clean
+  styled wordmark — so a brand is NEVER shown as a broken image.
+  Params: name (required), image (optional), link (optional), style ('tile' | 'marquee')
+{%- endcomment -%}
+{%- liquid
+  assign slug = name | downcase | replace: '.', '' | replace: '&', 'and' | replace: '  ', ' ' | strip | replace: ' ', '-'
+  assign href = link
+  if href == blank
+    assign href = '/collections/' | append: slug
+  endif
+  if image != blank
+    assign src = image | image_url: width: 240
+  else
+    assign src = 'brand-' | append: slug | append: '.png' | asset_url
+  endif
+  assign wrap = style | default: 'tile'
+-%}
+<a href="{{ href }}" class="brand-tile brand-tile--{{ wrap }}" aria-label="{{ name | escape }}">
+  <img src="{{ src }}" alt="{{ name | escape }}" width="200" height="100" loading="lazy" class="brand-img"
+    onerror="this.style.display='none';this.nextElementSibling.style.display='inline-flex';">
+  <span class="brand-wordmark" style="display:none;">{{ name }}</span>
+</a>

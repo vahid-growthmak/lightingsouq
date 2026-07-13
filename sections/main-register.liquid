@@ -1,0 +1,75 @@
+{%- comment -%}
+  Classic customer registration. OS 2.0 main section.
+{%- endcomment -%}
+<div class="container" style="padding-top:1.25rem;">
+  <nav class="breadcrumb" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a> / <span>Create account</span>
+  </nav>
+</div>
+
+<section class="section">
+  <div class="container lsq-auth" style="max-width:560px;">
+    <h1 class="collection-title">Create your account</h1>
+    <p class="collection-intro">Join Lighting Souq for faster checkout and order tracking.</p>
+
+    {%- form 'create_customer', novalidate: 'novalidate' -%}
+      {%- if form.errors -%}
+        <div class="form-errors">{{ form.errors | default_errors }}</div>
+      {%- endif -%}
+
+      <div class="lsq-field">
+        <label for="reg_first">First name</label>
+        <input type="text" name="customer[first_name]" id="reg_first" autocomplete="given-name" value="{% if form.first_name %}{{ form.first_name }}{% endif %}">
+      </div>
+
+      <div class="lsq-field">
+        <label for="reg_last">Last name</label>
+        <input type="text" name="customer[last_name]" id="reg_last" autocomplete="family-name" value="{% if form.last_name %}{{ form.last_name }}{% endif %}">
+      </div>
+
+      <div class="lsq-field">
+        <label for="reg_email">Email</label>
+        <input type="email" name="customer[email]" id="reg_email" autocomplete="email" autocorrect="off" autocapitalize="off" value="{% if form.email %}{{ form.email }}{% endif %}" required>
+      </div>
+
+      <div class="lsq-field">
+        <label for="reg_password">Password</label>
+        <input type="password" name="customer[password]" id="reg_password" autocomplete="new-password" required>
+      </div>
+
+      <button type="submit" class="btn-primary lsq-btn-full">Create account</button>
+
+      <p class="lsq-alt">Already have an account? <a href="{{ routes.account_login_url }}">Log in</a></p>
+    {%- endform -%}
+  </div>
+</section>
+
+<style>
+  .lsq-auth .lsq-field { margin-bottom: 1rem; }
+  .lsq-auth label { display:block; font-weight:600; margin-bottom:0.4rem; font-size:0.9rem; color: var(--brand-text, #333); }
+  .lsq-auth input[type="email"],
+  .lsq-auth input[type="password"],
+  .lsq-auth input[type="text"] {
+    width:100%; padding:0.7rem 0.9rem; border:1px solid #e5e7eb;
+    border-radius: var(--radius, 10px); font-size:1rem; box-sizing:border-box;
+    background:#fff; color: var(--brand-text, #333);
+  }
+  .lsq-auth input:focus { outline:2px solid var(--brand-primary, #2B60AD); outline-offset:1px; border-color: var(--brand-primary, #2B60AD); }
+  .lsq-auth .lsq-btn-full { width:100%; margin-top:0.5rem; }
+  .lsq-auth .lsq-alt { margin-top:1rem; font-size:0.9rem; color:#6b7280; }
+  .lsq-auth .lsq-alt a { color: var(--brand-primary, #2B60AD); font-weight:600; text-decoration:none; }
+  .lsq-auth .lsq-alt a:hover { text-decoration:underline; }
+  .lsq-auth .form-errors {
+    background:#fef2f2; border:1px solid #fecaca; color:#b91c1c;
+    padding:0.85rem 1rem; border-radius: var(--radius, 10px); margin-bottom:1.25rem; font-size:0.9rem;
+  }
+  .lsq-auth .form-errors ul { margin:0; padding-left:1.1rem; }
+</style>
+
+{% schema %}
+{
+  "name": "Customer register",
+  "tag": "section",
+  "settings": []
+}
+{% endschema %}

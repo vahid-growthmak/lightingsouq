@@ -1,0 +1,33 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Warranty"
+      },
+      "blocks": {
+        "help": { "type": "crumb", "settings": { "label": "Help Center", "link": "/pages/help-center" } },
+        "current": { "type": "crumb", "settings": { "label": "Warranty" } }
+      },
+      "block_order": ["help", "current"]
+    },
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Warranty",
+        "subtitle": "Genuine products with a real local warranty — not a grey-market import.",
+        "bg": "bg-gray"
+      }
+    },
+    "terms": {
+      "type": "rich-text",
+      "settings": {
+        "heading": "Warranty terms & claims",
+        "content": "<p>Every product we sell is 100% genuine and covered by a <strong>local warranty</strong>. Coverage length varies by product and brand, and is shown on the product page and your invoice.</p><p>The warranty covers manufacturing defects under normal use. It does not cover accidental damage, misuse, or normal wear.</p><p><strong>To make a claim:</strong> keep your order number and proof of purchase, then <a href='/pages/contact'>contact our team</a>. We handle claims locally through our Doha showroom — no shipping items overseas.</p>",
+        "bg": "bg-white"
+      }
+    }
+  },
+  "order": ["breadcrumb", "hero", "terms"]
+}

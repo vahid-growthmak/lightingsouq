@@ -1,0 +1,48 @@
+{
+  "sections": {
+    "breadcrumb": {
+      "type": "breadcrumb",
+      "settings": {
+        "home_label": "Home",
+        "current": "Returns & Refunds"
+      },
+      "blocks": {
+        "help": { "type": "crumb", "settings": { "label": "Help Center", "link": "/pages/help-center" } },
+        "current": { "type": "crumb", "settings": { "label": "Returns & Refunds" } }
+      },
+      "block_order": ["help", "current"]
+    },
+    "hero": {
+      "type": "page-hero",
+      "settings": {
+        "heading": "Returns & Refunds",
+        "subtitle": "Shop with confidence. Local returns and refunds handled by our Doha team.",
+        "bg": "bg-gray"
+      }
+    },
+    "policy": {
+      "type": "rich-text",
+      "settings": {
+        "heading": "Returns policy",
+        "content": "<p>You can return most items within <strong>7 days</strong> of delivery in their original, unused packaging. Refunds are issued to your original payment method once the item is received and inspected.</p><p>Some items are non-returnable for hygiene or safety reasons. For the full terms, see our <a href='/policies/refund-policy'>refund policy</a>.</p>",
+        "bg": "bg-white"
+      }
+    },
+    "howto": {
+      "type": "feature-columns",
+      "settings": {
+        "heading": "How to return an item",
+        "subtitle": "Three simple steps.",
+        "grid_class": "grid-3",
+        "bg": "bg-gray"
+      },
+      "blocks": {
+        "s1": { "type": "item", "settings": { "step": "1", "title": "Contact us", "text": "Message our team with your order number and the item you want to return.", "link": "/pages/contact", "link_label": "Contact us" } },
+        "s2": { "type": "item", "settings": { "step": "2", "title": "Pack it up", "text": "Repack the item in its original, unused packaging with all accessories." } },
+        "s3": { "type": "item", "settings": { "step": "3", "title": "Get your refund", "text": "Once we receive and inspect the item, we refund your original payment method." } }
+      },
+      "block_order": ["s1", "s2", "s3"]
+    }
+  },
+  "order": ["breadcrumb", "hero", "policy", "howto"]
+}

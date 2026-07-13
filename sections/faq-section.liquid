@@ -1,0 +1,100 @@
+{%- liquid
+  assign bg = section.settings.bg
+-%}
+<section class="section {{ bg }}" id="FAQS--{{ section.id }}">
+  <div class="container">
+    {%- if section.settings.heading != blank -%}
+      <h2 class="section-title text-center">{{ section.settings.heading }}</h2>
+    {%- endif -%}
+    {%- if section.settings.subtitle != blank -%}
+      <p class="section-sub text-center mb-8">{{ section.settings.subtitle }}</p>
+    {%- endif -%}
+    <div class="faq-wrap">
+      {%- for block in section.blocks -%}
+        <div class="collapsible-row{% if forloop.first %} active{% endif %}" {{ block.shopify_attributes }}>
+          <button class="collapsible-trigger" type="button" data-accordion>{{ block.settings.question }} <span class="material-symbols-outlined">expand_more</span></button>
+          <div class="collapsible-content">{{ block.settings.answer }}</div>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('FAQS--{{ section.id }}');
+    if (!root) return;
+    root.addEventListener('click', function (e) {
+      var trigger = e.target.closest('[data-accordion]');
+      if (!trigger || !root.contains(trigger)) return;
+      var row = trigger.closest('.collapsible-row');
+      if (row) row.classList.toggle('active');
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "FAQ",
+  "tag": "section",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Frequently Asked Questions" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Answers to the questions we hear most." },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ Item",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question", "default": "Add your question here" },
+        { "type": "richtext", "id": "answer", "label": "Answer", "default": "<p>Add your answer here.</p>" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "FAQ",
+      "blocks": [
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Are your products genuine and covered by warranty?",
+            "answer": "<p>Yes. Every product is 100% genuine with a <strong>local warranty</strong> handled by our Doha team — never a grey-market import.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "How fast is delivery in Qatar?",
+            "answer": "<p>Order before 4 PM for <strong>same-day delivery in Doha</strong>. Elsewhere in Qatar it is 1–2 days, and we also ship across the GCC.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "Will smart lights work with Alexa, Google or Siri?",
+            "answer": "<p>Most of our smart range works with <strong>Alexa, Google Home and Apple Home</strong> via apps like Tuya, Smart Life, Mi Home and Hue. See our setup guides for step-by-step help.</p>"
+          }
+        },
+        {
+          "type": "faq",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>You can return within <strong>7 days</strong> of delivery in the original, unused packaging. See our returns page for the full policy.</p>"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

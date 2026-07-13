@@ -1,0 +1,63 @@
+{%- comment -%}
+  Product reviews block.
+  - DISPLAY: Google reviews badge (embed) linking to the store's Google reviews.
+  - WRITE: Judge.me product widget provides the "Write a review" flow (and shows
+    product-specific Judge.me reviews once customers submit them).
+  Requires the Judge.me app + its theme app-embed (Theme editor > App embeds).
+  The Google reviews link is set globally in Theme settings > Reviews.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+<section class="section {{ s.bg }}" id="reviews">
+  <div class="container">
+    {%- if s.heading != blank -%}
+      <h2 class="section-title text-center">{{ s.heading }}</h2>
+    {%- endif -%}
+    {%- if s.subtitle != blank -%}
+      <p class="section-sub text-center mb-8">{{ s.subtitle }}</p>
+    {%- endif -%}
+
+    {%- comment -%} Google reviews (display) {%- endcomment -%}
+    <div class="pdp-reviews-badge">
+      {%- render 'google-reviews', rating: settings.google_rating, count: settings.google_count, link: settings.google_reviews_url -%}
+      {%- if settings.google_reviews_url != blank -%}
+        <a class="btn-secondary" href="{{ settings.google_reviews_url }}" target="_blank" rel="noopener nofollow">Read all reviews on Google</a>
+      {%- endif -%}
+    </div>
+
+    {%- comment -%} Judge.me — "Write a review" (and any product reviews written via the app) {%- endcomment -%}
+    <div style="margin-top:2rem;">
+      <div
+        id="judgeme_product_reviews"
+        class="jdgm-widget jdgm-review-widget"
+        data-product-title="{{ product.title | escape }}"
+        data-id="{{ product.id }}">
+        {{ product.metafields.judgeme.widget }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Product Reviews",
+  "tag": "section",
+  "settings": [
+    { "type": "paragraph", "content": "Displays your Google reviews badge (links to Google). Judge.me handles writing reviews — enable it under Theme editor > App embeds. Edit the Google link in Theme settings > Reviews." },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Customer Reviews" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Rated 4.9 on Google. Write your own review below." },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ],
+  "presets": [
+    { "name": "Product Reviews" }
+  ]
+}
+{% endschema %}

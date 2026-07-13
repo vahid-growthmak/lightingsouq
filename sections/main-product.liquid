@@ -203,6 +203,8 @@
         <div class="pdp-assurance">
           {%- if s.assure_1 != blank -%}<div class="pdp-assure-item"><span class="material-symbols-outlined">local_shipping</span><span>{{ s.assure_1 }}</span></div>{%- endif -%}
           {%- if s.assure_2 != blank -%}<div class="pdp-assure-item"><span class="material-symbols-outlined">verified_user</span><span>{{ s.assure_2 }}</span></div>{%- endif -%}
+          {%- assign mf_trust = product.metafields.custom.trust.value -%}
+          {%- if mf_trust != blank -%}<div class="pdp-assure-item"><span class="material-symbols-outlined">workspace_premium</span><span>{{ mf_trust | strip_html }}</span></div>{%- endif -%}
         </div>
       </div>
     </div>
@@ -218,7 +220,18 @@
         <div class="collapsible-content">
           {%- assign specs_mf = product.metafields.custom.specifications.value -%}
           <div class="spec-grid">
-            {%- if specs_mf != blank -%}
+            {%- if specs_mf != blank and specs_mf contains '<tr' -%}
+              {%- comment -%} Per-product specs from HTML table metafield — <tr><td>Key</td><td>Value</td></tr> rows rendered as native spec rows {%- endcomment -%}
+              {%- assign spec_rows = specs_mf | split: '<tr>' -%}
+              {%- for row in spec_rows offset: 1 -%}
+                {%- assign cells = row | split: '</td>' -%}
+                {%- assign sk = cells[0] | strip_html | strip -%}
+                {%- assign sv = cells[1] | strip_html | strip -%}
+                {%- if sk != blank and sv != blank -%}
+                  <div class="spec-item"><span class="spec-key"><span class="material-symbols-outlined">check</span>{{ sk }}</span><span class="spec-val">{{ sv }}</span></div>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- elsif specs_mf != blank -%}
               {%- comment -%} Per-product specs from metafield "Key: Value" per line — native spec rows {%- endcomment -%}
               {%- assign spec_rows = specs_mf | strip | newline_to_br | split: '<br />' -%}
               {%- for row in spec_rows -%}

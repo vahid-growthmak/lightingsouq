@@ -5,7 +5,24 @@
     <div class="faq-wrap">
       {%- assign mf_faqs = product.metafields.custom.faqs.value -%}
       {%- assign faq_rendered = false -%}
-      {%- if mf_faqs != blank and mf_faqs contains 'A:' -%}
+      {%- if mf_faqs != blank and mf_faqs contains 'faq-item' -%}
+        {%- comment -%} Per-product FAQ from HTML metafield — <div class="faq-item"><h3 class="faq-q">Q</h3><p class="faq-a">A</p></div> rendered as the theme's native accordion {%- endcomment -%}
+        {%- assign faq_pairs = mf_faqs | split: '<div class="faq-item">' -%}
+        {%- assign fi = 0 -%}
+        {%- for pair in faq_pairs offset: 1 -%}
+          {%- assign parts = pair | split: '</h3>' -%}
+          {%- assign fq = parts[0] | strip_html | strip -%}
+          {%- assign fa = parts[1] | strip_html | strip -%}
+          {%- if fq != blank and fa != blank -%}
+            {%- assign fi = fi | plus: 1 -%}
+            {%- assign faq_rendered = true -%}
+            <div class="collapsible-row{% if fi == 1 %} active{% endif %}">
+              <button class="collapsible-trigger" type="button" data-accordion>{{ fq }} <span class="material-symbols-outlined">expand_more</span></button>
+              <div class="collapsible-content"><p>{{ fa }}</p></div>
+            </div>
+          {%- endif -%}
+        {%- endfor -%}
+      {%- elsif mf_faqs != blank and mf_faqs contains 'A:' -%}
         {%- comment -%} Per-product FAQ from metafield "Q: ... A: ..." — rendered as the theme's native accordion {%- endcomment -%}
         {%- assign faq_pairs = mf_faqs | split: 'Q:' -%}
         {%- assign fi = 0 -%}

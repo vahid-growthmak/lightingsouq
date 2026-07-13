@@ -1,3 +1,4 @@
+{%- comment -%} Product reviews section — v2 (resync) {%- endcomment -%}
 {%- liquid
   assign real_rating = product.metafields.reviews.rating.value
   assign real_count = product.metafields.reviews.rating_count.value
@@ -6,6 +7,13 @@
   assign show = false
   if real_rating != blank or section.blocks.size > 0
     assign show = true
+  endif
+  comment Prefer the dedicated reviews page for "View more"; fall back to Google. endcomment
+  assign more_href = section.settings.more_reviews_link
+  assign more_external = false
+  if more_href == blank
+    assign more_href = section.settings.google_link
+    assign more_external = true
   endif
 -%}
 {%- if show -%}
@@ -36,7 +44,7 @@
   </div>
   <div class="review-list-pdp">
     {% for block in section.blocks %}
-    <div class="review-item{% if section.settings.google_link == blank and forloop.index > section.settings.initial_count %} review-hidden{% endif %}" {{ block.shopify_attributes }}>
+    <div class="review-item{% if more_href == blank and forloop.index > section.settings.initial_count %} review-hidden{% endif %}" {{ block.shopify_attributes }}>
       <div class="review-item-head"><span class="review-item-author">{{ block.settings.name }} <span class="review-verified"><span class="material-symbols-outlined">check</span> Verified</span></span></div>
       <div class="stars">{% render 'rating-stars', rating: block.settings.rating %}</div>
       <p>{{ block.settings.text }}</p>
@@ -45,9 +53,11 @@
     {% endfor %}
   </div>
   <div class="reviews-actions">
-    {%- if section.settings.google_link != blank -%}
-      <a class="btn-view-more" href="{{ section.settings.google_link }}" target="_blank" rel="noopener nofollow"><span class="material-symbols-outlined">open_in_new</span> {{ section.settings.view_more_label }}</a>
-      <a class="btn-outline" href="{{ section.settings.google_link }}" target="_blank" rel="noopener nofollow">{{ section.settings.write_label }}</a>
+    {%- if more_href != blank -%}
+      <a class="btn-view-more" href="{{ more_href }}"{% if more_external %} target="_blank" rel="noopener nofollow"{% endif %}><span class="material-symbols-outlined">reviews</span> {{ section.settings.view_more_label }}</a>
+      {%- if section.settings.google_link != blank -%}
+        <a class="btn-outline" href="{{ section.settings.google_link }}" target="_blank" rel="noopener nofollow">{{ section.settings.write_label }}</a>
+      {%- endif -%}
     {%- else -%}
       <button class="btn-view-more" type="button" data-more><span class="material-symbols-outlined">expand_more</span> {{ section.settings.view_more_label }}</button>
       <button class="btn-outline" type="button">{{ section.settings.write_label }}</button>
@@ -103,6 +113,7 @@
       "label": "Total reviews",
       "default": "124"
     },
+    { "type": "url", "id": "more_reviews_link", "label": "\"View more reviews\" page (e.g. Reviews page)" },
     { "type": "header", "content": "Google reviews" },
     { "type": "checkbox", "id": "google_show", "label": "Show Google reviews badge", "default": true },
     { "type": "text", "id": "google_rating", "label": "Google rating", "default": "4.9" },

@@ -1,10 +1,12 @@
 {%- comment -%}
+  PDP core — renders per-product custom metafields (specifications, delivery, pickup) dynamically. v3 (resync)
   Main product — PDP core. Replicates the mockup as an editable TEMPLATE: title,
   price, compare-at, images, variants and description come from the real product;
   rating, sold count, stock urgency, specs, delivery copy etc. are editable
   placeholder values that always render (like the mockup) so the merchant fills them
   in. Real reviews metafield / real inventory override the placeholders when present.
   Shopify-safe schema (names <=25 chars, no empty/url/step violations, plain product form).
+  Stock is live from inventory; viewers & sold are editable toggles (OFF by default).
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -47,7 +49,7 @@
   <div class="container">
 
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="{{ routes.root_url }}">Home</a>
+      <a href="{{ routes.root_url }}">{{ s.label_home | default: 'Home' | escape }}</a>
       {%- if bc != blank %} / <a href="{{ bc.url }}">{{ bc.title }}</a>{% elsif product.type != blank %} / <a href="{{ routes.all_products_collection_url }}">{{ product.type }}</a>{% endif -%}
       {%- if product.vendor != blank and product.vendor != bc.title %} / <a href="{{ product.vendor | url_for_vendor }}">{{ product.vendor }}</a>{% endif %} /
       <span>{{ product.title }}</span>
@@ -58,21 +60,21 @@
         <div class="pdp-main-img">
           {%- if on_sale -%}
             {%- assign pct = cur.compare_at_price | minus: cur.price | times: 100.0 | divided_by: cur.compare_at_price | round -%}
-            <span class="pdp-gallery-badge">Save {{ pct }}%</span>
+            <span class="pdp-gallery-badge">{{ s.label_save | default: 'Save' | escape }} {{ pct }}%</span>
           {%- endif -%}
           <div class="pdp-gallery-tools">
-            <button class="pdp-tool-btn" type="button" aria-label="Add to wishlist" data-wishlist-toggle
+            <button class="pdp-tool-btn" type="button" aria-label="{{ settings.aria_add_wishlist | default: 'Add to wishlist' | escape }}" data-wishlist-toggle
               data-handle="{{ product.handle }}"
               data-id="{{ product.id }}"
               data-variant="{{ cur.id }}"
               data-available="{{ product.available }}"
               data-title="{{ product.title | escape }}"
               data-url="{{ product.url }}"
-              data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 400 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}"
+              data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 400 }}{% elsif settings.default_product_image != blank %}{{ settings.default_product_image | image_url: width: 400 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}"
               data-price="{{ cur.price | money }}"><span class="material-symbols-outlined">favorite</span></button>
-            <button class="pdp-tool-btn" type="button" aria-label="Share" data-share><span class="material-symbols-outlined">share</span></button>
+            <button class="pdp-tool-btn" type="button" aria-label="{{ s.label_share | default: 'Share' | escape }}" data-share><span class="material-symbols-outlined">share</span></button>
           </div>
-          <img id="MainImg--{{ section.id }}" src="{% if product.featured_image %}{{ product.featured_image | image_url: width: 900 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}" alt="{{ product.featured_image.alt | default: product.title | escape }}" width="900" height="900">
+          <img id="MainImg--{{ section.id }}" src="{% if product.featured_image %}{{ product.featured_image | image_url: width: 900 }}{% elsif settings.default_product_image != blank %}{{ settings.default_product_image | image_url: width: 900 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}" alt="{{ product.featured_image.alt | default: product.title | escape }}" width="900" height="900">
         </div>
         {%- if product.images.size > 1 -%}
           <div class="pdp-thumbs">
@@ -92,8 +94,11 @@
         <div class="pdp-rating-row">
           {%- assign g_rating = settings.google_rating | default: rating -%}
           <div class="stars">{% render 'rating-stars', rating: g_rating %}</div>
-          <a href="{{ settings.google_reviews_url | default: '#reviews' }}"{% if settings.google_reviews_url != blank %} target="_blank" rel="noopener nofollow"{% endif %} class="pdp-rating-link">{{ g_rating }} · {{ settings.google_count | default: review_count }} Google reviews</a>
-          {%- if s.sold_count != blank -%}<span class="pdp-sold">· {{ s.sold_count }} sold</span>{%- endif -%}
+          <a href="{{ settings.google_reviews_url | default: '#reviews' }}"{% if settings.google_reviews_url != blank %} target="_blank" rel="noopener nofollow"{% endif %} class="pdp-rating-link">{{ g_rating }} · {{ settings.google_count | default: review_count }} {{ settings.google_reviews_label | default: 'Google reviews' | escape }}</a>
+          {%- if s.show_sold -%}
+            {%- assign sold_val = product.metafields.custom.sold.value | default: s.sold_count -%}
+            {%- if sold_val != blank -%}<span class="pdp-sold">· {{ sold_val }} {{ s.label_sold | default: 'sold' | escape }}</span>{%- endif -%}
+          {%- endif -%}
         </div>
 
         <div class="pdp-price-row">
@@ -104,19 +109,38 @@
             <span class="pdp-discount">-{{ pct }}%</span>
           {%- endif -%}
         </div>
-        {%- if on_sale -%}<p class="pdp-save">You save {{ cur.compare_at_price | minus: cur.price | money }} today</p>{%- endif -%}
+        {%- if on_sale -%}<p class="pdp-save">{{ s.label_you_save | default: 'You save' | escape }} {{ cur.compare_at_price | minus: cur.price | money }} {{ s.label_today | default: 'today' | escape }}</p>{%- endif -%}
         {%- if s.tax_note != blank -%}<p class="pdp-tax-note">{{ s.tax_note }}</p>{%- endif -%}
 
         {%- if s.show_urgency -%}
-          {%- assign stock_txt = s.stock_label -%}
-          {%- if cur.inventory_management != blank and cur.inventory_quantity > 0 -%}
-            {%- assign stock_txt = 'Only ' | append: cur.inventory_quantity | append: ' left in stock' -%}
+          {%- liquid
+            comment Real inventory-driven stock status. endcomment
+            assign threshold = s.low_stock_threshold | default: 10
+            assign tracked = false
+            if cur.inventory_management != blank
+              assign tracked = true
+            endif
+            assign qty = cur.inventory_quantity
+            assign is_low = false
+            assign bar_pct = 100
+            if tracked and qty > 0 and qty <= threshold
+              assign is_low = true
+              assign bar_pct = qty | times: 100 | divided_by: threshold
+            endif
+          -%}
+          {%- if product.available -%}
+            <div class="pdp-stock-row">
+              {%- if is_low -%}
+                <span class="pdp-stock low"><span class="dot"></span> {{ s.stock_low_pre | default: 'Only' | escape }} {{ qty }} {{ s.stock_low_post | default: 'left in stock' | escape }}</span>
+              {%- else -%}
+                <span class="pdp-stock in"><span class="dot"></span> {{ s.stock_in | default: 'In stock' | escape }}</span>
+              {%- endif -%}
+              {%- if s.show_viewers and s.viewers != blank -%}<span class="pdp-viewers"><span class="material-symbols-outlined">visibility</span> {{ s.viewers }} {{ s.label_viewers | default: 'people viewing now' | escape }}</span>{%- endif -%}
+            </div>
+            {%- if is_low -%}<div class="pdp-stock-bar"><span style="width:{{ bar_pct }}%"></span></div>{%- endif -%}
+          {%- else -%}
+            <div class="pdp-stock-row"><span class="pdp-stock out"><span class="dot"></span> {{ s.stock_out | default: 'Out of stock' | escape }}</span></div>
           {%- endif -%}
-          <div class="pdp-stock-row">
-            <span class="pdp-stock low"><span class="dot"></span> {{ stock_txt }}</span>
-            {%- if s.viewers != blank -%}<span class="pdp-viewers"><span class="material-symbols-outlined">visibility</span> {{ s.viewers }} people viewing now</span>{%- endif -%}
-          </div>
-          <div class="pdp-stock-bar"><span style="width:{{ s.stock_bar_pct }}%"></span></div>
         {%- endif -%}
 
         <form method="post" action="{{ routes.cart_add_url }}" id="ProductForm--{{ section.id }}" class="pdp-form" accept-charset="UTF-8" enctype="multipart/form-data" data-cart-form>
@@ -141,25 +165,38 @@
           <div class="pdp-actions">
             <div class="pdp-qty-cta">
               <div class="qty-control">
-                <button type="button" data-qty-minus aria-label="Decrease">−</button>
+                <button type="button" data-qty-minus aria-label="{{ s.label_decrease | default: 'Decrease' | escape }}">−</button>
                 <span data-qty>1</span>
-                <button type="button" data-qty-plus aria-label="Increase">+</button>
+                <button type="button" data-qty-plus aria-label="{{ s.label_increase | default: 'Increase' | escape }}">+</button>
               </div>
               <input type="hidden" name="quantity" value="1" data-qty-input>
-              <button class="btn-atc" type="submit" data-atc {% unless cur.available %}disabled{% endunless %}>{% if cur.available %}ADD TO CART{% else %}SOLD OUT{% endif %}</button>
+              <button class="btn-atc" type="submit" data-atc {% unless cur.available %}disabled{% endunless %}>{% if cur.available %}{{ s.label_add_cart | default: 'ADD TO CART' | escape }}{% else %}{{ s.label_sold_out_pdp | default: 'SOLD OUT' | escape }}{% endif %}</button>
             </div>
-            {%- if cur.available -%}<button class="btn-buy-now" type="submit" name="checkout" data-buy-now>BUY IT NOW</button>{%- endif -%}
-            {%- if s.show_bulk -%}<a class="btn-quote-lg" href="{{ s.bulk_link | default: '/' }}"><span class="material-symbols-outlined" style="font-size:1.1rem;">request_quote</span> {{ s.bulk_label }}</a>{%- endif -%}
+            {%- if cur.available -%}<button class="btn-buy-now" type="submit" name="checkout" data-buy-now>{{ s.label_buy_now | default: 'BUY IT NOW' | escape }}</button>{%- endif -%}
+            {%- if s.show_bulk -%}<a class="btn-quote-lg rbo-open" href="{{ s.bulk_link | default: routes.root_url }}"
+              data-variant-id="{{ cur.id }}"
+              data-title="{{ product.title | escape }}"
+              data-variant="{{ cur.title | escape }}"
+              data-sku="{{ cur.sku }}"
+              data-handle="{{ product.handle }}"
+              data-price="{{ cur.price | money }}"
+              data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 96 }}{% endif %}"><span class="material-symbols-outlined" style="font-size:1.1rem;">request_quote</span> {{ s.bulk_label }}</a>{%- endif -%}
           </div>
         </form>
 
         <div class="pdp-pay-under">
-          <span class="pdp-pay-label"><strong>Pay your way</strong>{% if s.pay_note != blank %} — {{ s.pay_note }}{% endif %}</span>
+          <span class="pdp-pay-label"><strong>{{ s.label_pay | default: 'Pay your way' | escape }}</strong>{% if s.pay_note != blank %} — {{ s.pay_note }}{% endif %}</span>
           <div class="pay-methods">
-            <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Visa"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><text x="20" y="17.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="11" font-weight="800" font-style="italic" fill="#1A1F71" letter-spacing="0.5">VISA</text></svg>
-            <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Mastercard"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><circle cx="17" cy="13" r="6.4" fill="#EB001B"/><circle cx="24" cy="13" r="6.4" fill="#F79E1B"/><path d="M20.5 8.1a6.4 6.4 0 0 0 0 9.8 6.4 6.4 0 0 0 0-9.8z" fill="#FF5F00"/></svg>
-            <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Apple Pay"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><g fill="#000"><path d="M11.9 9.6c.3-.4.5-.9.45-1.45-.46.02-1.02.3-1.35.7-.3.35-.55.9-.48 1.42.52.04 1.05-.27 1.38-.67z"/><path d="M12.35 10.35c-.75-.05-1.38.42-1.74.42-.36 0-.9-.4-1.48-.39-.76.01-1.46.44-1.85 1.12-.79 1.37-.2 3.4.56 4.52.37.54.82 1.15 1.41 1.13.56-.02.78-.36 1.46-.36.68 0 .87.36 1.46.35.61-.01.99-.55 1.36-1.09.43-.62.6-1.22.61-1.25-.01-.01-1.17-.46-1.18-1.81-.01-1.13.92-1.67.96-1.7-.53-.77-1.34-.86-1.63-.87z"/></g><text x="26" y="16.5" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#000">Pay</text></svg>
-            <svg class="pay-chip" viewBox="0 0 40 26" role="img" aria-label="Cash on Delivery"><rect width="40" height="26" rx="4" fill="#fff" stroke="#e6e8ec"/><rect x="7" y="9.5" width="12" height="7.5" rx="1.3" fill="none" stroke="#059669" stroke-width="1.2"/><circle cx="13" cy="13.2" r="1.9" fill="#059669"/><text x="29" y="16.4" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="8" font-weight="800" fill="#059669">COD</text></svg>
+            {%- assign has_pay = false -%}
+            {%- for block in section.blocks -%}{%- if block.type == 'payment' -%}{%- assign has_pay = true -%}{%- endif -%}{%- endfor -%}
+            {%- if has_pay -%}
+              {%- for block in section.blocks -%}{%- if block.type == 'payment' -%}{% render 'payment-icon', label: block.settings.method %}{%- endif -%}{%- endfor -%}
+            {%- else -%}
+              {%- render 'payment-icon', label: 'Visa' -%}
+              {%- render 'payment-icon', label: 'Mastercard' -%}
+              {%- render 'payment-icon', label: 'Apple Pay' -%}
+              {%- render 'payment-icon', label: 'Cash on Delivery' -%}
+            {%- endif -%}
           </div>
         </div>
 
@@ -172,15 +209,27 @@
 
     <div class="pdp-accordions">
       <div class="collapsible-row active">
-        <button class="collapsible-trigger" type="button" data-accordion>Description <span class="material-symbols-outlined">expand_more</span></button>
+        <button class="collapsible-trigger" type="button" data-accordion>{{ s.label_description | default: 'Description' | escape }} <span class="material-symbols-outlined">expand_more</span></button>
         <div class="collapsible-content"><div class="pdp-desc">{% if product.description != blank %}{{ product.description }}{% else %}{{ s.fallback_desc }}{% endif %}</div></div>
       </div>
 
       <div class="collapsible-row" id="specs">
-        <button class="collapsible-trigger" type="button" data-accordion>Key Specifications <span class="material-symbols-outlined">expand_more</span></button>
+        <button class="collapsible-trigger" type="button" data-accordion>{{ s.label_specs | default: 'Key Specifications' | escape }} <span class="material-symbols-outlined">expand_more</span></button>
         <div class="collapsible-content">
+          {%- assign specs_mf = product.metafields.custom.specifications.value -%}
           <div class="spec-grid">
-            {%- if specs != blank -%}
+            {%- if specs_mf != blank -%}
+              {%- comment -%} Per-product specs from metafield "Key: Value" per line — native spec rows {%- endcomment -%}
+              {%- assign spec_rows = specs_mf | strip | newline_to_br | split: '<br />' -%}
+              {%- for row in spec_rows -%}
+                {%- assign row = row | strip -%}
+                {%- if row contains ':' -%}
+                  {%- assign sk = row | split: ':' | first | strip -%}
+                  {%- assign sv = row | remove_first: sk | remove_first: ':' | strip -%}
+                  <div class="spec-item"><span class="spec-key"><span class="material-symbols-outlined">check</span>{{ sk }}</span><span class="spec-val">{{ sv }}</span></div>
+                {%- endif -%}
+              {%- endfor -%}
+            {%- elsif specs != blank -%}
               {%- for row in specs -%}
                 {%- assign parts = row | split: '|' -%}
                 <div class="spec-item"><span class="spec-key"><span class="material-symbols-outlined">check</span>{{ parts[0] | strip }}</span><span class="spec-val">{{ parts[1] | default: parts[0] | strip }}</span></div>
@@ -196,10 +245,19 @@
         </div>
       </div>
 
-      {%- if s.delivery_content != blank -%}
+      {%- assign mf_delivery = product.metafields.custom.delivery.value -%}
+      {%- assign mf_pickup = product.metafields.custom.pickup.value -%}
+      {%- if mf_delivery != blank or mf_pickup != blank or s.delivery_content != blank -%}
         <div class="collapsible-row">
-          <button class="collapsible-trigger" type="button" data-accordion>Delivery &amp; Pick-up <span class="material-symbols-outlined">expand_more</span></button>
-          <div class="collapsible-content"><div class="delivery-content">{{ s.delivery_content }}</div></div>
+          <button class="collapsible-trigger" type="button" data-accordion>{{ s.label_delivery | default: 'Delivery &amp; Pick-up' }} <span class="material-symbols-outlined">expand_more</span></button>
+          <div class="collapsible-content"><div class="delivery-content">
+            {%- if mf_delivery != blank or mf_pickup != blank -%}
+              {%- if mf_delivery != blank -%}<div class="pdp-dp-block"><strong>Delivery</strong><p>{{ mf_delivery | newline_to_br }}</p></div>{%- endif -%}
+              {%- if mf_pickup != blank -%}<div class="pdp-dp-block"><strong>Pickup</strong><p>{{ mf_pickup | newline_to_br }}</p></div>{%- endif -%}
+            {%- else -%}
+              {{ s.delivery_content }}
+            {%- endif -%}
+          </div></div>
         </div>
       {%- endif -%}
     </div>
@@ -209,7 +267,7 @@
 <div class="sticky-atc" data-sticky>
   <div class="container sticky-atc-inner">
     <div class="sticky-atc-left">
-      <img class="sticky-atc-thumb" src="{% if product.featured_image %}{{ product.featured_image | image_url: width: 120 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}" alt="{{ product.title | escape }}" width="60" height="60">
+      <img class="sticky-atc-thumb" src="{% if product.featured_image %}{{ product.featured_image | image_url: width: 120 }}{% elsif settings.default_product_image != blank %}{{ settings.default_product_image | image_url: width: 120 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}" alt="{{ product.title | escape }}" width="60" height="60">
       <div class="sticky-atc-info">
         <div class="sticky-atc-title">{{ product.title }}</div>
         <div class="sticky-atc-meta">
@@ -219,8 +277,8 @@
       </div>
     </div>
     <div class="sticky-atc-actions">
-      <button class="btn-atc" type="button" data-sticky-atc {% unless cur.available %}disabled{% endunless %}>{% if cur.available %}Add to Cart{% else %}Sold Out{% endif %}</button>
-      {%- if cur.available -%}<button class="btn-buy-now" type="button" data-sticky-buy>Buy it Now</button>{%- endif -%}
+      <button class="btn-atc" type="button" data-sticky-atc {% unless cur.available %}disabled{% endunless %}>{% if cur.available %}{{ s.label_add_cart_sticky | default: 'Add to Cart' | escape }}{% else %}{{ s.label_sold_sticky | default: 'Sold Out' | escape }}{% endif %}</button>
+      {%- if cur.available -%}<button class="btn-buy-now" type="button" data-sticky-buy>{{ s.label_buy_sticky | default: 'Buy it Now' | escape }}</button>{%- endif -%}
     </div>
   </div>
 </div>
@@ -236,6 +294,8 @@
     var atc = root.querySelector('[data-atc]');
     var form = root.querySelector('.pdp-form');
     var moneyFormat = {{ shop.money_format | json }};
+    var L_ATC = {{ s.label_add_cart | default: 'ADD TO CART' | json }};
+    var L_SOLD = {{ s.label_sold_out_pdp | default: 'SOLD OUT' | json }};
     function money(cents) {
       var v = (cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       return moneyFormat.replace(/\{\{\s*amount\s*\}\}/, v);
@@ -254,7 +314,7 @@
       if (!match) return;
       if (idInput) idInput.value = match.id;
       if (priceEl) priceEl.textContent = money(match.price);
-      if (atc) { atc.disabled = !match.available; atc.textContent = match.available ? 'ADD TO CART' : 'SOLD OUT'; }
+      if (atc) { atc.disabled = !match.available; atc.textContent = match.available ? L_ATC : L_SOLD; }
     }
     optionGrids.forEach(function (g) {
       g.querySelectorAll('.option-btn').forEach(function (btn) {
@@ -307,16 +367,46 @@
   "name": "Product",
   "tag": "section",
   "settings": [
+    { "type": "header", "content": "Labels & wording" },
+    { "type": "text", "id": "label_home", "label": "Breadcrumb home", "default": "Home" },
+    { "type": "text", "id": "label_save", "label": "Save badge word", "default": "Save" },
+    { "type": "text", "id": "label_share", "label": "Share button label", "default": "Share" },
+    { "type": "text", "id": "label_sold", "label": "'sold' word", "default": "sold" },
+    { "type": "text", "id": "label_you_save", "label": "'You save' text", "default": "You save" },
+    { "type": "text", "id": "label_today", "label": "'today' word", "default": "today" },
+    { "type": "text", "id": "stock_low_pre", "label": "Low stock prefix", "default": "Only" },
+    { "type": "text", "id": "stock_low_post", "label": "Low stock suffix", "default": "left in stock" },
+    { "type": "text", "id": "stock_in", "label": "In stock text", "default": "In stock" },
+    { "type": "text", "id": "stock_out", "label": "Out of stock text", "default": "Out of stock" },
+    { "type": "text", "id": "label_viewers", "label": "'people viewing now' text", "default": "people viewing now" },
+    { "type": "text", "id": "label_decrease", "label": "Qty decrease label", "default": "Decrease" },
+    { "type": "text", "id": "label_increase", "label": "Qty increase label", "default": "Increase" },
+    { "type": "text", "id": "label_add_cart", "label": "Add to cart button", "default": "ADD TO CART" },
+    { "type": "text", "id": "label_sold_out_pdp", "label": "Sold out button", "default": "SOLD OUT" },
+    { "type": "text", "id": "label_buy_now", "label": "Buy it now button", "default": "BUY IT NOW" },
+    { "type": "text", "id": "label_add_cart_sticky", "label": "Sticky add to cart", "default": "Add to Cart" },
+    { "type": "text", "id": "label_sold_sticky", "label": "Sticky sold out", "default": "Sold Out" },
+    { "type": "text", "id": "label_buy_sticky", "label": "Sticky buy it now", "default": "Buy it Now" },
+    { "type": "text", "id": "label_pay", "label": "Payment heading", "default": "Pay your way" },
+    { "type": "text", "id": "label_description", "label": "Description tab", "default": "Description" },
+    { "type": "text", "id": "label_specs", "label": "Specifications tab", "default": "Key Specifications" },
+    { "type": "text", "id": "label_delivery", "label": "Delivery tab", "default": "Delivery & Pick-up" },
     { "type": "header", "content": "Rating (placeholder until a reviews app)" },
     { "type": "range", "id": "fallback_rating", "label": "Rating", "min": 0, "max": 5, "step": 0.1, "default": 4.7 },
     { "type": "text", "id": "fallback_reviews", "label": "Review count", "default": "90" },
-    { "type": "text", "id": "sold_count", "label": "Sold count", "default": "340+" },
     { "type": "text", "id": "tax_note", "label": "Price note", "default": "Price incl. VAT · Free delivery over QAR 150" },
-    { "type": "header", "content": "Stock urgency" },
-    { "type": "checkbox", "id": "show_urgency", "label": "Show stock urgency", "default": true },
-    { "type": "text", "id": "stock_label", "label": "Stock label", "default": "Only 6 left in stock" },
-    { "type": "text", "id": "viewers", "label": "Viewers count", "default": "18" },
-    { "type": "range", "id": "stock_bar_pct", "label": "Stock bar fill", "min": 0, "max": 100, "step": 1, "default": 22 },
+    { "type": "header", "content": "Stock status (live inventory)" },
+    { "type": "checkbox", "id": "show_urgency", "label": "Show stock status", "default": true },
+    { "type": "paragraph", "content": "Reads live from the product's inventory. 'Only X left' shows when tracked stock is at or below the threshold; otherwise 'In stock'; 'Out of stock' when unavailable." },
+    { "type": "range", "id": "low_stock_threshold", "label": "Low-stock threshold", "min": 1, "max": 50, "step": 1, "default": 10 },
+    { "type": "header", "content": "People viewing now" },
+    { "type": "paragraph", "content": "There is no real live-visitor data in a theme — this is a manual number. Leave OFF and use the LastHour app for a genuine live count, or turn it on with your own value." },
+    { "type": "checkbox", "id": "show_viewers", "label": "Show 'people viewing now'", "default": false },
+    { "type": "text", "id": "viewers", "label": "Viewers number", "default": "18" },
+    { "type": "header", "content": "Units sold" },
+    { "type": "paragraph", "content": "Real 'sold' comes from a product metafield custom.sold if set, otherwise the number below. Leave OFF, or use the LastHour app." },
+    { "type": "checkbox", "id": "show_sold", "label": "Show 'X sold'", "default": false },
+    { "type": "text", "id": "sold_count", "label": "Sold number (fallback)", "default": "340+" },
     { "type": "header", "content": "Actions" },
     { "type": "checkbox", "id": "show_bulk", "label": "Show bulk order button", "default": true },
     { "type": "text", "id": "bulk_label", "label": "Bulk button label", "default": "Request Bulk Order" },
@@ -338,6 +428,23 @@
         { "type": "text", "id": "key", "label": "Label", "default": "Base / Fitting" },
         { "type": "text", "id": "value", "label": "Value", "default": "E27" }
       ]
+    },
+    {
+      "type": "payment",
+      "name": "Payment icon",
+      "settings": [
+        { "type": "select", "id": "method", "label": "Method", "default": "Visa", "options": [
+          { "value": "Visa", "label": "Visa" },
+          { "value": "Mastercard", "label": "Mastercard" },
+          { "value": "Apple Pay", "label": "Apple Pay" },
+          { "value": "Google Pay", "label": "Google Pay" },
+          { "value": "Amex", "label": "American Express" },
+          { "value": "PayPal", "label": "PayPal" },
+          { "value": "mada", "label": "mada" },
+          { "value": "Tabby", "label": "Tabby" },
+          { "value": "Cash on Delivery", "label": "Cash on Delivery" }
+        ] }
+      ]
     }
   ],
   "presets": [
@@ -356,3 +463,4 @@
   ]
 }
 {% endschema %}
+

@@ -487,14 +487,16 @@
       if (qtyField && !frm.querySelector('.lsq-qty')) {
         var q = document.createElement('div');
         q.className = 'lsq-qty';
-        q.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:0.75rem;margin:0.75rem 0 0.25rem;';
+        q.style.cssText = 'display:flex;align-items:center;justify-content:center;gap:0.85rem;margin:0.25rem 0 1.1rem;padding:0.6rem 0;border-top:1px solid #f3f4f6;border-bottom:1px solid #f3f4f6;';
         q.innerHTML = '<span style="font-size:0.85rem;font-weight:600;color:#374151;">Quantity</span>' +
           '<button type="button" data-lsq-minus style="width:32px;height:32px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:1.1rem;cursor:pointer;">\u2212</button>' +
           '<span data-lsq-qty style="min-width:2ch;text-align:center;font-weight:700;">1</span>' +
           '<button type="button" data-lsq-plus style="width:32px;height:32px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:1.1rem;cursor:pointer;">+</button>';
         var firstNameEl = frm.querySelector('[name="storeifyInput_first_name"]');
-        var row = firstNameEl ? (firstNameEl.closest('div') || firstNameEl) : null;
-        if (row && row.parentElement) { row.parentElement.insertBefore(q, row); }
+        var lastNameEl = frm.querySelector('[name="storeifyInput_last_name"]');
+        var row = firstNameEl ? firstNameEl.parentElement : null;
+        while (row && row !== frm && !(lastNameEl && row.contains(lastNameEl))) { row = row.parentElement; }
+        if (row && row !== frm && row.parentElement) { row.parentElement.insertBefore(q, row); }
         else if (titleEl && titleEl.parentElement) { titleEl.insertAdjacentElement('afterend', q); }
         else { frm.insertAdjacentElement('afterbegin', q); }
         var n = parseInt(qtyField.value, 10) || 1;
@@ -517,7 +519,12 @@
           '<input type="text" data-lsq-search placeholder="Search products..." autocomplete="off" style="width:100%;padding:0.65rem 0.8rem;border:1px solid #d1d5db;border-radius:10px;font-family:inherit;">' +
           '<div data-lsq-results style="border:1px solid #e5e7eb;border-radius:10px;margin-top:4px;max-height:180px;overflow:auto;display:none;background:#fff;"></div>' +
           '<div data-lsq-list style="margin-top:0.5rem;display:flex;flex-direction:column;gap:0.35rem;"></div>';
-        comment.closest('div') ? comment.closest('div').insertAdjacentElement('beforebegin', box) : frm.appendChild(box);
+        var cwrap = comment.closest('div') || comment;
+        var canchor = cwrap;
+        var cprev = cwrap.previousElementSibling;
+        if (cprev && !cprev.querySelector('textarea') && /comment|suggestion/i.test(cprev.textContent)) { canchor = cprev; }
+        canchor.insertAdjacentElement('beforebegin', box);
+        box.style.margin = '0.25rem 0 1.1rem';
         var inp = box.querySelector('[data-lsq-search]'), res = box.querySelector('[data-lsq-results]'), list = box.querySelector('[data-lsq-list]');
         var t = null;
         inp.addEventListener('input', function () {

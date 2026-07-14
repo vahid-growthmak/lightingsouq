@@ -410,3 +410,43 @@
   });
 })();
 </script>
+
+<script>
+  /* Storeify quote form -> WhatsApp continuation.
+     When the app's quote popup submits successfully, offer the same
+     auto-drafted WhatsApp handoff as the bulk-order popup. */
+  (function () {
+    if (!WA_NUMBER) return;
+    var last = null;
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.storeify-submit-frm');
+      if (!btn) return;
+      var frm = btn.closest('.storeify-requestaquote') || document;
+      function val(sel) { var el = frm.querySelector(sel); return el ? el.value.trim() : ''; }
+      last = {
+        first: val('[name="storeifyInput_first_name"]'),
+        lastn: val('[name="storeifyInput_last_name"]'),
+        email: val('[name="storeifyInput_email"]'),
+        product: val('[name="storeify_product_title"]'),
+        qty: val('[name="ify_qty"]') || '1',
+        comment: (frm.querySelector('textarea') || {}).value || ''
+      };
+    }, true);
+    var mo = new MutationObserver(function () {
+      var modal = document.querySelector('.storeify-light-modal');
+      if (!modal || modal.offsetParent === null && getComputedStyle(modal).display === 'none') return;
+      var txt = modal.textContent || '';
+      if (!/has been submitted|received your quote/i.test(txt)) return;
+      if (modal.querySelector('.sfy-wa-continue') || !last) return;
+      var lines = ['QUOTE REQUEST', '', 'Product: ' + last.product + ' × ' + last.qty, 'Name: ' + (last.first + ' ' + last.lastn).trim(), 'Email: ' + last.email];
+      if (last.comment) lines.push('Notes: ' + last.comment);
+      var holder = document.createElement('div');
+      holder.style.cssText = 'text-align:center;margin-top:1.25rem;';
+      holder.innerHTML = '<a class="sfy-wa-continue" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.5rem;background:#22c55e;color:#fff;font-weight:700;padding:0.8rem 1.4rem;border-radius:10px;text-decoration:none;font-family:inherit;">✉ Continue on WhatsApp</a>';
+      holder.querySelector('a').href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(lines.join('\n'));
+      var target = modal.querySelector('.storeify-light-modal-content') || modal;
+      target.appendChild(holder);
+    });
+    mo.observe(document.body, { childList: true, subtree: true, characterData: true });
+  })();
+</script>

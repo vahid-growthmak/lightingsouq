@@ -721,16 +721,6 @@
             "link": "/collections/solar-lights",
             "button_label": "Browse →"
           }
-        },
-        "space_BtRxed": {
-          "type": "space",
-          "settings": {
-            "fallback": "space-smart.png",
-            "title": "Smart Home Lighting",
-            "description": "Control lights from your phone",
-            "link": "/collections/smart-lights",
-            "button_label": "Browse →"
-          }
         }
       },
       "block_order": [
@@ -738,8 +728,7 @@
         "space_DeFtGB",
         "space_8VdCcr",
         "space_f8NeAC",
-        "space_fVVrcd",
-        "space_BtRxed"
+        "space_fVVrcd"
       ],
       "name": "Shop Lighting by Space",
       "settings": {

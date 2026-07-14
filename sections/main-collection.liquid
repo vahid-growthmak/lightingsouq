@@ -83,14 +83,19 @@
                     {%- endfor -%}
                   {%- when 'price_range' -%}
                     {%- liquid
-                      assign ps_max = filter.range_max | money_without_currency | remove: ',' | ceil
+                      comment
+                        Money values are numeric subunits (cents) - divide by 100.
+                        Never parse formatted money strings: the store money format
+                        uses European separators (18.200,00) which breaks parsing.
+                      endcomment
+                      assign ps_max = filter.range_max | divided_by: 100.0 | ceil
                       assign ps_min_val = 0
                       if filter.min_value.value != blank
-                        assign ps_min_val = filter.min_value.value | money_without_currency | remove: ',' | floor
+                        assign ps_min_val = filter.min_value.value | divided_by: 100.0 | floor
                       endif
                       assign ps_max_val = ps_max
                       if filter.max_value.value != blank
-                        assign ps_max_val = filter.max_value.value | money_without_currency | remove: ',' | ceil
+                        assign ps_max_val = filter.max_value.value | divided_by: 100.0 | ceil
                       endif
                     -%}
                     <div class="price-slider" data-price-slider data-ps-cap="{{ ps_max }}" data-ps-currency="{{ cart.currency.iso_code }}">
@@ -154,9 +159,9 @@
             </nav>
           {%- endif -%}
         {%- else -%}
-          <div style="padding:3rem 0;text-align:center;color:var(--gray-500);">
-            <p>{{ section.settings.empty_title | default: 'No products found' | escape }}{% if collection.all_products_count > 0 %} {{ section.settings.empty_subtitle | default: 'with these filters' | escape }}{% endif %}.</p>
-            <a class="btn-primary" href="{{ collection.url | default: routes.all_products_collection_url }}" style="margin-top:1rem;">{{ section.settings.empty_button | default: 'View all products' | escape }}</a>
+          <div style="padding:3rem 0;display:flex;flex-direction:column;align-items:center;gap:1.25rem;text-align:center;color:var(--gray-500);">
+            <p style="margin:0;">{{ section.settings.empty_title | default: 'No products found' | escape }}{% if collection.all_products_count > 0 %} {{ section.settings.empty_subtitle | default: 'with these filters' | escape }}{% endif %}.</p>
+            <a class="btn-primary" href="{{ collection.url | default: routes.all_products_collection_url }}" style="display:inline-flex;align-items:center;">{{ section.settings.empty_button | default: 'View all products' | escape }}</a>
           </div>
         {%- endif -%}
       </div>

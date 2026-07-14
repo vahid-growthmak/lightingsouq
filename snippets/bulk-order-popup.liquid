@@ -493,11 +493,25 @@
           '<button type="button" data-lsq-minus style="width:32px;height:32px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:1.1rem;cursor:pointer;">\u2212</button>' +
           '<span data-lsq-qty style="min-width:2ch;text-align:center;font-weight:700;">1</span>' +
           '<button type="button" data-lsq-plus style="width:32px;height:32px;border:1px solid #d1d5db;border-radius:8px;background:#fff;font-size:1.1rem;cursor:pointer;">+</button>';
-        var lastNameEl = frm.querySelector('[name="storeifyInput_last_name"]');
-        var row = fnEl.parentElement;
-        while (row && row !== frm && !(lastNameEl && row.contains(lastNameEl))) { row = row.parentElement; }
-        if (row && row !== frm && row.parentElement) { row.parentElement.insertBefore(q, row); }
-        else { fnEl.closest('div').insertAdjacentElement('beforebegin', q); }
+        var ptv = (frm.querySelector('[name="storeify_product_title"]') || {}).value || '';
+        var tEl = null;
+        if (ptv) {
+          var all = frm.querySelectorAll('h1,h2,h3,h4,p,div,span,strong,b');
+          for (var ti = 0; ti < all.length; ti++) {
+            if (all[ti].children.length === 0 && all[ti].textContent.trim() === ptv.trim()) { tEl = all[ti]; break; }
+          }
+        }
+        if (tEl) {
+          var tHost = tEl;
+          while (tHost.parentElement && tHost.parentElement !== frm && tHost.parentElement.textContent.trim() === ptv.trim()) { tHost = tHost.parentElement; }
+          tHost.insertAdjacentElement('afterend', q);
+        } else {
+          var lastNameEl = frm.querySelector('[name="storeifyInput_last_name"]');
+          var row = fnEl.parentElement;
+          while (row && row !== frm && !(lastNameEl && row.contains(lastNameEl))) { row = row.parentElement; }
+          if (row && row !== frm && row.parentElement && row.parentElement !== frm) { row.parentElement.insertBefore(q, row); }
+          else { fnEl.closest('div').insertAdjacentElement('beforebegin', q); }
+        }
         var n = parseInt(qtyField.value, 10) || 1;
         function paint() { q.querySelector('[data-lsq-qty]').textContent = n; qtyField.value = n; }
         q.querySelector('[data-lsq-minus]').addEventListener('click', function () { n = Math.max(1, n - 1); paint(); });

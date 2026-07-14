@@ -533,7 +533,12 @@
               .then(function (r) { return r.json(); })
               .then(function (d) {
                 var prods = (d.resources && d.resources.results && d.resources.results.products) || [];
-                res.innerHTML = prods.map(function (pr) { return '<div data-lsq-pick data-title="' + pr.title.replace(/"/g, '&quot;') + '" style="padding:0.5rem 0.75rem;cursor:pointer;font-size:0.85rem;border-bottom:1px solid #f3f4f6;">' + pr.title + '</div>'; }).join('') || '<div style="padding:0.5rem 0.75rem;color:#9ca3af;font-size:0.85rem;">No products found</div>';
+                res.innerHTML = prods.map(function (pr) {
+                  var img = pr.featured_image ? (pr.featured_image.url || pr.image || '') : (pr.image || '');
+                  return '<div data-lsq-pick data-title="' + pr.title.replace(/"/g, '&quot;') + '" data-img="' + img + '" style="display:flex;align-items:center;gap:0.6rem;padding:0.45rem 0.7rem;cursor:pointer;font-size:0.85rem;border-bottom:1px solid #f3f4f6;">' +
+                    (img ? '<img src="' + img + '" width="34" height="34" style="width:34px;height:34px;object-fit:contain;border:1px solid #f3f4f6;border-radius:6px;background:#fff;flex-shrink:0;" alt="">' : '') +
+                    '<span>' + pr.title + '</span></div>';
+                }).join('') || '<div style="padding:0.5rem 0.75rem;color:#9ca3af;font-size:0.85rem;">No products found</div>';
                 res.style.display = 'block';
               }).catch(function () {});
           }, 250);
@@ -541,13 +546,14 @@
         res.addEventListener('click', function (e) {
           var pick = e.target.closest('[data-lsq-pick]');
           if (!pick) return;
-          extras.push({ title: pick.getAttribute('data-title'), qty: 1 });
+          extras.push({ title: pick.getAttribute('data-title'), image: pick.getAttribute('data-img') || '', qty: 1 });
           res.style.display = 'none'; inp.value = '';
           renderList();
         });
         function renderList() {
           list.innerHTML = extras.map(function (x, i) {
             return '<div style="display:flex;align-items:center;gap:0.5rem;background:#f9fafb;border:1px solid #e5e7eb;border-radius:8px;padding:0.4rem 0.6rem;font-size:0.83rem;">' +
+              (x.image ? '<img src="' + x.image + '" width="38" height="38" style="width:38px;height:38px;object-fit:contain;border:1px solid #e5e7eb;border-radius:6px;background:#fff;flex-shrink:0;" alt="">' : '') +
               '<span style="flex:1;">' + x.title + '</span>' +
               '<button type="button" data-i="' + i + '" data-lsq-xminus style="width:24px;height:24px;border:1px solid #d1d5db;border-radius:6px;background:#fff;cursor:pointer;">\u2212</button>' +
               '<b>' + x.qty + '</b>' +

@@ -79,11 +79,37 @@
         "b6"
       ],
       "settings": {
+        "label_home": "Home",
+        "label_save": "Save",
+        "label_share": "Share",
+        "label_sold": "sold",
+        "label_you_save": "You save",
+        "label_today": "today",
+        "stock_low_pre": "Only",
+        "stock_low_post": "left in stock",
+        "stock_in": "In stock",
+        "stock_out": "Out of stock",
+        "label_viewers": "people viewing now",
+        "label_decrease": "Decrease",
+        "label_increase": "Increase",
+        "label_add_cart": "ADD TO CART",
+        "label_sold_out_pdp": "SOLD OUT",
+        "label_buy_now": "BUY IT NOW",
+        "label_add_cart_sticky": "Add to Cart",
+        "label_sold_sticky": "Sold Out",
+        "label_buy_sticky": "Buy it Now",
+        "label_pay": "Pay your way",
+        "label_description": "Description",
+        "label_specs": "Key Specifications",
+        "label_delivery": "Delivery & Pick-up",
         "fallback_rating": 4.7,
         "fallback_reviews": "90",
         "tax_note": "Price incl. VAT · Free delivery over QAR 150",
         "show_urgency": true,
+        "low_stock_threshold": 10,
+        "show_viewers": false,
         "viewers": "18",
+        "show_sold": false,
         "sold_count": "340+",
         "show_bulk": true,
         "bulk_label": "Request Bulk Order",
@@ -477,6 +503,27 @@
         "button_label": "Request a Bulk Quote",
         "button_link": ""
       }
+    },
+    "178402116969ef9e2e": {
+      "type": "apps",
+      "blocks": {
+        "storeify_request_a_quote_button_block_ErMaPL": {
+          "type": "shopify://apps/storeify-request-a-quote/blocks/button_block/dac9aba2-251e-4c25-abc3-9fc57dbf7885",
+          "settings": {
+            "font_size": 16,
+            "color_text": "#FFFFFF",
+            "bg_button": "#000000",
+            "label_btn": "Add to Quote",
+            "multi_lang": false,
+            "class_button": "storeify-btn-custom",
+            "form_id": ""
+          }
+        }
+      },
+      "block_order": [
+        "storeify_request_a_quote_button_block_ErMaPL"
+      ],
+      "settings": {}
     }
   },
   "order": [
@@ -488,6 +535,7 @@
     "related",
     "similar",
     "faq",
-    "bulk"
+    "bulk",
+    "178402116969ef9e2e"
   ]
 }

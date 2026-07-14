@@ -8,7 +8,8 @@
   assign slug = name | downcase | replace: '.', '' | replace: '&', 'and' | replace: '  ', ' ' | strip | replace: ' ', '-'
   assign href = link
   if href == blank
-    assign href = '/collections/' | append: slug
+    assign page_slug = name | handleize
+    assign href = '/pages/' | append: page_slug
   endif
   if image != blank
     assign src = image | image_url: width: 240

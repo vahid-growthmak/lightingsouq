@@ -1,0 +1,9 @@
+{
+  "sections": {
+    "main": {
+      "type": "brands-index",
+      "settings": {}
+    }
+  },
+  "order": ["main"]
+}

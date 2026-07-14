@@ -51,7 +51,7 @@
     <nav class="breadcrumb" aria-label="Breadcrumb">
       <a href="{{ routes.root_url }}">{{ s.label_home | default: 'Home' | escape }}</a>
       {%- if bc != blank %} / <a href="{{ bc.url }}">{{ bc.title }}</a>{% elsif product.type != blank %} / <a href="{{ routes.all_products_collection_url }}">{{ product.type }}</a>{% endif -%}
-      {%- if product.vendor != blank and product.vendor != bc.title %} / <a href="{{ product.vendor | url_for_vendor }}">{{ product.vendor }}</a>{% endif %} /
+      {%- if product.vendor != blank and product.vendor != bc.title %} / <a href="/pages/{{ product.vendor | handleize }}">{{ product.vendor }}</a>{% endif %} /
       <span>{{ product.title }}</span>
     </nav>
 

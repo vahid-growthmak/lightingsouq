@@ -1,0 +1,52 @@
+{%- comment -%}
+  All-brands index — one tile per vendor in the store, linking to that
+  brand's dedicated page (/pages/<brand-handle>). Fully dynamic: new vendors
+  appear automatically after their products are imported.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+-%}
+<section class="section {{ s.bg }}">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a> / <span>{{ s.heading | escape }}</span>
+    </nav>
+    <h1 class="section-title text-center">{{ s.heading }}</h1>
+    <p class="section-sub text-center mb-8">{{ s.subtitle }}</p>
+    <div class="brands-index-grid">
+      {%- for v in shop.vendors -%}
+        {%- if v == 'VS (Vossloh-Schwabe)' -%}{%- continue -%}{%- endif -%}
+        {%- assign vslug = v | handleize -%}
+        {%- assign vcol = collections[vslug] -%}
+        {%- assign vlink = '/pages/' | append: vslug -%}
+        <div class="brand-index-card">
+          {%- render 'brand-logo', name: v, link: vlink -%}
+          <a class="brand-index-meta" href="{{ vlink }}">{% if vcol != blank %}{{ vcol.products_count }} {{ s.count_suffix | default: 'products' | escape }}{% else %}{{ s.view_label | default: 'View brand' | escape }}{% endif %}</a>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brands index",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Our Brands" },
+    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Every brand we stock — genuine, Theqa-certified, with local warranty." },
+    { "type": "text", "id": "count_suffix", "label": "Count suffix", "default": "products" },
+    { "type": "text", "id": "view_label", "label": "Fallback label", "default": "View brand" },
+    {
+      "type": "select",
+      "id": "bg",
+      "label": "Background",
+      "options": [
+        { "value": "bg-white", "label": "White" },
+        { "value": "bg-gray", "label": "Gray" }
+      ],
+      "default": "bg-white"
+    }
+  ]
+}
+{% endschema %}

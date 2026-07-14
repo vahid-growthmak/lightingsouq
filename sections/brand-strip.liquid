@@ -14,12 +14,17 @@
       {%- else -%}
         {%- comment -%} No blocks configured — show the store's brand collections so this is never empty {%- endcomment -%}
         {%- assign d_names = 'Ledvance,Philips,Wink,Glint,Osram' | split: ',' -%}
-        {%- assign d_links = '/collections/ledvance,/collections/philips,/collections/wink,/collections/glint,/collections/osram' | split: ',' -%}
+        {%- assign d_links = '/pages/ledvance,/pages/philips,/pages/wink,/pages/glint,/pages/osram' | split: ',' -%}
         {%- for name in d_names -%}
           {%- render 'brand-logo', name: name, link: d_links[forloop.index0] -%}
         {%- endfor -%}
       {%- endif -%}
     </div>
+    {%- if section.settings.view_all_label != blank -%}
+      <div style="text-align:center;margin-top:1.75rem;">
+        <a class="btn-view-more" href="{{ section.settings.view_all_link | default: '/pages/brands' }}">{{ section.settings.view_all_label }} <span class="material-symbols-outlined">arrow_forward</span></a>
+      </div>
+    {%- endif -%}
   </div>
 </section>
 
@@ -30,6 +35,8 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "Shop by Brand" },
     { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "From value picks to premium ecosystems — go straight to your brand." },
+    { "type": "text", "id": "view_all_label", "label": "View all label", "default": "View All Brands" },
+    { "type": "url", "id": "view_all_link", "label": "View all link" },
     {
       "type": "select",
       "id": "bg",

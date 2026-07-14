@@ -330,44 +330,44 @@
         "category_cQHVaY": {
           "type": "category",
           "settings": {
-            "collection": "led-tubes",
-            "fallback": "prod-tube.png",
-            "title": "LED Tubes",
+            "collection": "conventional-bulbs",
+            "fallback": "prod-bulb.png",
+            "title": "Conventional Bulbs",
             "count": "T8 · T5 battens",
-            "link": "/collections/led-tubes",
+            "link": "/collections/conventional-bulbs",
             "link_label": "Shop Now →"
           }
         },
         "category_VLA3cn": {
           "type": "category",
           "settings": {
-            "collection": "downlights",
-            "fallback": "space-office.png",
-            "title": "Downlights & Spots",
+            "collection": "led-strips",
+            "fallback": "space-smart.png",
+            "title": "LED & RGB Strips",
             "count": "Recessed & spots",
-            "link": "/collections/downlights",
+            "link": "/collections/led-strips",
             "link_label": "Shop Now →"
           }
         },
         "category_hBehCk": {
           "type": "category",
           "settings": {
-            "collection": "indoor-fixtures",
-            "fallback": "prod-pendant.png",
-            "title": "Indoor Fixtures",
+            "collection": "solar-outdoor",
+            "fallback": "prod-solar.png",
+            "title": "Solar & Outdoor",
             "count": "Panels · pendants · lamps",
-            "link": "/collections/indoor-fixtures",
+            "link": "/collections/solar-outdoor",
             "link_label": "Shop Now →"
           }
         },
         "category_hzHyqr": {
           "type": "category",
           "settings": {
-            "collection": "solar-outdoor",
+            "collection": "outdoor-lights",
             "fallback": "space-outdoor.png",
-            "title": "Solar & Outdoor",
+            "title": "Outdoor & Garden",
             "count": "Solar · flood · garden",
-            "link": "/collections/solar-outdoor",
+            "link": "/collections/outdoor-lights",
             "link_label": "Shop Now →"
           }
         },
@@ -375,7 +375,7 @@
           "type": "category",
           "settings": {
             "collection": "fans-electrical",
-            "fallback": "prod-living.png",
+            "fallback": "prod-tube.png",
             "title": "Fans & Electrical",
             "count": "Fans · drivers · switches",
             "link": "/collections/fans-electrical",
@@ -385,11 +385,11 @@
         "category_QAXpQa": {
           "type": "category",
           "settings": {
-            "collection": "deals",
-            "fallback": "prod-solar.png",
-            "title": "Today's Deals",
+            "collection": "smart-gadgets",
+            "fallback": "space-home.png",
+            "title": "Smart Gadgets",
             "count": "Save up to 40%",
-            "link": "/collections/deals",
+            "link": "/collections/smart-gadgets",
             "link_label": "Shop Now →"
           }
         }
@@ -417,63 +417,56 @@
           "type": "brand",
           "settings": {
             "name": "Ledvance",
-            "link": "/collections/ledvance"
+            "link": "/pages/ledvance"
           }
         },
         "brand_dkrwDq": {
           "type": "brand",
           "settings": {
             "name": "Osram",
-            "link": "/collections/osram"
+            "link": "/pages/osram"
           }
         },
         "brand_HREDD9": {
           "type": "brand",
           "settings": {
             "name": "Philips",
-            "link": "/collections/philips"
+            "link": "/pages/philips"
           }
         },
         "brand_Jig7YG": {
           "type": "brand",
           "settings": {
             "name": "Wink",
-            "link": "/collections/wink"
+            "link": "/pages/wink"
           }
         },
         "brand_xR7xgi": {
           "type": "brand",
           "settings": {
             "name": "Xiaomi",
-            "link": "/collections/xiaomi"
+            "link": "/pages/xiaomi"
           }
         },
         "brand_Vqty6e": {
           "type": "brand",
           "settings": {
             "name": "GE",
-            "link": "/collections/ge"
+            "link": "/pages/ge"
           }
         },
         "brand_TDiM78": {
           "type": "brand",
           "settings": {
             "name": "Glint",
-            "link": "/collections/glint"
+            "link": "/pages/glint"
           }
         },
         "brand_4G4rNg": {
           "type": "brand",
           "settings": {
             "name": "KDK",
-            "link": "/collections/kdk"
-          }
-        },
-        "brand_CgPAdn": {
-          "type": "brand",
-          "settings": {
-            "name": "All Brands",
-            "link": "/collections"
+            "link": "/pages/kdk"
           }
         }
       },
@@ -485,8 +478,7 @@
         "brand_xR7xgi",
         "brand_Vqty6e",
         "brand_TDiM78",
-        "brand_4G4rNg",
-        "brand_CgPAdn"
+        "brand_4G4rNg"
       ],
       "name": "Brand Strip",
       "settings": {

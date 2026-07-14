@@ -1469,6 +1469,22 @@ details.filter-group[open] > summary { margin-bottom: 0.75rem; }
 .price-slider .ps-range::-moz-range-thumb { pointer-events: auto; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 2px solid var(--brand-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.25); cursor: grab; }
 .price-slider .ps-range::-moz-range-track { background: transparent; }
 .price-slider .ps-labels { display: flex; justify-content: space-between; margin-top: 0.65rem; font-size: 0.8rem; font-weight: 600; color: var(--gray-600); }
+/* ---- Brand pages ---- */
+.brand-hero { display: flex; align-items: center; gap: 1.5rem; margin: 1.25rem 0 1rem; flex-wrap: wrap; }
+.brand-hero-logo .brand-tile { width: 170px; height: 96px; border: 1px solid var(--gray-200); border-radius: var(--radius); background: #fff; display: flex; align-items: center; justify-content: center; padding: 0.75rem; }
+.brand-hero-logo .brand-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.brand-hero-title { font-size: 1.75rem; font-weight: 800; margin-bottom: 0.25rem; }
+.brand-hero-meta { color: var(--gray-600); font-size: 0.9rem; margin-bottom: 0.75rem; }
+.brand-summary { max-width: 860px; margin-top: 0.5rem; }
+.brands-index-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+@media (min-width: 768px) { .brands-index-grid { grid-template-columns: repeat(4, 1fr); } }
+@media (min-width: 1024px) { .brands-index-grid { grid-template-columns: repeat(6, 1fr); } }
+.brand-index-card { display: flex; flex-direction: column; align-items: center; gap: 0.4rem; }
+.brand-index-card .brand-tile { width: 100%; height: 84px; border: 1px solid var(--gray-200); border-radius: var(--radius); background: #fff; display: flex; align-items: center; justify-content: center; padding: 0.75rem; transition: box-shadow var(--transition), border-color var(--transition); }
+.brand-index-card .brand-tile:hover { border-color: var(--brand-primary); box-shadow: 0 4px 14px rgba(0,0,0,0.08); }
+.brand-index-card .brand-img { max-width: 100%; max-height: 100%; width: auto; height: auto; object-fit: contain; }
+.brand-index-meta { font-size: 0.78rem; color: var(--gray-500); }
+.brand-index-meta:hover { color: var(--brand-primary); }
 
 .filter-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.85rem; color: var(--gray-600); cursor: pointer; }
 .filter-option input { accent-color: var(--brand-primary); width: 1rem; height: 1rem; }

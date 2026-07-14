@@ -1,0 +1,75 @@
+{%- comment -%}
+  Brand page — dedicated page per brand (page template "brand").
+  Resolves the brand collection from the page title (handleized), shows the
+  logo, summary (page content), popular products and a link to the full
+  brand collection. Safe when the collection is missing or empty.
+{%- endcomment -%}
+{%- liquid
+  assign s = section.settings
+  assign bslug = page.title | handleize
+  assign bcol = collections[bslug]
+  assign blink = '/pages/' | append: bslug
+-%}
+<section class="section bg-white">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a> /
+      <a href="{{ s.brands_link | default: '/pages/brands' }}">{{ s.crumb_brands | default: 'Brands' | escape }}</a> /
+      <span>{{ page.title }}</span>
+    </nav>
+    <div class="brand-hero">
+      <div class="brand-hero-logo">
+        {%- render 'brand-logo', name: page.title, link: blink -%}
+      </div>
+      <div class="brand-hero-body">
+        <h1 class="brand-hero-title">{{ page.title }}</h1>
+        {%- if bcol != blank and bcol.products_count > 0 -%}
+          <p class="brand-hero-meta">{{ bcol.products_count }} {{ s.meta_suffix | default: 'products available in Qatar' | escape }}</p>
+          <a class="btn-primary-sm" href="{{ bcol.url }}">{{ s.cta_label | default: 'Shop all' | escape }} {{ page.title }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">arrow_forward</span></a>
+        {%- endif -%}
+      </div>
+    </div>
+    {%- if page.content != blank -%}
+      <div class="lsq-prose brand-summary">{{ page.content }}</div>
+    {%- endif -%}
+  </div>
+</section>
+
+{%- if bcol.products.size > 0 -%}
+<section class="section bg-gray">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <h2 class="section-title">{{ s.products_heading | default: 'Popular from' | escape }} {{ page.title }}</h2>
+        <p class="section-sub">{{ s.products_subtitle | default: 'Genuine, Theqa-certified stock with local warranty.' | escape }}</p>
+      </div>
+    </div>
+    <div class="grid-4">
+      {%- for p in bcol.products limit: s.products_to_show -%}
+        {%- render 'product-card', product: p -%}
+      {%- endfor -%}
+    </div>
+    <div style="text-align:center;margin-top:2rem;">
+      <a class="btn-view-more" href="{{ bcol.url }}">{{ s.view_all_label | default: 'View all' | escape }} {{ bcol.products_count }} {{ s.view_all_suffix | default: 'products' | escape }} <span class="material-symbols-outlined">arrow_forward</span></a>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "Brand page",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "crumb_brands", "label": "Breadcrumb brands label", "default": "Brands" },
+    { "type": "url", "id": "brands_link", "label": "All brands page link" },
+    { "type": "text", "id": "meta_suffix", "label": "Product count suffix", "default": "products available in Qatar" },
+    { "type": "text", "id": "cta_label", "label": "Hero CTA label", "default": "Shop all" },
+    { "type": "text", "id": "products_heading", "label": "Products heading prefix", "default": "Popular from" },
+    { "type": "text", "id": "products_subtitle", "label": "Products subtitle", "default": "Genuine, Theqa-certified stock with local warranty." },
+    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 4, "max": 16, "step": 4, "default": 8 },
+    { "type": "text", "id": "view_all_label", "label": "View all label", "default": "View all" },
+    { "type": "text", "id": "view_all_suffix", "label": "View all suffix", "default": "products" }
+  ]
+}
+{% endschema %}

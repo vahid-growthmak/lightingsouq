@@ -373,41 +373,27 @@
 </script>
 
 <script>
-  /* Search-bar camera icon — proxies the image-search app's floating widget.
-     Finds the app's fixed-position bubble at the right edge; if present, the
-     camera button appears (all breakpoints) and forwards clicks to it. */
+  /* Search-bar camera icon — Birse Visual Search integration.
+     The Birse app embed renders a floating <birse-img-upload-button> bubble.
+     We hide the bubble (CSS) and trigger its file uploader from the camera
+     icon inside the search bar instead. If the app embed is disabled, the
+     icon stays hidden so nothing ever looks broken. */
   (function () {
     var btn = document.querySelector('[data-scan-trigger]');
     if (!btn) return;
-    var widget = null, tries = 0;
-    function locate() {
-      var nodes = document.querySelectorAll('body > *, body > * > *');
-      for (var i = 0; i < nodes.length; i++) {
-        var el = nodes[i];
-        if (!(el instanceof HTMLElement)) continue;
-        if (el.closest('.main-header, .sticky-atc, .mobile-menu-drawer, .rbo-pop')) continue;
-        var cs = getComputedStyle(el);
-        if (cs.position !== 'fixed' || cs.display === 'none' || cs.visibility === 'hidden') continue;
-        var r = el.getBoundingClientRect();
-        if (r.width < 26 || r.width > 120 || r.height < 26 || r.height > 120) continue;
-        if (window.innerWidth - r.right > 48) continue;
-        return el;
-      }
-      return null;
-    }
+    function widget() { return document.querySelector('birse-img-upload-button'); }
+    var tries = 0;
     var timer = setInterval(function () {
-      widget = locate();
-      if (widget || ++tries > 16) {
-        clearInterval(timer);
-        if (widget) btn.hidden = false;
-      }
+      if (widget()) { clearInterval(timer); btn.hidden = false; }
+      else if (++tries > 20) { clearInterval(timer); }
     }, 500);
     btn.addEventListener('click', function () {
-      if (!widget || !document.body.contains(widget)) widget = locate();
-      if (!widget) return;
-      var target = widget.querySelector('button, [role="button"], a, img, svg') || widget;
+      var w = widget();
+      if (!w) return;
+      var input = w.querySelector('input[type="file"], .birse-upload-input');
+      if (input) { input.click(); return; }
       ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'].forEach(function (t) {
-        try { target.dispatchEvent(new MouseEvent(t, { bubbles: true, cancelable: true, view: window })); } catch (e) {}
+        try { w.dispatchEvent(new MouseEvent(t, { bubbles: true, cancelable: true, view: window })); } catch (e) {}
       });
     });
   })();

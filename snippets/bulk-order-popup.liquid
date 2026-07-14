@@ -416,6 +416,7 @@
      When the app's quote popup submits successfully, offer the same
      auto-drafted WhatsApp handoff as the bulk-order popup. */
   (function () {
+    var WA_NUMBER = {{ wa_num | json }};
     if (!WA_NUMBER) return;
     var last = null;
     document.addEventListener('click', function (e) {

@@ -33,11 +33,36 @@
         "channels_text": "Relationship-driven buyer? Reach the trade team directly."
       },
       "blocks": {
-        "c1": { "type": "channel", "settings": { "icon": "chat", "label": "WhatsApp", "value": "+974 0000 0000" } },
-        "c2": { "type": "channel", "settings": { "icon": "call", "label": "Trade line", "value": "+974 0000 0000" } },
-        "c3": { "type": "channel", "settings": { "icon": "mail", "label": "Email", "value": "trade@lightingsouq.qa" } }
+        "c1": {
+          "type": "channel",
+          "settings": {
+            "icon": "chat",
+            "label": "WhatsApp",
+            "value": "+974 0000 0000"
+          }
+        },
+        "c2": {
+          "type": "channel",
+          "settings": {
+            "icon": "call",
+            "label": "Trade line",
+            "value": "+974 0000 0000"
+          }
+        },
+        "c3": {
+          "type": "channel",
+          "settings": {
+            "icon": "mail",
+            "label": "Email",
+            "value": "trade@lightingsouq.qa"
+          }
+        }
       },
-      "block_order": ["c1", "c2", "c3"]
+      "block_order": [
+        "c1",
+        "c2",
+        "c3"
+      ]
     },
     "how": {
       "type": "feature-columns",
@@ -48,11 +73,38 @@
         "bg": "bg-gray"
       },
       "blocks": {
-        "h1": { "type": "item", "settings": { "step": "1", "title": "Add to quote", "text": "Browse the catalogue and add the items and quantities you need." } },
-        "h2": { "type": "item", "settings": { "step": "2", "title": "Submit request", "text": "Send us your list — no account or commitment required.", "link": "/collections/all", "link_label": "Browse products" } },
-        "h3": { "type": "item", "settings": { "step": "3", "title": "Receive pricing", "text": "Our team replies with volume pricing and delivery options." } }
+        "h1": {
+          "type": "item",
+          "settings": {
+            "step": "1",
+            "title": "Add to quote",
+            "text": "Browse the catalogue and add the items and quantities you need."
+          }
+        },
+        "h2": {
+          "type": "item",
+          "settings": {
+            "step": "2",
+            "title": "Submit request",
+            "text": "Send us your list — no account or commitment required.",
+            "link": "/collections/all",
+            "link_label": "Browse products"
+          }
+        },
+        "h3": {
+          "type": "item",
+          "settings": {
+            "step": "3",
+            "title": "Receive pricing",
+            "text": "Our team replies with volume pricing and delivery options."
+          }
+        }
       },
-      "block_order": ["h1", "h2", "h3"]
+      "block_order": [
+        "h1",
+        "h2",
+        "h3"
+      ]
     },
     "selector": {
       "type": "product-collection",
@@ -61,7 +113,8 @@
         "subtitle": "Popular lines for trade buyers — browse the full catalogue for more.",
         "products_to_show": 8,
         "bg": "bg-white",
-        "layout": "grid"
+        "layout": "scroll",
+        "collection": "best-sellers"
       }
     },
     "direct": {
@@ -70,7 +123,7 @@
         "heading": "Prefer to deal direct?",
         "text": "Message our trade team for sourcing, lead times and net-terms enquiries — real people, fast replies.",
         "button_label": "Chat on WhatsApp",
-        "button_link": "/pages/contact"
+        "button_link": ""
       }
     },
     "trusted": {
@@ -81,15 +134,60 @@
         "bg": "bg-gray"
       },
       "blocks": {
-        "b1": { "type": "brand", "settings": { "name": "Ledvance" } },
-        "b2": { "type": "brand", "settings": { "name": "Philips Hue" } },
-        "b3": { "type": "brand", "settings": { "name": "Wink" } },
-        "b4": { "type": "brand", "settings": { "name": "Glint" } },
-        "b5": { "type": "brand", "settings": { "name": "Vettam" } },
-        "b6": { "type": "brand", "settings": { "name": "DG Lighting" } }
+        "b1": {
+          "type": "brand",
+          "settings": {
+            "name": "Ledvance"
+          }
+        },
+        "b2": {
+          "type": "brand",
+          "settings": {
+            "name": "Philips Hue"
+          }
+        },
+        "b3": {
+          "type": "brand",
+          "settings": {
+            "name": "Wink"
+          }
+        },
+        "b4": {
+          "type": "brand",
+          "settings": {
+            "name": "Glint"
+          }
+        },
+        "b5": {
+          "type": "brand",
+          "settings": {
+            "name": "Vettam"
+          }
+        },
+        "b6": {
+          "type": "brand",
+          "settings": {
+            "name": "DG Lighting"
+          }
+        }
       },
-      "block_order": ["b1", "b2", "b3", "b4", "b5", "b6"]
+      "block_order": [
+        "b1",
+        "b2",
+        "b3",
+        "b4",
+        "b5",
+        "b6"
+      ]
     }
   },
-  "order": ["breadcrumb", "hero", "rfq", "how", "selector", "direct", "trusted"]
+  "order": [
+    "breadcrumb",
+    "hero",
+    "rfq",
+    "how",
+    "selector",
+    "direct",
+    "trusted"
+  ]
 }

@@ -110,7 +110,6 @@
           <input type="hidden" name="options[prefix]" value="last">
           <span class="search-icon"><span class="material-symbols-outlined">search</span></span>
           <input type="search" name="q" class="search-input" placeholder="{{ s.search_placeholder }}" autocomplete="off" aria-label="{{ s.search_aria | default: 'Search products' }}" data-search-input>
-          <button type="button" class="search-scan-btn" data-scan-trigger aria-label="{{ s.scan_label | default: 'Search with a photo' }}" hidden><span class="material-symbols-outlined">photo_camera</span></button>
           <div class="search-suggest" data-search-results role="listbox" aria-label="Search suggestions" hidden></div>
         </form>
       {%- endif -%}
@@ -373,29 +372,23 @@
 </script>
 
 <script>
-  /* Search-bar camera icon — Birse Visual Search integration.
-     The Birse app embed renders a floating <birse-img-upload-button> bubble.
-     We hide the bubble (CSS) and trigger its file uploader from the camera
-     icon inside the search bar instead. If the app embed is disabled, the
-     icon stays hidden so nothing ever looks broken. */
+  /* Birse Visual Search: move the app's own floating button INTO the search bar.
+     The element (and all of the app's behaviour) is untouched - only its position
+     changes. If the app embed is off, nothing renders and nothing breaks. */
   (function () {
-    var btn = document.querySelector('[data-scan-trigger]');
-    if (!btn) return;
-    function widget() { return document.querySelector('birse-img-upload-button'); }
+    var wrap = document.querySelector('.search-wrap');
+    if (!wrap) return;
     var tries = 0;
     var timer = setInterval(function () {
-      if (widget()) { clearInterval(timer); btn.hidden = false; }
-      else if (++tries > 20) { clearInterval(timer); }
-    }, 500);
-    btn.addEventListener('click', function () {
-      var w = widget();
-      if (!w) return;
-      var input = w.querySelector('input[type="file"], .birse-upload-input');
-      if (input) { input.click(); return; }
-      ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'].forEach(function (t) {
-        try { w.dispatchEvent(new MouseEvent(t, { bubbles: true, cancelable: true, view: window })); } catch (e) {}
-      });
-    });
+      var w = document.querySelector('birse-img-upload-button');
+      if (w) {
+        clearInterval(timer);
+        if (wrap.contains(w)) return;
+        w.classList.remove('float');
+        w.classList.add('in-searchbar');
+        wrap.appendChild(w);
+      } else if (++tries > 20) { clearInterval(timer); }
+    }, 400);
   })();
 </script>
 

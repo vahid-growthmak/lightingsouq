@@ -4,7 +4,15 @@
       <h3>{{ section.settings.heading }}</h3>
       <p>{{ section.settings.text }}</p>
     </div>
-    <a href="{{ section.settings.button_link }}" class="btn-whatsapp"><span class="material-symbols-outlined">chat</span> {{ section.settings.button_label }}</a>
+    {%- liquid
+      assign eb_href = section.settings.button_link
+      if eb_href == blank and settings.whatsapp_number != blank
+        assign eb_num = settings.whatsapp_number | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
+        assign eb_msg = 'Hi! I need help checking if a product fits my setup.' | url_encode
+        assign eb_href = 'https://wa.me/' | append: eb_num | append: '?text=' | append: eb_msg
+      endif
+    -%}
+    <a href="{{ eb_href | default: '/pages/contact' }}" class="btn-whatsapp"{% if eb_href contains 'wa.me' %} target="_blank" rel="noopener"{% endif %}><span class="material-symbols-outlined">chat</span> {{ section.settings.button_label }}</a>
   </div>
 </section>
 

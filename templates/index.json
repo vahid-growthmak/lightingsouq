@@ -477,6 +477,34 @@
             "name": "KDK",
             "link": "/pages/kdk"
           }
+        },
+        "brand_add_1": {
+          "type": "brand",
+          "settings": {
+            "name": "Vettam",
+            "link": "/pages/vettam"
+          }
+        },
+        "brand_add_2": {
+          "type": "brand",
+          "settings": {
+            "name": "Panasonic",
+            "link": "/pages/panasonic"
+          }
+        },
+        "brand_add_3": {
+          "type": "brand",
+          "settings": {
+            "name": "Huawei",
+            "link": "/pages/huawei"
+          }
+        },
+        "brand_add_4": {
+          "type": "brand",
+          "settings": {
+            "name": "Energizer",
+            "link": "/pages/energizer"
+          }
         }
       },
       "block_order": [
@@ -487,7 +515,11 @@
         "brand_xR7xgi",
         "brand_Vqty6e",
         "brand_TDiM78",
-        "brand_4G4rNg"
+        "brand_4G4rNg",
+        "brand_add_1",
+        "brand_add_2",
+        "brand_add_3",
+        "brand_add_4"
       ],
       "name": "Brand Strip",
       "settings": {

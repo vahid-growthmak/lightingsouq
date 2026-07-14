@@ -74,6 +74,7 @@
       <input type="text" name="contact[first_name]" data-fill="first_name">
       <input type="text" name="contact[last_name]" data-fill="last_name">
       <input type="tel" name="contact[phone]" data-fill="phone">
+      <input type="hidden" name="contact[note]" data-fill="note">
     {%- endform -%}
   </div>
   <div data-rbo-order-form>
@@ -353,8 +354,17 @@
     lines.push('', 'Name: ' + nm, 'Email: ' + email);
     if (phone) lines.push('Phone: ' + phone);
     if (notes) lines.push('Notes: ' + notes);
+    var cartLink = cartPermalink();
+    if (cartLink) lines.push('', 'Load these items as an order: ' + cartLink);
     if (TEMPLATE_MSG) lines.push('', TEMPLATE_MSG);
     return lines.join('\n');
+  }
+  /* One-click cart link — the team opens it, the exact basket loads, and they can
+     create the order / draft order from it immediately. */
+  function cartPermalink() {
+    var parts = items.map(function (it) { return it.variantId + ':' + it.qty; });
+    if (!parts.length) return '';
+    return location.origin + '/cart/' + parts.join(',');
   }
   function waURL(text) { return 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text); }
 
@@ -384,7 +394,7 @@
     var r = ref();
     var nm = splitName(name);
     var body = bodyText(name, email, phone, notes, r);
-    fill(custForm,  { email: email, first_name: nm.first, last_name: nm.last, phone: phone });
+    fill(custForm,  { email: email, first_name: nm.first, last_name: nm.last, phone: phone, note: body });
     fill(orderForm, { email: email, first_name: nm.first, last_name: nm.last, phone: phone, body: body });
 
     submitBtn.classList.add('is-loading');

@@ -110,6 +110,7 @@
           <input type="hidden" name="options[prefix]" value="last">
           <span class="search-icon"><span class="material-symbols-outlined">search</span></span>
           <input type="search" name="q" class="search-input" placeholder="{{ s.search_placeholder }}" autocomplete="off" aria-label="{{ s.search_aria | default: 'Search products' }}" data-search-input>
+          <button type="button" class="search-scan-btn" data-scan-trigger aria-label="{{ s.scan_label | default: 'Search with a photo' }}" hidden><span class="material-symbols-outlined">photo_camera</span></button>
           <div class="search-suggest" data-search-results role="listbox" aria-label="Search suggestions" hidden></div>
         </form>
       {%- endif -%}
@@ -368,6 +369,47 @@
     });
     document.addEventListener('click', function (e) { if (!e.target.closest('.loc')) closeAll(null); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAll(null); });
+  })();
+</script>
+
+<script>
+  /* Search-bar camera icon — proxies the image-search app's floating widget.
+     Finds the app's fixed-position bubble at the right edge; if present, the
+     camera button appears (all breakpoints) and forwards clicks to it. */
+  (function () {
+    var btn = document.querySelector('[data-scan-trigger]');
+    if (!btn) return;
+    var widget = null, tries = 0;
+    function locate() {
+      var nodes = document.querySelectorAll('body > *, body > * > *');
+      for (var i = 0; i < nodes.length; i++) {
+        var el = nodes[i];
+        if (!(el instanceof HTMLElement)) continue;
+        if (el.closest('.main-header, .sticky-atc, .mobile-menu-drawer, .rbo-pop')) continue;
+        var cs = getComputedStyle(el);
+        if (cs.position !== 'fixed' || cs.display === 'none' || cs.visibility === 'hidden') continue;
+        var r = el.getBoundingClientRect();
+        if (r.width < 26 || r.width > 120 || r.height < 26 || r.height > 120) continue;
+        if (window.innerWidth - r.right > 48) continue;
+        return el;
+      }
+      return null;
+    }
+    var timer = setInterval(function () {
+      widget = locate();
+      if (widget || ++tries > 16) {
+        clearInterval(timer);
+        if (widget) btn.hidden = false;
+      }
+    }, 500);
+    btn.addEventListener('click', function () {
+      if (!widget || !document.body.contains(widget)) widget = locate();
+      if (!widget) return;
+      var target = widget.querySelector('button, [role="button"], a, img, svg') || widget;
+      ['pointerdown', 'mousedown', 'pointerup', 'mouseup', 'click'].forEach(function (t) {
+        try { target.dispatchEvent(new MouseEvent(t, { bubbles: true, cancelable: true, view: window })); } catch (e) {}
+      });
+    });
   })();
 </script>
 

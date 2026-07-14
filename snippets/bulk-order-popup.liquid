@@ -478,7 +478,10 @@
         modal.querySelectorAll('label, p, span, div').forEach(function (n) { if (n.children.length === 0 && n.textContent.trim() === 'Custom Field') n.textContent = 'Phone (optional)'; });
       }
 
-      /* 2 - quantity stepper */
+      /* 2 - quantity stepper (the product body renders async - retry briefly) */
+      var qtyTries = 0;
+      var qtyTimer = setInterval(function () { if (injectQty() || ++qtyTries > 12) clearInterval(qtyTimer); }, 300);
+      function injectQty() {
       var qtyField = frm.querySelector('[name="ify_qty"]');
       var titleEl = frm.querySelector('.storeify-frm-product-title') || modal.querySelector('h1,h2,h3,strong');
       if (qtyField && !frm.querySelector('.lsq-qty')) {
@@ -496,6 +499,9 @@
         q.querySelector('[data-lsq-minus]').addEventListener('click', function () { n = Math.max(1, n - 1); paint(); });
         q.querySelector('[data-lsq-plus]').addEventListener('click', function () { n = n + 1; paint(); });
         paint();
+        return true;
+      }
+      return false;
       }
 
       /* 3 - add another product */

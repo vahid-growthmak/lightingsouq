@@ -6,12 +6,39 @@
   assign grid_class = section.settings.grid_class
   assign show_countdown = section.settings.show_countdown
   assign col = collections[section.settings.collection]
+  assign ctx = section.settings.context | default: 'none'
+  if ctx == 'none'
+    assign ctx = ''
+  endif
+  if ctx != blank and product != blank
+    if ctx == 'vendor'
+      assign ctx_handle = product.vendor | handleize
+    else
+      assign ctx_handle = product.type | handleize
+    endif
+    assign ctx_col = collections[ctx_handle]
+    if ctx_col.products.size > 1
+      assign col = ctx_col
+    elsif product.collections.size > 0
+      assign col = product.collections.first
+    endif
+  endif
   assign use_dynamic = false
-  if section.settings.collection != blank and col.products.size > 0
+  if col.products.size > 0
     assign use_dynamic = true
   endif
   assign layout = section.settings.layout | default: 'scroll'
 -%}
+{%- liquid
+  comment
+    Context mode on a product page must never fall back to demo cards - hide instead.
+  endcomment
+  assign hide_section = false
+  if ctx != blank and use_dynamic == false
+    assign hide_section = true
+  endif
+-%}
+{%- unless hide_section -%}
 {%- style -%}
   #PC--{{ section.id }} .pc-container { position: relative; }
   #PC--{{ section.id }} .pc-scroll { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth; padding: 6px 2px 1.25rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
@@ -46,9 +73,19 @@
       {%- if layout == 'scroll' -%}<button class="pc-arrow pc-prev" type="button" aria-label="Previous" data-pc-prev><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg></button>{%- endif -%}
       <div class="{% if layout == 'scroll' %}pc-scroll{% else %}{{ grid_class }}{% endif %}" data-pc-track>
       {%- if use_dynamic -%}
-        {%- comment -%} ===== MODE A: whole collection — auto product list ===== {%- endcomment -%}
-        {%- for product in col.products limit: section.settings.products_to_show -%}
-          {%- render 'product-card', product: product -%}
+        {%- comment -%} ===== MODE A: whole collection — auto product list (skips the product being viewed) ===== {%- endcomment -%}
+        {%- liquid
+          assign current_pid = 0
+          if product != blank
+            assign current_pid = product.id
+          endif
+          assign pc_shown = 0
+        -%}
+        {%- for item in col.products -%}
+          {%- if item.id == current_pid -%}{%- continue -%}{%- endif -%}
+          {%- if pc_shown >= section.settings.products_to_show -%}{%- break -%}{%- endif -%}
+          {%- render 'product-card', product: item -%}
+          {%- assign pc_shown = pc_shown | plus: 1 -%}
         {%- endfor -%}
       {%- else -%}
         {%- comment -%} ===== MODE B: per-block — hand-picked real product OR demo fallback ===== {%- endcomment -%}
@@ -129,6 +166,7 @@
   })();
 </script>
 {% endif %}
+{%- endunless -%}
 
 {% schema %}
 {
@@ -158,6 +196,18 @@
       "type": "collection",
       "id": "collection",
       "label": "Collection"
+    },
+    {
+      "type": "select",
+      "id": "context",
+      "label": "Auto source (product pages)",
+      "options": [
+        { "value": "none", "label": "Off — use picked collection" },
+        { "value": "vendor", "label": "Same brand as current product" },
+        { "value": "type", "label": "Same type as current product" }
+      ],
+      "default": "none",
+      "info": "On a product page, pulls products from the current product's brand or type collection and hides the section if none exist. Overrides the picked collection."
     },
     {
       "type": "range",

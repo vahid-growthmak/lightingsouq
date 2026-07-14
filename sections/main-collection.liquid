@@ -41,8 +41,29 @@
               <a class="filter-clear" href="{{ collection.url }}">{{ section.settings.label_clear_all | default: 'Clear all' | escape }}</a>
             </div>
             {%- for filter in collection.filters -%}
-              <div class="filter-group">
-                <p class="filter-group-title">{{ filter.label }}</p>
+              {%- liquid
+                comment
+                  Open a group when it has an active selection, otherwise only the first two by default.
+                endcomment
+                assign fg_open = false
+                if forloop.index <= 2
+                  assign fg_open = true
+                endif
+                if filter.active_values.size > 0
+                  assign fg_open = true
+                endif
+                if filter.type == 'price_range'
+                  if filter.min_value.value != blank or filter.max_value.value != blank
+                    assign fg_open = true
+                  endif
+                endif
+              -%}
+              <details class="filter-group"{% if fg_open %} open{% endif %}>
+                <summary class="filter-group-title">
+                  <span>{{ filter.label }}{% if filter.active_values.size > 0 %} <span class="filter-active-dot">{{ filter.active_values.size }}</span>{% endif %}</span>
+                  <span class="material-symbols-outlined fg-chevron">expand_more</span>
+                </summary>
+                <div class="filter-values{% if filter.values.size > 8 %} filter-values-scroll{% endif %}">
                 {%- case filter.type -%}
                   {%- when 'list', 'boolean' -%}
                     {%- for value in filter.values -%}
@@ -58,7 +79,8 @@
                     </div>
                     <button type="submit" class="btn-primary-sm" style="margin-top:0.5rem;">{{ section.settings.label_apply | default: 'Apply' | escape }}</button>
                 {%- endcase -%}
-              </div>
+                </div>
+              </details>
             {%- endfor -%}
           </form>
         </aside>

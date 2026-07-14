@@ -1448,7 +1448,16 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
 .filter-clear:hover { text-decoration: underline; }
 .filter-group { border-top: 1px solid var(--gray-200); padding: 1rem 0; }
 .filter-group:last-child { padding-bottom: 0; }
-.filter-group-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0.75rem; color: var(--brand-text); }
+.filter-group-title { font-size: 0.85rem; font-weight: 700; margin-bottom: 0; color: var(--brand-text); }
+summary.filter-group-title { display: flex; align-items: center; justify-content: space-between; cursor: pointer; list-style: none; user-select: none; }
+summary.filter-group-title::-webkit-details-marker { display: none; }
+summary.filter-group-title .fg-chevron { font-size: 1.2rem; color: var(--gray-400); transition: transform 150ms ease-out; }
+details.filter-group[open] > summary .fg-chevron { transform: rotate(180deg); }
+details.filter-group[open] > summary { margin-bottom: 0.75rem; }
+.filter-active-dot { display: inline-flex; align-items: center; justify-content: center; min-width: 1.1rem; height: 1.1rem; padding: 0 0.3rem; margin-left: 0.35rem; border-radius: 999px; background: var(--brand-primary); color: #fff; font-size: 0.68rem; font-weight: 700; }
+.filter-values-scroll { max-height: 300px; overflow-y: auto; overscroll-behavior: contain; padding-right: 0.25rem; }
+.filter-values-scroll::-webkit-scrollbar { width: 6px; }
+.filter-values-scroll::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 999px; }
 .filter-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.85rem; color: var(--gray-600); cursor: pointer; }
 .filter-option input { accent-color: var(--brand-primary); width: 1rem; height: 1rem; }
 .filter-option .filter-count { margin-left: auto; font-size: 0.75rem; color: var(--gray-400); }

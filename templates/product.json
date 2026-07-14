@@ -301,7 +301,7 @@
       ],
       "settings": {
         "heading": "More from this brand",
-        "subtitle": "Limited-time offers on bulbs, tubes, lamps and smart lighting.",
+        "subtitle": "Genuine stock from the same manufacturer.",
         "collection": "",
         "products_to_show": 5,
         "bg": "bg-white",
@@ -311,7 +311,8 @@
         "show_countdown": false,
         "countdown_hours": 12,
         "countdown_minutes": 34,
-        "countdown_seconds": 56
+        "countdown_seconds": 56,
+        "context": "vendor"
       }
     },
     "similar": {
@@ -390,7 +391,7 @@
       ],
       "settings": {
         "heading": "Similar products",
-        "subtitle": "Limited-time offers on bulbs, tubes, lamps and smart lighting.",
+        "subtitle": "More options in the same category.",
         "collection": "",
         "products_to_show": 5,
         "bg": "bg-gray",
@@ -400,7 +401,8 @@
         "show_countdown": false,
         "countdown_hours": 12,
         "countdown_minutes": 34,
-        "countdown_seconds": 56
+        "countdown_seconds": 56,
+        "context": "type"
       }
     },
     "faq": {
@@ -484,4 +486,3 @@
     "bulk"
   ]
 }
-

@@ -124,7 +124,7 @@
         "viewers": "18",
         "show_sold": false,
         "sold_count": "340+",
-        "show_bulk": true,
+        "show_bulk": false,
         "bulk_label": "Request Bulk Order",
         "bulk_link": "",
         "pay_note": "Cash on Delivery available",

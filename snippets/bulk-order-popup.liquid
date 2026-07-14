@@ -439,8 +439,11 @@
       var txt = modal.textContent || '';
       if (!/has been submitted|received your quote/i.test(txt)) return;
       if (modal.querySelector('.sfy-wa-continue') || !last) return;
-      var lines = ['QUOTE REQUEST', '', 'Product: ' + last.product + ' × ' + last.qty, 'Name: ' + (last.first + ' ' + last.lastn).trim(), 'Email: ' + last.email];
-      if (last.comment) lines.push('Notes: ' + last.comment);
+      var lines = ['QUOTE REQUEST', '', 'Products:', '• ' + last.product + ' × ' + last.qty];
+      (window.__lsqExtras || []).forEach(function (x) { lines.push('• ' + x.title + ' × ' + x.qty); });
+      lines.push('', 'Name: ' + (last.first + ' ' + last.lastn).trim(), 'Email: ' + last.email);
+      var cleanComment = (last.comment || '').split('ADDITIONAL ITEMS REQUESTED')[0].trim();
+      if (cleanComment) lines.push('Notes: ' + cleanComment);
       var holder = document.createElement('div');
       holder.style.cssText = 'text-align:center;margin-top:1.25rem;';
       holder.innerHTML = '<a class="sfy-wa-continue" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.5rem;background:#22c55e;color:#fff;font-weight:700;padding:0.8rem 1.4rem;border-radius:10px;text-decoration:none;font-family:inherit;">✉ Continue on WhatsApp</a>';
@@ -535,7 +538,8 @@
                 var prods = (d.resources && d.resources.results && d.resources.results.products) || [];
                 res.innerHTML = prods.map(function (pr) {
                   var img = pr.featured_image ? (pr.featured_image.url || pr.image || '') : (pr.image || '');
-                  return '<div data-lsq-pick data-title="' + pr.title.replace(/"/g, '&quot;') + '" data-img="' + img + '" style="display:flex;align-items:center;gap:0.6rem;padding:0.45rem 0.7rem;cursor:pointer;font-size:0.85rem;border-bottom:1px solid #f3f4f6;">' +
+                  var ph = (pr.url || '').split('/products/')[1] || ''; ph = ph.split('?')[0];
+                  return '<div data-lsq-pick data-title="' + pr.title.replace(/"/g, '&quot;') + '" data-img="' + img + '" data-handle="' + ph + '" style="display:flex;align-items:center;gap:0.6rem;padding:0.45rem 0.7rem;cursor:pointer;font-size:0.85rem;border-bottom:1px solid #f3f4f6;">' +
                     (img ? '<img src="' + img + '" width="34" height="34" style="width:34px;height:34px;object-fit:contain;border:1px solid #f3f4f6;border-radius:6px;background:#fff;flex-shrink:0;" alt="">' : '') +
                     '<span>' + pr.title + '</span></div>';
                 }).join('') || '<div style="padding:0.5rem 0.75rem;color:#9ca3af;font-size:0.85rem;">No products found</div>';
@@ -546,9 +550,17 @@
         res.addEventListener('click', function (e) {
           var pick = e.target.closest('[data-lsq-pick]');
           if (!pick) return;
-          extras.push({ title: pick.getAttribute('data-title'), image: pick.getAttribute('data-img') || '', qty: 1 });
+          var item = { title: pick.getAttribute('data-title'), image: pick.getAttribute('data-img') || '', handle: pick.getAttribute('data-handle') || '', qty: 1, variant_id: '', price: '' };
+          extras.push(item);
           res.style.display = 'none'; inp.value = '';
           renderList();
+          if (item.handle) {
+            fetch('/products/' + item.handle + '.js').then(function (r) { return r.json(); }).then(function (prod) {
+              var v = (prod.variants || []).filter(function (x) { return x.available; })[0] || (prod.variants || [])[0];
+              if (v) { item.variant_id = v.id; item.price = v.price / 100; }
+              if (!item.image && prod.featured_image) { item.image = prod.featured_image; renderList(); }
+            }).catch(function () {});
+          }
         });
         function renderList() {
           list.innerHTML = extras.map(function (x, i) {
@@ -572,10 +584,28 @@
       }
     }
 
-    /* append extra items to the comment right before the app submits */
+    /* on submit: expose extras to the WhatsApp bridge, write them into the
+       app's quote cookie (its native multi-item store) and keep a comment
+       fallback so the information is never lost */
     document.addEventListener('click', function (e) {
       var btn = e.target.closest('.storeify-submit-frm');
       if (!btn || !extras.length) return;
+      window.__lsqExtras = extras.slice();
+      try {
+        var cname = 'storeify_custommer';
+        var cur = {};
+        var cm = document.cookie.match(new RegExp('(?:^|; )' + cname + '=([^;]*)'));
+        if (cm) { try { cur = JSON.parse(decodeURI(cm[1])); } catch (e2) { cur = {}; } }
+        extras.forEach(function (x) {
+          if (!x.handle || !x.variant_id) return;
+          if (!cur[x.handle]) cur[x.handle] = [];
+          var hit = cur[x.handle].filter(function (en) { return en.variant_id == x.variant_id; })[0];
+          if (hit) { hit.qty = Number(hit.qty) + Number(x.qty); }
+          else { cur[x.handle].push({ variant_id: x.variant_id, qty: x.qty, price: x.price, utm_source: '' }); }
+        });
+        var dd = new Date(); dd.setTime(dd.getTime() + 86400000);
+        document.cookie = cname + '=' + encodeURI(JSON.stringify(cur)) + ';expires=' + dd.toUTCString() + ';path=/';
+      } catch (e3) {}
       var frm = btn.closest('.storeify-requestaquote') || document;
       var comment = frm.querySelector('textarea');
       if (!comment) return;
@@ -585,7 +615,14 @@
       }
     }, true);
 
+    function relabelTriggers() {
+      document.querySelectorAll('.storeify-quote-btn-trigger-popup').forEach(function (b) {
+        if (b.textContent.trim() !== 'Request Bulk Order') b.textContent = 'Request Bulk Order';
+      });
+    }
+    relabelTriggers();
     var watcher = new MutationObserver(function () {
+      relabelTriggers();
       document.querySelectorAll('.storeify-light-modal').forEach(function (m) {
         if (m.offsetParent !== null || getComputedStyle(m).display !== 'none') enhance(m);
       });

@@ -7,10 +7,24 @@
         "current": "FAQs"
       },
       "blocks": {
-        "help": { "type": "crumb", "settings": { "label": "Help Center", "link": "/pages/help-center" } },
-        "current": { "type": "crumb", "settings": { "label": "FAQs" } }
+        "help": {
+          "type": "crumb",
+          "settings": {
+            "label": "Support",
+            "link": "/pages/contact"
+          }
+        },
+        "current": {
+          "type": "crumb",
+          "settings": {
+            "label": "FAQs"
+          }
+        }
       },
-      "block_order": ["help", "current"]
+      "block_order": [
+        "help",
+        "current"
+      ]
     },
     "hero": {
       "type": "page-hero",
@@ -28,14 +42,54 @@
         "bg": "bg-white"
       },
       "blocks": {
-        "compat": { "type": "faq", "settings": { "question": "Will smart lights work with Alexa, Google or Siri?", "answer": "<p>Most of our smart range works with <strong>Alexa, Google Home and Apple Home</strong> via apps like Tuya, Smart Life, Mi Home and Hue. See our <a href='/pages/smart-home-hub'>Smart Home Hub</a> for details.</p>" } },
-        "ship": { "type": "faq", "settings": { "question": "How fast is delivery?", "answer": "<p>Order before 4 PM for <strong>same-day delivery in Doha</strong>, 1–2 days elsewhere in Qatar, plus GCC and UK shipping. See <a href='/pages/shipping-delivery'>Shipping & Delivery</a>.</p>" } },
-        "returns": { "type": "faq", "settings": { "question": "What is your return policy?", "answer": "<p>You can return within <strong>7 days</strong> of delivery in the original, unused packaging. See our <a href='/pages/returns-refunds'>Returns & Refunds</a> page.</p>" } },
-        "warranty": { "type": "faq", "settings": { "question": "Are products covered by warranty?", "answer": "<p>Yes. Every product is genuine and covered by a <strong>local warranty</strong> handled by our Doha team.</p>" } },
-        "bulk": { "type": "faq", "settings": { "question": "Do you offer bulk or trade pricing?", "answer": "<p>Yes. For projects, offices and villas we offer volume pricing. Request a quote on our <a href='/pages/bulk-orders'>Bulk Orders</a> page.</p>" } }
+        "compat": {
+          "type": "faq",
+          "settings": {
+            "question": "Will smart lights work with Alexa, Google or Siri?",
+            "answer": "<p>Most of our smart range works with <strong>Alexa, Google Home and Apple Home</strong> via apps like Tuya, Smart Life, Mi Home and Hue. See our <a href='/pages/smart-home-hub'>Smart Home Hub</a> for details.</p>"
+          }
+        },
+        "ship": {
+          "type": "faq",
+          "settings": {
+            "question": "How fast is delivery?",
+            "answer": "<p>Order before 4 PM for <strong>same-day delivery in Doha</strong>, 1–2 days elsewhere in Qatar, plus GCC and UK shipping. See <a href='/pages/shipping-delivery'>Shipping & Delivery</a>.</p>"
+          }
+        },
+        "returns": {
+          "type": "faq",
+          "settings": {
+            "question": "What is your return policy?",
+            "answer": "<p>You can return within <strong>7 days</strong> of delivery in the original, unused packaging. See our <a href='/pages/returns-refunds'>Returns & Refunds</a> page.</p>"
+          }
+        },
+        "warranty": {
+          "type": "faq",
+          "settings": {
+            "question": "Are products covered by warranty?",
+            "answer": "<p>Yes. Every product is genuine and covered by a <strong>local warranty</strong> handled by our Doha team.</p>"
+          }
+        },
+        "bulk": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you offer bulk or trade pricing?",
+            "answer": "<p>Yes. For projects, offices and villas we offer volume pricing. Request a quote on our <a href='/pages/bulk-orders'>Bulk Orders</a> page.</p>"
+          }
+        }
       },
-      "block_order": ["compat", "ship", "returns", "warranty", "bulk"]
+      "block_order": [
+        "compat",
+        "ship",
+        "returns",
+        "warranty",
+        "bulk"
+      ]
     }
   },
-  "order": ["breadcrumb", "hero", "faqs"]
+  "order": [
+    "breadcrumb",
+    "hero",
+    "faqs"
+  ]
 }

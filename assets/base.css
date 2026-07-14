@@ -1458,6 +1458,18 @@ details.filter-group[open] > summary { margin-bottom: 0.75rem; }
 .filter-values-scroll { max-height: 300px; overflow-y: auto; overscroll-behavior: contain; padding-right: 0.25rem; }
 .filter-values-scroll::-webkit-scrollbar { width: 6px; }
 .filter-values-scroll::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 999px; }
+/* ---- Price range slider ---- */
+.price-slider { position: relative; padding-top: 0.25rem; }
+.price-slider .ps-track { position: relative; height: 5px; background: var(--gray-200); border-radius: 999px; margin: 16px 2px 4px; }
+.price-slider .ps-fill { position: absolute; top: 0; bottom: 0; background: var(--brand-primary); border-radius: 999px; }
+.price-slider .ps-range { position: absolute; left: 0; top: 14px; width: 100%; height: 9px; margin: 0; -webkit-appearance: none; appearance: none; background: transparent; pointer-events: none; }
+.price-slider .ps-range:focus { outline: none; }
+.price-slider .ps-range::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; pointer-events: auto; width: 18px; height: 18px; border-radius: 50%; background: #fff; border: 2px solid var(--brand-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.25); cursor: grab; }
+.price-slider .ps-range::-webkit-slider-thumb:active { cursor: grabbing; }
+.price-slider .ps-range::-moz-range-thumb { pointer-events: auto; width: 16px; height: 16px; border-radius: 50%; background: #fff; border: 2px solid var(--brand-primary); box-shadow: 0 1px 4px rgba(0,0,0,0.25); cursor: grab; }
+.price-slider .ps-range::-moz-range-track { background: transparent; }
+.price-slider .ps-labels { display: flex; justify-content: space-between; margin-top: 0.65rem; font-size: 0.8rem; font-weight: 600; color: var(--gray-600); }
+
 .filter-option { display: flex; align-items: center; gap: 0.5rem; padding: 0.3rem 0; font-size: 0.85rem; color: var(--gray-600); cursor: pointer; }
 .filter-option input { accent-color: var(--brand-primary); width: 1rem; height: 1rem; }
 .filter-option .filter-count { margin-left: auto; font-size: 0.75rem; color: var(--gray-400); }

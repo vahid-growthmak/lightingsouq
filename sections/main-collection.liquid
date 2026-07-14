@@ -36,6 +36,15 @@
       {%- if has_filters -%}
         <aside class="filter-rail rail-collapsed" id="FilterRail--{{ section.id }}" aria-label="Product filters">
           <form method="get">
+            {%- comment -%} Preserve active list-filter selections and sorting when the price form submits {%- endcomment -%}
+            {%- if collection.sort_by != blank -%}<input type="hidden" name="sort_by" value="{{ collection.sort_by }}">{%- endif -%}
+            {%- for f in collection.filters -%}
+              {%- if f.type == 'list' or f.type == 'boolean' -%}
+                {%- for v in f.active_values -%}
+                  <input type="hidden" name="{{ v.param_name }}" value="{{ v.value }}">
+                {%- endfor -%}
+              {%- endif -%}
+            {%- endfor -%}
             <div class="filter-rail-head">
               <h2>{{ section.settings.label_filters | default: 'Filters' | escape }}</h2>
               <a class="filter-clear" href="{{ collection.url }}">{{ section.settings.label_clear_all | default: 'Clear all' | escape }}</a>
@@ -73,11 +82,26 @@
                       </a>
                     {%- endfor -%}
                   {%- when 'price_range' -%}
-                    <div style="display:flex;gap:0.5rem;align-items:center;">
-                      <input type="number" name="{{ filter.min_value.param_name }}" value="{{ filter.min_value.value }}" placeholder="Min" min="0" max="{{ filter.range_max | money_without_currency | ceil }}" style="width:50%;padding:0.4rem;border:1px solid var(--gray-200);border-radius:var(--radius);">
-                      <input type="number" name="{{ filter.max_value.param_name }}" value="{{ filter.max_value.value }}" placeholder="Max" min="0" max="{{ filter.range_max | money_without_currency | ceil }}" style="width:50%;padding:0.4rem;border:1px solid var(--gray-200);border-radius:var(--radius);">
+                    {%- liquid
+                      assign ps_max = filter.range_max | money_without_currency | remove: ',' | ceil
+                      assign ps_min_val = 0
+                      if filter.min_value.value != blank
+                        assign ps_min_val = filter.min_value.value | money_without_currency | remove: ',' | floor
+                      endif
+                      assign ps_max_val = ps_max
+                      if filter.max_value.value != blank
+                        assign ps_max_val = filter.max_value.value | money_without_currency | remove: ',' | ceil
+                      endif
+                    -%}
+                    <div class="price-slider" data-price-slider data-ps-cap="{{ ps_max }}" data-ps-currency="{{ cart.currency.iso_code }}">
+                      <div class="ps-track"><div class="ps-fill" data-ps-fill></div></div>
+                      <input type="range" class="ps-range" data-ps-lo min="0" max="{{ ps_max }}" step="1" value="{{ ps_min_val }}" aria-label="Minimum price">
+                      <input type="range" class="ps-range" data-ps-hi min="0" max="{{ ps_max }}" step="1" value="{{ ps_max_val }}" aria-label="Maximum price">
+                      <div class="ps-labels"><span data-ps-lo-label></span><span data-ps-hi-label></span></div>
+                      <input type="hidden" name="{{ filter.min_value.param_name }}" value="{% if filter.min_value.value != blank %}{{ ps_min_val }}{% endif %}" data-ps-lo-field {% if filter.min_value.value == blank %}disabled{% endif %}>
+                      <input type="hidden" name="{{ filter.max_value.param_name }}" value="{% if filter.max_value.value != blank %}{{ ps_max_val }}{% endif %}" data-ps-hi-field {% if filter.max_value.value == blank %}disabled{% endif %}>
+                      <button type="submit" class="btn-primary-sm" style="margin-top:0.75rem;width:100%;">{{ section.settings.label_apply | default: 'Apply' | escape }}</button>
                     </div>
-                    <button type="submit" class="btn-primary-sm" style="margin-top:0.5rem;">{{ section.settings.label_apply | default: 'Apply' | escape }}</button>
                 {%- endcase -%}
                 </div>
               </details>
@@ -158,6 +182,33 @@
     var t = root.querySelector('[data-filter-toggle]');
     var rail = document.getElementById('FilterRail--{{ section.id }}');
     if (t && rail) t.addEventListener('click', function () { rail.classList.toggle('rail-collapsed'); });
+
+    /* ---- Price range slider (dual thumbs, drag to set) ---- */
+    var ps = rail ? rail.querySelector('[data-price-slider]') : null;
+    if (ps) {
+      var cap = parseInt(ps.getAttribute('data-ps-cap'), 10) || 0;
+      var cur = ps.getAttribute('data-ps-currency') || '';
+      var lo = ps.querySelector('[data-ps-lo]'), hi = ps.querySelector('[data-ps-hi]');
+      var loF = ps.querySelector('[data-ps-lo-field]'), hiF = ps.querySelector('[data-ps-hi-field]');
+      var loL = ps.querySelector('[data-ps-lo-label]'), hiL = ps.querySelector('[data-ps-hi-label]');
+      var fill = ps.querySelector('[data-ps-fill]');
+      function fmt(v) { return cur + ' ' + Number(v).toLocaleString(); }
+      function sync(moved) {
+        var a = parseInt(lo.value, 10), b = parseInt(hi.value, 10);
+        if (a > b) { if (moved === lo) { hi.value = a; b = a; } else { lo.value = b; a = b; } }
+        loL.textContent = fmt(a); hiL.textContent = fmt(b);
+        if (fill && cap > 0) { fill.style.left = (a / cap * 100) + '%'; fill.style.right = (100 - b / cap * 100) + '%'; }
+        loF.value = a; hiF.value = b;
+        loF.disabled = (a <= 0); hiF.disabled = (b >= cap);
+      }
+      lo.addEventListener('input', function () { sync(lo); });
+      hi.addEventListener('input', function () { sync(hi); });
+      var form = ps.closest('form');
+      function submitNow() { if (form) { form.requestSubmit ? form.requestSubmit() : form.submit(); } }
+      lo.addEventListener('change', submitNow);
+      hi.addEventListener('change', submitNow);
+      sync();
+    }
   })();
 </script>
 

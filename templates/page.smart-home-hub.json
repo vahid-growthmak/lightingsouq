@@ -29,12 +29,41 @@
         "btn2_link": "/collections/smart-lights"
       },
       "blocks": {
-        "f1": { "type": "feature", "settings": { "icon": "bolt", "label": "No rewiring needed" } },
-        "f2": { "type": "feature", "settings": { "icon": "mic", "label": "Alexa · Google · Siri" } },
-        "f3": { "type": "feature", "settings": { "icon": "smartphone", "label": "Tuya · Mi · Hue apps" } },
-        "f4": { "type": "feature", "settings": { "icon": "palette", "label": "16M colours and scenes" } }
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "bolt",
+            "label": "No rewiring needed"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "mic",
+            "label": "Alexa · Google · Siri"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "smartphone",
+            "label": "Tuya · Mi · Hue apps"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "icon": "palette",
+            "label": "16M colours and scenes"
+          }
+        }
       },
-      "block_order": ["f1", "f2", "f3", "f4"]
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ]
     },
     "rooms": {
       "type": "shop-by-space",
@@ -43,12 +72,53 @@
         "bg": "bg-white"
       },
       "blocks": {
-        "r1": { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Living Room", "description": "Ambience, scenes and voice control for the majlis.", "link": "/collections/smart-lights", "button_label": "Browse →" } },
-        "r2": { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Outdoor and Security", "description": "Motion, solar and smart floodlights for peace of mind.", "link": "/collections/solar-outdoor", "button_label": "Browse →" } },
-        "r3": { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Bedroom", "description": "Warm dimming and wake-up schedules for better rest.", "link": "/collections/smart-lights", "button_label": "Browse →" } },
-        "r4": { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Gaming and Creator", "description": "RGB strips and reactive scenes for your setup.", "link": "/collections/smart-lights", "button_label": "Browse →" } }
+        "r1": {
+          "type": "space",
+          "settings": {
+            "fallback": "space-smart.png",
+            "title": "Living Room",
+            "description": "Ambience, scenes and voice control for the majlis.",
+            "link": "/collections/smart-lights",
+            "button_label": "Browse →"
+          }
+        },
+        "r2": {
+          "type": "space",
+          "settings": {
+            "fallback": "space-smart.png",
+            "title": "Outdoor and Security",
+            "description": "Motion, solar and smart floodlights for peace of mind.",
+            "link": "/collections/solar-outdoor",
+            "button_label": "Browse →"
+          }
+        },
+        "r3": {
+          "type": "space",
+          "settings": {
+            "fallback": "space-smart.png",
+            "title": "Bedroom",
+            "description": "Warm dimming and wake-up schedules for better rest.",
+            "link": "/collections/smart-lights",
+            "button_label": "Browse →"
+          }
+        },
+        "r4": {
+          "type": "space",
+          "settings": {
+            "fallback": "space-smart.png",
+            "title": "Gaming and Creator",
+            "description": "RGB strips and reactive scenes for your setup.",
+            "link": "/collections/smart-lights",
+            "button_label": "Browse →"
+          }
+        }
       },
-      "block_order": ["r1", "r2", "r3", "r4"]
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ]
     },
     "ecosystem": {
       "type": "feature-columns",
@@ -59,11 +129,42 @@
         "bg": "bg-gray"
       },
       "blocks": {
-        "e1": { "type": "item", "settings": { "icon": "hub", "title": "Voice assistants", "text": "Works with Alexa, Google Assistant and Siri Shortcuts — control by voice or app.", "link": "/pages/help-center", "link_label": "Get help" } },
-        "e2": { "type": "item", "settings": { "icon": "apps", "title": "Apps and platforms", "text": "Tuya, Mi Home and Philips Hue supported — mix value picks with premium ecosystems.", "link": "/collections/philips", "link_label": "Shop Philips" } },
-        "e3": { "type": "item", "settings": { "icon": "verified", "title": "Buy with confidence", "text": "We confirm compatibility before you buy — message the team any time.", "link": "/pages/contact", "link_label": "Ask an expert" } }
+        "e1": {
+          "type": "item",
+          "settings": {
+            "icon": "hub",
+            "title": "Voice assistants",
+            "text": "Works with Alexa, Google Assistant and Siri Shortcuts — control by voice or app.",
+            "link": "/pages/help-center",
+            "link_label": "Get help"
+          }
+        },
+        "e2": {
+          "type": "item",
+          "settings": {
+            "icon": "apps",
+            "title": "Apps and platforms",
+            "text": "Tuya, Mi Home and Philips Hue supported — mix value picks with premium ecosystems.",
+            "link": "/collections/philips",
+            "link_label": "Shop Philips"
+          }
+        },
+        "e3": {
+          "type": "item",
+          "settings": {
+            "icon": "verified",
+            "title": "Buy with confidence",
+            "text": "We confirm compatibility before you buy — message the team any time.",
+            "link": "/pages/contact",
+            "link_label": "Ask an expert"
+          }
+        }
       },
-      "block_order": ["e1", "e2", "e3"]
+      "block_order": [
+        "e1",
+        "e2",
+        "e3"
+      ]
     },
     "guides": {
       "type": "feature-columns",
@@ -74,20 +175,46 @@
         "bg": "bg-white"
       },
       "blocks": {
-        "g1": { "type": "item", "settings": { "step": "1", "title": "Fit the bulb", "text": "Screw or clip into your existing fitting — no electrician, no rewiring." } },
-        "g2": { "type": "item", "settings": { "step": "2", "title": "Pair the app", "text": "Open Tuya, Mi Home or Hue and follow the in-app pairing prompt." } },
-        "g3": { "type": "item", "settings": { "step": "3", "title": "Set your scenes", "text": "Create schedules, colours and voice routines that fit your day." } }
+        "g1": {
+          "type": "item",
+          "settings": {
+            "step": "1",
+            "title": "Fit the bulb",
+            "text": "Screw or clip into your existing fitting — no electrician, no rewiring."
+          }
+        },
+        "g2": {
+          "type": "item",
+          "settings": {
+            "step": "2",
+            "title": "Pair the app",
+            "text": "Open Tuya, Mi Home or Hue and follow the in-app pairing prompt."
+          }
+        },
+        "g3": {
+          "type": "item",
+          "settings": {
+            "step": "3",
+            "title": "Set your scenes",
+            "text": "Create schedules, colours and voice routines that fit your day."
+          }
+        }
       },
-      "block_order": ["g1", "g2", "g3"]
+      "block_order": [
+        "g1",
+        "g2",
+        "g3"
+      ]
     },
     "starter_kits": {
       "type": "product-collection",
       "settings": {
         "heading": "Starter kits",
-        "subtitle": "Everything you need for your first smart room, bundled to save.",
-        "products_to_show": 4,
+        "subtitle": "Top smart lighting picks to start your first smart room.",
+        "products_to_show": 8,
         "bg": "bg-gray",
-        "layout": "grid"
+        "layout": "scroll",
+        "collection": "smart-lights"
       }
     },
     "testimonials": {
@@ -97,11 +224,39 @@
         "bg": "bg-white"
       },
       "blocks": {
-        "t1": { "type": "review", "settings": { "name": "Khalid Al-Marri", "rating": 5, "text": "Bought smart bulbs for the whole majlis. Setup was quick and they look great.", "date": "March 2026" } },
-        "t2": { "type": "review", "settings": { "name": "Noora Ibrahim", "rating": 5, "text": "The team helped me pick a kit that works with Alexa. Everything paired first try.", "date": "February 2026" } },
-        "t3": { "type": "review", "settings": { "name": "Fatima Hassan", "rating": 5, "text": "Best lighting store in Qatar. WhatsApp support was very helpful.", "date": "April 2026" } }
+        "t1": {
+          "type": "review",
+          "settings": {
+            "name": "Khalid Al-Marri",
+            "rating": 5,
+            "text": "Bought smart bulbs for the whole majlis. Setup was quick and they look great.",
+            "date": "March 2026"
+          }
+        },
+        "t2": {
+          "type": "review",
+          "settings": {
+            "name": "Noora Ibrahim",
+            "rating": 5,
+            "text": "The team helped me pick a kit that works with Alexa. Everything paired first try.",
+            "date": "February 2026"
+          }
+        },
+        "t3": {
+          "type": "review",
+          "settings": {
+            "name": "Fatima Hassan",
+            "rating": 5,
+            "text": "Best lighting store in Qatar. WhatsApp support was very helpful.",
+            "date": "April 2026"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3"]
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ]
     },
     "bulk": {
       "type": "bulk-band",
@@ -113,5 +268,14 @@
       }
     }
   },
-  "order": ["breadcrumb", "smart_home", "rooms", "ecosystem", "guides", "starter_kits", "testimonials", "bulk"]
+  "order": [
+    "breadcrumb",
+    "smart_home",
+    "rooms",
+    "ecosystem",
+    "guides",
+    "starter_kits",
+    "testimonials",
+    "bulk"
+  ]
 }

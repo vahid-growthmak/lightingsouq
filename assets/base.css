@@ -1658,8 +1658,8 @@ details.filter-group[open] > summary { margin-bottom: 0.75rem; }
 /* Storeify Request-a-Quote button — match theme buttons */
 .pdp-app-block { width: 100%; }
 .pdp-app-block .storeify-button-quote-liquid { margin: 0 !important; }
-.pdp-app-block .storeify-quote-btn-trigger-popup { width: 100% !important; min-height: 46px !important; border-radius: var(--radius) !important; font-family: inherit !important; font-weight: 600 !important; font-size: 0.875rem !important; background: var(--brand-primary) !important; color: #fff !important; border: 1.5px solid var(--brand-primary) !important; display: inline-flex !important; align-items: center; justify-content: center; gap: 0.4rem; transition: opacity var(--transition) !important; }
-.pdp-app-block .storeify-quote-btn-trigger-popup:hover { opacity: 0.9; }
+.pdp-app-block .storeify-quote-btn-trigger-popup { width: 100% !important; min-height: 46px !important; border-radius: var(--radius) !important; font-family: inherit !important; font-weight: 600 !important; font-size: 0.875rem !important; background: #fff !important; color: var(--gray-600) !important; border: 1.5px solid var(--gray-300) !important; display: inline-flex !important; align-items: center; justify-content: center; gap: 0.4rem; transition: border-color var(--transition), color var(--transition) !important; }
+.pdp-app-block .storeify-quote-btn-trigger-popup:hover { border-color: var(--brand-primary) !important; color: var(--brand-primary) !important; }
 .storeify-light-modal .storeify-requestaquote button[type="submit"], .storeify-light-modal .ify-button[type="submit"] { background: var(--brand-primary) !important; border-color: var(--brand-primary) !important; border-radius: var(--radius) !important; font-family: inherit !important; }
 
 /* Assurance row (delivery + payment + secure) — CRO */

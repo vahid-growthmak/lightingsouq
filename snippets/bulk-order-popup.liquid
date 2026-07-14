@@ -617,7 +617,9 @@
 
     function relabelTriggers() {
       document.querySelectorAll('.storeify-quote-btn-trigger-popup').forEach(function (b) {
-        if (b.textContent.trim() !== 'Request Bulk Order') b.textContent = 'Request Bulk Order';
+        if (b.getAttribute('data-lsq-label')) return;
+        b.setAttribute('data-lsq-label', '1');
+        b.innerHTML = '<span class="material-symbols-outlined" style="font-size:1.1rem;">request_quote</span> Request Bulk Order';
       });
     }
     relabelTriggers();

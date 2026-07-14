@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "main": {
@@ -72,12 +81,10 @@
       "settings": {
         "fallback_rating": 4.7,
         "fallback_reviews": "90",
-        "sold_count": "340+",
         "tax_note": "Price incl. VAT · Free delivery over QAR 150",
         "show_urgency": true,
-        "stock_label": "Only 6 left in stock",
         "viewers": "18",
-        "stock_bar_pct": 22,
+        "sold_count": "340+",
         "show_bulk": true,
         "bulk_label": "Request Bulk Order",
         "bulk_link": "",
@@ -156,8 +163,6 @@
       "settings": {
         "heading": "Customer Reviews",
         "subtitle": "Verified reviews from Judge.me and our Google Business profile.",
-        "show_store_reviews": true,
-        "store_heading": "What our customers say",
         "bg": "bg-white"
       }
     },
@@ -303,6 +308,7 @@
         "heading": "More from this brand",
         "subtitle": "Genuine stock from the same manufacturer.",
         "collection": "",
+        "context": "vendor",
         "products_to_show": 5,
         "bg": "bg-white",
         "center": false,
@@ -311,8 +317,7 @@
         "show_countdown": false,
         "countdown_hours": 12,
         "countdown_minutes": 34,
-        "countdown_seconds": 56,
-        "context": "vendor"
+        "countdown_seconds": 56
       }
     },
     "similar": {
@@ -393,6 +398,7 @@
         "heading": "Similar products",
         "subtitle": "More options in the same category.",
         "collection": "",
+        "context": "type",
         "products_to_show": 5,
         "bg": "bg-gray",
         "center": false,
@@ -401,8 +407,7 @@
         "show_countdown": false,
         "countdown_hours": 12,
         "countdown_minutes": 34,
-        "countdown_seconds": 56,
-        "context": "type"
+        "countdown_seconds": 56
       }
     },
     "faq": {

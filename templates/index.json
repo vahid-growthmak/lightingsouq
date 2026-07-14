@@ -1,3 +1,12 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
 {
   "sections": {
     "hero_zd9xXb": {
@@ -805,12 +814,9 @@
       "name": "Testimonials",
       "settings": {
         "heading": "Trusted by Buyers in Qatar",
-        "big_rating": "4.9★",
-        "rating_label": "Google Rating from 84 Reviews",
         "initial_count": 4,
         "view_more_label": "View more reviews",
         "view_more_link": "shopify://pages/reviews",
-        "use_judgeme": true,
         "bg": "bg-white"
       }
     },

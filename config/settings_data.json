@@ -18,6 +18,7 @@
     "brand_background": "#FFFFFF",
     "corner_radius": 10,
     "theqa_image": "shopify://shop_images/imgi_23_Badge-success.jpg_EB41E.jpg",
+    "whatsapp_number": "97455529088",
     "content_for_index": [],
     "blocks": {
       "14717942367183170102": {
@@ -45,9 +46,13 @@
         "type": "shopify://apps/lasthour-pvc/blocks/total-visitors-popup/83400307-b23e-4759-9c06-69ca779f523b",
         "disabled": true,
         "settings": {}
+      },
+      "11469127169306096870": {
+        "type": "shopify://apps/storeify-request-a-quote/blocks/embed-app/dac9aba2-251e-4c25-abc3-9fc57dbf7885",
+        "disabled": false,
+        "settings": {}
       }
-    },
-    "whatsapp_number": "97455529088"
+    }
   },
   "presets": {
     "Lighting Souq": {

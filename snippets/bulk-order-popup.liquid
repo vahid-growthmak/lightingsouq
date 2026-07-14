@@ -445,8 +445,9 @@
       holder.style.cssText = 'text-align:center;margin-top:1.25rem;';
       holder.innerHTML = '<a class="sfy-wa-continue" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:0.5rem;background:#22c55e;color:#fff;font-weight:700;padding:0.8rem 1.4rem;border-radius:10px;text-decoration:none;font-family:inherit;">✉ Continue on WhatsApp</a>';
       holder.querySelector('a').href = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(lines.join('\n'));
-      var target = modal.querySelector('.storeify-light-modal-content') || modal;
-      target.appendChild(holder);
+      var msg = [...modal.querySelectorAll('p, div, span')].find(function (n) { return /has been submitted|received your quote/i.test(n.textContent) && n.children.length === 0; });
+      var target = msg ? msg.parentElement : (modal.querySelector('.storeify-light-modal-content') || modal);
+      if (msg) { msg.insertAdjacentElement('afterend', holder); } else { target.appendChild(holder); }
     });
     mo.observe(document.body, { childList: true, subtree: true, characterData: true });
   })();

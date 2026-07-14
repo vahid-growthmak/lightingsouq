@@ -181,6 +181,11 @@
               data-handle="{{ product.handle }}"
               data-price="{{ cur.price | money }}"
               data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 96 }}{% endif %}"><span class="material-symbols-outlined" style="font-size:1.1rem;">request_quote</span> {{ s.bulk_label }}</a>{%- endif -%}
+            {%- for block in section.blocks -%}
+              {%- if block.type == '@app' -%}
+                <div class="pdp-app-block" {{ block.shopify_attributes }}>{% render block %}</div>
+              {%- endif -%}
+            {%- endfor -%}
           </div>
         </form>
 
@@ -433,6 +438,7 @@
     { "type": "richtext", "id": "delivery_content", "label": "Delivery content", "default": "<p>Pick up from our showroom or get it delivered. <strong>Delivery in 1–2 Days.</strong> Working hours: Sat – Thu 8.00am – 7.30pm.</p>" }
   ],
   "blocks": [
+    { "type": "@app" },
     {
       "type": "spec",
       "name": "Specification",

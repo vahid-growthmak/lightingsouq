@@ -67,6 +67,18 @@
             "key": "Warranty",
             "value": "2 years local warranty"
           }
+        },
+        "storeify_request_a_quote_button_block_ErMaPL": {
+          "type": "shopify://apps/storeify-request-a-quote/blocks/button_block/dac9aba2-251e-4c25-abc3-9fc57dbf7885",
+          "settings": {
+            "font_size": 16,
+            "color_text": "#FFFFFF",
+            "bg_button": "#000000",
+            "label_btn": "Add to Quote",
+            "multi_lang": false,
+            "class_button": "storeify-btn-custom",
+            "form_id": ""
+          }
         }
       },
       "block_order": [
@@ -76,7 +88,8 @@
         "b3",
         "b4",
         "b5",
-        "b6"
+        "b6",
+        "storeify_request_a_quote_button_block_ErMaPL"
       ],
       "settings": {
         "label_home": "Home",
@@ -503,27 +516,6 @@
         "button_label": "Request a Bulk Quote",
         "button_link": ""
       }
-    },
-    "178402116969ef9e2e": {
-      "type": "apps",
-      "blocks": {
-        "storeify_request_a_quote_button_block_ErMaPL": {
-          "type": "shopify://apps/storeify-request-a-quote/blocks/button_block/dac9aba2-251e-4c25-abc3-9fc57dbf7885",
-          "settings": {
-            "font_size": 16,
-            "color_text": "#FFFFFF",
-            "bg_button": "#000000",
-            "label_btn": "Add to Quote",
-            "multi_lang": false,
-            "class_button": "storeify-btn-custom",
-            "form_id": ""
-          }
-        }
-      },
-      "block_order": [
-        "storeify_request_a_quote_button_block_ErMaPL"
-      ],
-      "settings": {}
     }
   },
   "order": [
@@ -535,7 +527,6 @@
     "related",
     "similar",
     "faq",
-    "bulk",
-    "178402116969ef9e2e"
+    "bulk"
   ]
 }

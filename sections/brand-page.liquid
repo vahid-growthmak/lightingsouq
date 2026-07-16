@@ -120,9 +120,9 @@
           {%- assign chandle = cp[1] | strip -%}
           {%- assign ccol = collections[chandle] -%}
           {%- if ccol != blank -%}
-            {%- assign bpc = ccol.products | where: 'vendor', brand -%}
+            {%- assign bpc = ccol.products | where: 'vendor', bd -%}
             {%- assign cimg = bpc.first.featured_image | default: ccol.products.first.featured_image -%}
-            <a class="brand-cat-card" href="/collections/{{ chandle }}?filter.p.vendor={{ brand | url_encode }}">
+            <a class="brand-cat-card" href="/collections/{{ chandle }}?filter.p.vendor={{ bd | url_encode }}">
               {%- if cimg != blank -%}<img class="brand-cat-img" src="{{ cimg | image_url: width: 140 }}" alt="{{ clabel }}" width="52" height="52" loading="lazy">{%- endif -%}
               <span class="brand-cat-label">{{ clabel }}</span>
               <span class="material-symbols-outlined">arrow_forward</span>
@@ -147,7 +147,7 @@
       {%- for p in bcol.products limit: 8 -%}{%- render 'product-card', product: p -%}{%- endfor -%}
     </div>
     <div style="text-align:center;margin-top:2rem;">
-      <a class="btn-view-more" href="/collections/all?filter.p.vendor={{ brand | url_encode }}">View all {{ bcol.products_count }} products <span class="material-symbols-outlined">arrow_forward</span></a>
+      <a class="btn-view-more" href="/collections/all?filter.p.vendor={{ bd | url_encode }}">View all {{ bcol.products_count }} products <span class="material-symbols-outlined">arrow_forward</span></a>
     </div>
   </div>
 </section>

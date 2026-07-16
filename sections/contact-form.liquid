@@ -7,6 +7,12 @@
       </div>
     {%- endif -%}
 
+    {%- if section.settings.note_text != blank -%}
+      <div class="cf-note" style="max-width:760px;margin:0 auto 1.75rem;padding:1rem 1.25rem;background:var(--color-primary-surface,#f0effe);border:1px solid var(--gray-100,#e5e7eb);border-radius:12px;">
+        {%- if section.settings.note_title != blank -%}<strong>{{ section.settings.note_title }}</strong> {% endif %}{{ section.settings.note_text }}
+      </div>
+    {%- endif -%}
+
     <div class="cf-layout">
       <div class="cf-form-col">
         {%- if form.posted_successfully? -%}
@@ -124,6 +130,19 @@
   #Sec--{{ section.id }} .cf-channel-value { font-weight: 700; color: var(--brand-text); }
 {% endstyle %}
 
+{%- if page.handle == 'contact' -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ContactPage",
+  "@id": "{{ shop.url }}/pages/contact#page",
+  "url": "{{ shop.url }}/pages/contact",
+  "isPartOf": { "@id": "{{ shop.url }}/#website" },
+  "about": { "@id": "{{ shop.url }}/#store" }
+}
+</script>
+{%- endif -%}
+
 {% schema %}
 {
   "name": "Contact Form",
@@ -148,6 +167,9 @@
     { "type": "text", "id": "phone_label", "label": "Phone label", "default": "Phone (optional)" },
     { "type": "text", "id": "message_label", "label": "Message label", "default": "How can we help?" },
     { "type": "text", "id": "submit_label", "label": "Submit button label", "default": "Send message" },
+    { "type": "header", "content": "Before-you-write note" },
+    { "type": "text", "id": "note_title", "label": "Note title", "default": "Before you write" },
+    { "type": "textarea", "id": "note_text", "label": "Note text" },
     { "type": "header", "content": "Success message" },
     { "type": "text", "id": "success_title", "label": "Success title", "default": "Thanks — message received" },
     { "type": "textarea", "id": "success_text", "label": "Success text", "default": "We will get back to you shortly. For urgent help, reach us on WhatsApp." },
@@ -163,7 +185,7 @@
       "settings": [
         { "type": "text", "id": "icon", "label": "Material Symbol icon name", "default": "chat" },
         { "type": "text", "id": "label", "label": "Label", "default": "WhatsApp" },
-        { "type": "text", "id": "value", "label": "Value", "default": "+974 0000 0000" },
+        { "type": "text", "id": "value", "label": "Value", "default": "+974 5552 9088" },
         { "type": "url", "id": "link", "label": "Link" }
       ]
     }
@@ -172,9 +194,9 @@
     {
       "name": "Contact Form",
       "blocks": [
-        { "type": "channel", "settings": { "icon": "chat", "label": "WhatsApp", "value": "+974 0000 0000" } },
-        { "type": "channel", "settings": { "icon": "call", "label": "Call us", "value": "+974 0000 0000" } },
-        { "type": "channel", "settings": { "icon": "mail", "label": "Email", "value": "hello@lightingsouq.qa" } }
+        { "type": "channel", "settings": { "icon": "chat", "label": "WhatsApp", "value": "+974 5552 9088" } },
+        { "type": "channel", "settings": { "icon": "call", "label": "Call us", "value": "+974 5552 9088" } },
+        { "type": "channel", "settings": { "icon": "mail", "label": "Email", "value": "info@lightingsouq.com" } }
       ]
     }
   ]

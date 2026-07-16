@@ -6,7 +6,7 @@
       </div>
       <div class="smart-home-copy">
         <p class="smart-home-eyebrow">{{ section.settings.eyebrow }}</p>
-        <h2 class="smart-home-title">{{ section.settings.title }}</h2>
+        {%- if section.settings.title_tag == 'h1' -%}<h1 class="smart-home-title">{{ section.settings.title }}</h1>{%- else -%}<h2 class="smart-home-title">{{ section.settings.title }}</h2>{%- endif -%}
         <p class="smart-home-text">{{ section.settings.text }}</p>
         <div class="smart-home-features">
           {%- for block in section.blocks -%}
@@ -43,6 +43,7 @@
     { "type": "image_picker", "id": "image", "label": "Image" },
     { "type": "text", "id": "image_alt", "label": "Image alt text", "default": "Smart-lit living room controlled from a phone" },
     { "type": "header", "content": "Copy" },
+    { "type": "select", "id": "title_tag", "label": "Title heading level", "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" } ], "default": "h2" },
     { "type": "text", "id": "eyebrow", "label": "Eyebrow", "default": "Smart Lighting Specialists" },
     { "type": "text", "id": "title", "label": "Title", "default": "A smart home in an afternoon — no rewiring" },
     { "type": "textarea", "id": "text", "label": "Text", "default": "Retrofit your existing fittings with app-controlled bulbs, strips and switches. Set scenes, schedules and colour from your phone or voice — the way generalists and marketplaces simply can't guide you." },

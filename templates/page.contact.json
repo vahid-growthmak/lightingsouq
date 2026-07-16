@@ -11,8 +11,10 @@
       "type": "contact-form",
       "settings": {
         "bg": "bg-white",
-        "heading": "Get in touch",
-        "subtitle": "Tell us what you need and our Doha team replies fast — usually the same day.",
+        "heading": "Contact us",
+        "subtitle": "WhatsApp is the fastest way to reach us. Our team is available Sunday to Thursday, 9am to 6pm Qatar time, and usually replies within a few hours.",
+        "note_title": "Before you write",
+        "note_text": "If you are asking about a specific product, a photo of the old bulb, fitting or gear is worth ten lines of description. Send it and we will identify it.",
         "name_label": "Your name",
         "email_label": "Email address",
         "phone_label": "Phone (optional)",
@@ -25,9 +27,9 @@
         "channels_text": "Skip the form and reach the showroom team directly."
       },
       "blocks": {
-        "c1": { "type": "channel", "settings": { "icon": "chat", "label": "WhatsApp", "value": "+974 0000 0000" } },
-        "c2": { "type": "channel", "settings": { "icon": "call", "label": "Call us", "value": "+974 0000 0000" } },
-        "c3": { "type": "channel", "settings": { "icon": "mail", "label": "Email", "value": "hello@lightingsouq.qa" } }
+        "c1": { "type": "channel", "settings": { "icon": "chat", "label": "WhatsApp", "value": "+974 5552 9088", "link": "https://wa.me/97455529088" } },
+        "c2": { "type": "channel", "settings": { "icon": "call", "label": "Call us", "value": "+974 5552 9088", "link": "tel:+97455529088" } },
+        "c3": { "type": "channel", "settings": { "icon": "mail", "label": "Email", "value": "info@lightingsouq.com", "link": "mailto:info@lightingsouq.com" } }
       },
       "block_order": ["c1", "c2", "c3"]
     },

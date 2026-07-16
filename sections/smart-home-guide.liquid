@@ -1,0 +1,159 @@
+{%- comment -%}
+  Smart Home Hub — "what works with what" (doc 24). The compatibility table is the page:
+  a real HTML table, FAQ answers in the initial HTML collapsed, FAQPage + BreadcrumbList schema.
+{%- endcomment -%}
+{%- assign wa = 'https://wa.me/97455529088' -%}
+
+{%- comment -%} 2. Start here — three steps {%- endcomment -%}
+<section class="section bg-white" id="SmartGuide--{{ section.id }}">
+  <div class="container">
+    <h2 class="section-title">Starting from nothing? Three steps.</h2>
+    <div class="grid-3" style="margin-top:1.5rem;">
+      <div class="shg-step"><h3 class="shg-step-h"><span class="shg-num">1</span> Pick one room</h3><p>Do not plan the whole house. Buy smart bulbs for one room, live with them for a week, and you will know what you actually want next. Almost nobody gets the plan right on paper.</p></div>
+      <div class="shg-step"><h3 class="shg-step-h"><span class="shg-num">2</span> Buy bulbs before switches</h3><p>Smart bulbs screw into your existing fittings and need no wiring. Smart wall switches replace the switch and need a qualified electrician. Start with bulbs.</p></div>
+      <div class="shg-step"><h3 class="shg-step-h"><span class="shg-num">3</span> Add a speaker when you want voice</h3><p>An Echo or a Google Home is not required. Your lights work from their app without one. Add it when you want voice control, or when you want devices from different brands running in the same routine.</p></div>
+    </div>
+  </div>
+</section>
+
+{%- comment -%} 3. The compatibility table — this is the page {%- endcomment -%}
+<section class="section bg-gray" id="compatibility">
+  <div class="container">
+    <h2 class="section-title">What works with what</h2>
+    <p class="section-sub">Every smart brand we stock, and what it connects to. If your brand is not here, ask us.</p>
+    <div class="shg-table-wrap">
+      <table class="shg-table">
+        <thead>
+          <tr>
+            <th scope="col">Brand</th>
+            <th scope="col">App</th>
+            <th scope="col">Alexa</th>
+            <th scope="col">Google Home</th>
+            <th scope="col">Apple Home</th>
+            <th scope="col">Hub needed?</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row"><a href="/pages/wink">Wink</a></th><td>Tuya / Smart Life</td><td>Yes</td><td>Yes</td><td>No</td><td>No, WiFi</td></tr>
+          <tr><th scope="row"><a href="/pages/xiaomi">Xiaomi</a></th><td>Mi Home</td><td>Yes</td><td>Yes</td><td>No</td><td>No, WiFi</td></tr>
+          <tr><th scope="row"><a href="/pages/yeelight">Yeelight</a></th><td>Yeelight (and Mi Home for some)</td><td>Yes</td><td>Yes</td><td>No</td><td>No, WiFi</td></tr>
+          <tr><th scope="row"><a href="/pages/philips-hue">Philips Hue</a></th><td>Hue</td><td>Yes</td><td>Yes</td><td>Yes</td><td>Bluetooth for a few lights, Bridge for the full range</td></tr>
+          <tr><th scope="row"><a href="/pages/sonoff">Sonoff</a></th><td>eWeLink</td><td>Yes</td><td>Yes</td><td>No</td><td>No, WiFi</td></tr>
+          <tr><th scope="row"><a href="/pages/amazon">Amazon Echo</a></th><td>Alexa</td><td>Is Alexa</td><td>No</td><td>No</td><td>Is the hub</td></tr>
+          <tr><th scope="row"><a href="/pages/google">Google Home</a></th><td>Google Home</td><td>No</td><td>Is Google Home</td><td>No</td><td>Is the hub</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+{%- comment -%} 4. The one rule {%- endcomment -%}
+<section class="section bg-white">
+  <div class="container shg-narrow">
+    <h2 class="section-title">The one rule that explains everything</h2>
+    <div class="lsq-prose" style="margin-top:1rem;">
+      <p>Brands do not join each other's hubs. A Wink bulb will not pair with a Philips Hue Bridge. A Yeelight will not join the Mi hub. Those are closed systems and they are meant to be.</p>
+      <p>But every brand here connects to Alexa and Google Home. So a Wink bulb, a Yeelight strip and a Xiaomi plug can all sit in the same voice command and the same routine, even though none of them can see each other directly. The assistant is the meeting point, not the hub. Once you understand that, mixing brands stops being a problem.</p>
+    </div>
+  </div>
+</section>
+
+{%- comment -%} 6. Shop by device type {%- endcomment -%}
+<section class="section bg-gray">
+  <div class="container">
+    <h2 class="section-title">Or shop by what you need</h2>
+    <div class="brand-cat-grid" style="margin-top:1.5rem;">
+      <a class="brand-cat-card" href="/collections/smart-lighting"><span class="material-symbols-outlined">lightbulb</span><span class="brand-cat-label">Smart bulbs</span><span class="material-symbols-outlined">arrow_forward</span></a>
+      <a class="brand-cat-card" href="/collections/led-strips"><span class="material-symbols-outlined">linear_scale</span><span class="brand-cat-label">LED strips</span><span class="material-symbols-outlined">arrow_forward</span></a>
+      <a class="brand-cat-card" href="/collections/switches-sockets"><span class="material-symbols-outlined">toggle_on</span><span class="brand-cat-label">Switches &amp; sockets</span><span class="material-symbols-outlined">arrow_forward</span></a>
+      <a class="brand-cat-card" href="/collections/smart-plugs"><span class="material-symbols-outlined">power</span><span class="brand-cat-label">Smart plugs</span><span class="material-symbols-outlined">arrow_forward</span></a>
+      <a class="brand-cat-card" href="/collections/smart-security"><span class="material-symbols-outlined">videocam</span><span class="brand-cat-label">Cameras &amp; doorbells</span><span class="material-symbols-outlined">arrow_forward</span></a>
+      <a class="brand-cat-card" href="/collections/smart-locks"><span class="material-symbols-outlined">lock</span><span class="brand-cat-label">Door locks</span><span class="material-symbols-outlined">arrow_forward</span></a>
+    </div>
+  </div>
+</section>
+
+{%- comment -%} 8. FAQ — answers in the initial HTML, collapsed {%- endcomment -%}
+<section class="section bg-white" id="SmartFAQ--{{ section.id }}">
+  <div class="container">
+    <h2 class="section-title text-center">Smart home questions, answered</h2>
+    <div class="faq-wrap">
+      <div class="collapsible-row"><h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do I need a hub for smart lighting? <span class="material-symbols-outlined">expand_more</span></button></h3><div class="collapsible-content"><p>For most of what we stock, no. Wink, Xiaomi, Yeelight and Sonoff devices connect straight to your home WiFi and run from their app. Philips Hue is the exception: Hue bulbs include Bluetooth so you can start with a few lights without one, but the full range and the best performance need the Hue Bridge.</p></div></div>
+      <div class="collapsible-row"><h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can I mix smart brands in one home? <span class="material-symbols-outlined">expand_more</span></button></h3><div class="collapsible-content"><p>Yes, through Alexa or Google Home. What does not work is adding one brand's device to another brand's hub: a Wink bulb will not join the Hue Bridge, and a Yeelight will not join the Mi hub. But all of them connect to Alexa and Google Home, so you can control them together by voice and in the same routines.</p></div></div>
+      <div class="collapsible-row"><h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do I need to rewire to make my lights smart? <span class="material-symbols-outlined">expand_more</span></button></h3><div class="collapsible-content"><p>No, not to start. Smart bulbs screw into your existing fittings and connect over WiFi. Rewiring only comes in if you choose smart wall switches, which replace the existing switch and should be fitted by a qualified electrician. Damage from installation not carried out by a qualified electrician is not covered.</p></div></div>
+      <div class="collapsible-row"><h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Which app do I need? <span class="material-symbols-outlined">expand_more</span></button></h3><div class="collapsible-content"><p>It depends on the brand. Wink uses Tuya or Smart Life, Sonoff uses eWeLink, Xiaomi uses Mi Home, Yeelight uses the Yeelight app with many products also in Mi Home, and Philips Hue uses the Hue app. Most can then be linked into Alexa or Google Home so you control everything from one place by voice.</p></div></div>
+      <div class="collapsible-row"><h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do smart lights work if my internet goes down? <span class="material-symbols-outlined">expand_more</span></button></h3><div class="collapsible-content"><p>The switch on the wall still works, so you will not be left in the dark. App and voice control need the internet, and cloud-based routines pause until the connection returns.</p></div></div>
+      <div class="collapsible-row"><h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can I control my lights from outside Qatar? <span class="material-symbols-outlined">expand_more</span></button></h3><div class="collapsible-content"><p>Yes. These are WiFi devices connected through their app, so you can switch lights and change schedules from anywhere with an internet connection.</p></div></div>
+      <div class="collapsible-row"><h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What should I buy first? <span class="material-symbols-outlined">expand_more</span></button></h3><div class="collapsible-content"><p>Smart bulbs for one room. They need no wiring, they work from the app without a speaker, and after a week you will know whether you want strips, switches or voice control next. Almost nobody plans a smart home correctly on paper.</p></div></div>
+      <div class="collapsible-row"><h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Will smart bulbs work with my existing dimmer switch? <span class="material-symbols-outlined">expand_more</span></button></h3><div class="collapsible-content"><p>No, and this is worth knowing before you buy. A smart bulb does its own dimming from the app, so it needs constant mains power. On a dimmer switch it will flicker, buzz or fail early. Either replace the dimmer with a normal switch and dim from the app, or use a smart dimmer switch designed for it. Ask our team if you are unsure.</p></div></div>
+    </div>
+    <p class="text-center" style="margin-top:1.5rem;"><a class="btn-outline" href="{{ wa }}" target="_blank" rel="noopener">Ask us on WhatsApp</a></p>
+  </div>
+</section>
+
+<style>
+  #SmartGuide--{{ section.id }} .shg-step { background: var(--color-surface, #fff); border: 1px solid var(--gray-100, #eef0f4); border-radius: var(--radius-lg, 12px); padding: 1.5rem; }
+  .shg-step-h { display: flex; align-items: center; gap: .6rem; margin: 0 0 .5rem; font-size: 1.15rem; }
+  .shg-num { display: inline-flex; align-items: center; justify-content: center; width: 2rem; height: 2rem; border-radius: 999px; background: var(--brand-500, #4f46e5); color: #fff; font-weight: 700; flex: 0 0 auto; }
+  .shg-table-wrap { margin-top: 1.5rem; overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--gray-100, #e5e7eb); border-radius: var(--radius-lg, 12px); }
+  .shg-table { width: 100%; border-collapse: collapse; min-width: 720px; background: #fff; font-size: .95rem; }
+  .shg-table th, .shg-table td { padding: .85rem 1rem; text-align: left; border-bottom: 1px solid var(--gray-100, #eef0f4); vertical-align: top; }
+  .shg-table thead th { background: var(--gray-50, #f9fafb); font-weight: 700; white-space: nowrap; position: sticky; top: 0; }
+  .shg-table tbody th[scope="row"] { font-weight: 600; white-space: nowrap; }
+  .shg-table tbody th a { color: var(--brand-600, #4338ca); text-decoration: none; }
+  .shg-table tbody th a:hover { text-decoration: underline; }
+  .shg-table tbody tr:last-child th, .shg-table tbody tr:last-child td { border-bottom: 0; }
+  .shg-narrow { max-width: 760px; }
+</style>
+
+<script>
+  (function () {
+    ['SmartGuide--{{ section.id }}','SmartFAQ--{{ section.id }}'].forEach(function (id) {
+      var root = document.getElementById(id); if (!root) return;
+      root.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-accordion]'); if (!t || !root.contains(t)) return;
+        var row = t.closest('.collapsible-row'); if (row) row.classList.toggle('active');
+      });
+    });
+  })();
+</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "@id": "{{ shop.url }}/pages/smart-home-hub#faq",
+  "isPartOf": { "@id": "{{ shop.url }}/#website" },
+  "mainEntity": [
+    { "@type": "Question", "name": "Do I need a hub for smart lighting?", "acceptedAnswer": { "@type": "Answer", "text": "For most of what we stock, no. Wink, Xiaomi, Yeelight and Sonoff devices connect straight to your home WiFi and run from their app. Philips Hue is the exception: Hue bulbs include Bluetooth so you can start with a few lights without one, but the full range and the best performance need the Hue Bridge." } },
+    { "@type": "Question", "name": "Can I mix smart brands in one home?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, through Alexa or Google Home. What does not work is adding one brand's device to another brand's hub: a Wink bulb will not join the Hue Bridge, and a Yeelight will not join the Mi hub. But all of them connect to Alexa and Google Home, so you can control them together by voice and in the same routines." } },
+    { "@type": "Question", "name": "Do I need to rewire to make my lights smart?", "acceptedAnswer": { "@type": "Answer", "text": "No, not to start. Smart bulbs screw into your existing fittings and connect over WiFi. Rewiring only comes in if you choose smart wall switches, which replace the existing switch and should be fitted by a qualified electrician. Damage from installation not carried out by a qualified electrician is not covered." } },
+    { "@type": "Question", "name": "Which app do I need?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on the brand. Wink uses Tuya or Smart Life, Sonoff uses eWeLink, Xiaomi uses Mi Home, Yeelight uses the Yeelight app with many products also in Mi Home, and Philips Hue uses the Hue app. Most can then be linked into Alexa or Google Home so you control everything from one place by voice." } },
+    { "@type": "Question", "name": "Do smart lights work if my internet goes down?", "acceptedAnswer": { "@type": "Answer", "text": "The switch on the wall still works, so you will not be left in the dark. App and voice control need the internet, and cloud-based routines pause until the connection returns." } },
+    { "@type": "Question", "name": "Can I control my lights from outside Qatar?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. These are WiFi devices connected through their app, so you can switch lights and change schedules from anywhere with an internet connection." } },
+    { "@type": "Question", "name": "What should I buy first?", "acceptedAnswer": { "@type": "Answer", "text": "Smart bulbs for one room. They need no wiring, they work from the app without a speaker, and after a week you will know whether you want strips, switches or voice control next. Almost nobody plans a smart home correctly on paper." } },
+    { "@type": "Question", "name": "Will smart bulbs work with my existing dimmer switch?", "acceptedAnswer": { "@type": "Answer", "text": "No, and this is worth knowing before you buy. A smart bulb does its own dimming from the app, so it needs constant mains power. On a dimmer switch it will flicker, buzz or fail early. Either replace the dimmer with a normal switch and dim from the app, or use a smart dimmer switch designed for it. Ask our team if you are unsure." } }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Smart Home Hub", "item": "{{ shop.url }}/pages/smart-home-hub" }
+  ]
+}
+</script>
+
+{% schema %}
+{
+  "name": "Smart Home Guide",
+  "tag": "div",
+  "settings": [
+    { "type": "paragraph", "content": "The 'what works with what' compatibility table, one-rule explainer, device cards and FAQ (doc 24). Copy is fixed." }
+  ],
+  "presets": [{ "name": "Smart Home Guide" }]
+}
+{% endschema %}

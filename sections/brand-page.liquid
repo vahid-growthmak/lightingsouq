@@ -24,6 +24,21 @@
   assign bcol = collections[bslug]
   assign mf = page.metafields.brand
   assign vendor_filter = '?filter.p.vendor=' | append: brand | url_encode | replace: '%3Ffilter', '?filter'
+  # count category cards whose collection actually exists, so we can hide an all-empty section
+  assign cat_exist = 0
+  if mf.categories != blank
+    assign cat_lines = mf.categories | newline_to_br | split: '<br />'
+    for line in cat_lines
+      assign cline = line | strip
+      if cline contains '^'
+        assign cparts = cline | split: '^'
+        assign chandle = cparts[1] | strip
+        if collections[chandle] != blank
+          assign cat_exist = cat_exist | plus: 1
+        endif
+      endif
+    endfor
+  endif
 -%}
 
 <section class="section bg-white" id="BrandPage--{{ section.id }}">
@@ -41,13 +56,13 @@
         {%- if mf.sub_line != blank -%}<p class="brand-hero-meta">{{ mf.sub_line }}</p>
         {%- elsif bcol != blank -%}<p class="brand-hero-meta">{{ bcol.products_count }} {{ brand }} products in stock.</p>{%- endif -%}
         <div class="brand-hero-cta">
-          {%- if mf.categories != blank -%}
+          {%- if cat_exist > 0 -%}
             {%- capture cta_lbl -%}{% if mf.cta_label != blank %}{{ mf.cta_label }}{% else %}Find {{ brand }} collections{% endif %}{%- endcapture -%}
             <a class="btn-primary-sm" href="#shop-by-category" data-brand-scroll>{{ cta_lbl }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">expand_more</span></a>
           {%- elsif bcol != blank -%}
             <a class="btn-primary-sm" href="{{ bcol.url }}">Shop all {{ brand }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">arrow_forward</span></a>
           {%- endif -%}
-          {%- if bcol != blank and mf.categories != blank -%}<a class="brand-hero-secondary" href="{{ bcol.url }}">Shop all {{ brand }}</a>{%- endif -%}
+          {%- if bcol != blank and cat_exist > 0 -%}<a class="brand-hero-secondary" href="{{ bcol.url }}">Shop all {{ brand }}</a>{%- endif -%}
         </div>
       </div>
     </div>
@@ -87,8 +102,8 @@
   </div>
 </section>
 
-{%- comment -%} 6. Shop by category {%- endcomment -%}
-{%- if mf.categories != blank -%}
+{%- comment -%} 6. Shop by category — hidden when none of its collections exist {%- endcomment -%}
+{%- if cat_exist > 0 -%}
 <section class="section bg-gray" id="shop-by-category">
   <div class="container">
     <h2 class="section-title">Shop {{ brand }} by category</h2>

@@ -10,8 +10,8 @@
     "hero": {
       "type": "page-hero",
       "settings": {
-        "heading": "Our lighting showroom in Doha",
-        "subtitle": "See it lit before you buy it. Our showroom has the range on display, and our team can identify a part from a photo or the old bulb in your hand.",
+        "heading": "Our lighting showroom in Qatar",
+        "subtitle": "See it lit before you buy it. Our showroom in Barwa Village, Al Wakrah has the range on display, and our team can identify a part from a photo or the old bulb in your hand.",
         "bg": "bg-gray"
       }
     },
@@ -19,15 +19,16 @@
       "type": "map-embed",
       "settings": {
         "bg": "bg-white",
-        "heading": "Find us",
+        "heading": "Finding us",
         "subtitle": "Address, hours and directions to the showroom.",
         "eyebrow": "Showroom",
-        "showroom_name": "Lighting Souq Showroom",
-        "address": "Street address, Doha, Qatar",
-        "hours": "Sat to Thu, 9am to 9pm · Fri 4pm to 9pm",
-        "phone": "+974 5552 9088",
+        "showroom_name": "Go Green International Trading WLL",
+        "address": "Shop 8, Building 7, Barwa Village, Al Wakrah, Qatar",
+        "hours": "Open daily, 8am to 8pm",
+        "phone": "+974 4411 3544 · +974 5552 9088",
         "directions_label": "Get directions",
-        "directions_link": "/",
+        "directions_link": "https://www.google.com/maps/search/Go%20Green%20International%20Trading/@25.21178434,51.57667578,17z?hl=en",
+        "map_embed_url": "https://www.google.com/maps?q=25.21178434,51.57667578&z=17&hl=en&output=embed",
         "map_placeholder": "Add a Google Maps embed URL in the theme editor to show the showroom location here.",
         "show_collect": true,
         "collect_title": "Click and Collect",

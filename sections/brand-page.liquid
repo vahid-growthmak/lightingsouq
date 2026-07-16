@@ -60,7 +60,8 @@
             {%- capture cta_lbl -%}{% if mf.cta_label != blank %}{{ mf.cta_label }}{% else %}Find {{ brand }} collections{% endif %}{%- endcapture -%}
             <a class="btn-primary-sm" href="#shop-by-category" data-brand-scroll>{{ cta_lbl }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">expand_more</span></a>
           {%- elsif bcol != blank -%}
-            <a class="btn-primary-sm" href="{{ bcol.url }}">Shop all {{ brand }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">arrow_forward</span></a>
+            {%- capture cta_lbl2 -%}{% if mf.cta_label != blank %}{{ mf.cta_label }}{% else %}Shop all {{ brand }}{% endif %}{%- endcapture -%}
+            <a class="btn-primary-sm" href="{{ bcol.url }}">{{ cta_lbl2 }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">arrow_forward</span></a>
           {%- endif -%}
           {%- if bcol != blank and cat_exist > 0 -%}<a class="brand-hero-secondary" href="{{ bcol.url }}">Shop all {{ brand }}</a>{%- endif -%}
         </div>
@@ -151,7 +152,30 @@
 </section>
 {%- endif -%}
 
-{%- comment -%} 8. FAQ {%- endcomment -%}
+{%- comment -%} 8. Related brands — placed above the FAQ; heading is customisable (thin ranges use "…alternatives in stock") {%- endcomment -%}
+{%- if mf.related != blank -%}
+<section class="section bg-white">
+  <div class="container">
+    <h2 class="section-title text-center">{% if mf.related_heading != blank %}{{ mf.related_heading }}{% else %}Brands related to {{ brand }}{% endif %}</h2>
+    <div class="brands-index-grid" style="margin-top:1.5rem;">
+      {%- assign rel = mf.related | split: ',' -%}
+      {%- for r in rel -%}
+        {%- assign rslug = r | strip -%}
+        {%- assign rcol = collections[rslug] -%}
+        {%- if rcol != blank -%}
+          {%- comment -%} title-case-ish display from vendor list {%- endcomment -%}
+          {%- assign rname = rslug -%}
+          {%- for v in shop.vendors -%}{%- assign vh = v | handleize -%}{%- if vh == rslug -%}{%- assign rname = v -%}{%- break -%}{%- endif -%}{%- endfor -%}
+          {%- assign rlink = '/pages/' | append: rslug -%}
+          <div class="brand-index-card">{%- render 'brand-logo', name: rname, link: rlink -%}<a class="brand-index-meta" href="/pages/{{ rslug }}">{{ rcol.products_count }} products</a></div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{%- comment -%} 9. FAQ {%- endcomment -%}
 {%- if mf.faqs != blank -%}
 <section class="section bg-gray" id="BrandFAQ--{{ section.id }}">
   <div class="container">
@@ -166,29 +190,6 @@
             <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>{{ fp[0] | strip }} <span class="material-symbols-outlined">expand_more</span></button></h3>
             <div class="collapsible-content">{{ fp[1] | strip }}</div>
           </div>
-        {%- endif -%}
-      {%- endfor -%}
-    </div>
-  </div>
-</section>
-{%- endif -%}
-
-{%- comment -%} 9. Related brands {%- endcomment -%}
-{%- if mf.related != blank -%}
-<section class="section bg-white">
-  <div class="container">
-    <h2 class="section-title text-center">Brands related to {{ brand }}</h2>
-    <div class="brands-index-grid" style="margin-top:1.5rem;">
-      {%- assign rel = mf.related | split: ',' -%}
-      {%- for r in rel -%}
-        {%- assign rslug = r | strip -%}
-        {%- assign rcol = collections[rslug] -%}
-        {%- if rcol != blank -%}
-          {%- comment -%} title-case-ish display from vendor list {%- endcomment -%}
-          {%- assign rname = rslug -%}
-          {%- for v in shop.vendors -%}{%- assign vh = v | handleize -%}{%- if vh == rslug -%}{%- assign rname = v -%}{%- break -%}{%- endif -%}{%- endfor -%}
-          {%- assign rlink = '/pages/' | append: rslug -%}
-          <div class="brand-index-card">{%- render 'brand-logo', name: rname, link: rlink -%}<a class="brand-index-meta" href="/pages/{{ rslug }}">{{ rcol.products_count }} products</a></div>
         {%- endif -%}
       {%- endfor -%}
     </div>

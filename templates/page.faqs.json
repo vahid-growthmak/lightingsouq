@@ -9,96 +9,12 @@
  */
 {
   "sections": {
-    "breadcrumb": {
-      "type": "breadcrumb",
-      "settings": {
-        "home_label": "Home",
-        "current": "FAQs"
-      },
-      "blocks": {
-        "help": {
-          "type": "crumb",
-          "settings": {
-            "label": "Support",
-            "link": "/pages/contact"
-          }
-        },
-        "current": {
-          "type": "crumb",
-          "settings": {
-            "label": "FAQs"
-          }
-        }
-      },
-      "block_order": [
-        "help",
-        "current"
-      ]
-    },
-    "hero": {
-      "type": "page-hero",
-      "settings": {
-        "heading": "Frequently Asked Questions",
-        "subtitle": "Quick answers on compatibility, shipping, returns, warranty and bulk orders.",
-        "bg": "bg-gray"
-      }
-    },
-    "faqs": {
-      "type": "faq-section",
-      "settings": {
-        "heading": "Common questions",
-        "subtitle": "Still stuck? Contact us and a real person will help.",
-        "bg": "bg-white"
-      },
-      "blocks": {
-        "compat": {
-          "type": "faq",
-          "settings": {
-            "question": "Will smart lights work with Alexa, Google or Siri?",
-            "answer": "<p>Most of our smart range works with <strong>Alexa, Google Home and Apple Home</strong> via apps like Tuya, Smart Life, Mi Home and Hue. See our <a href='/pages/smart-home-hub'>Smart Home Hub</a> for details.</p>"
-          }
-        },
-        "ship": {
-          "type": "faq",
-          "settings": {
-            "question": "How fast is delivery?",
-            "answer": "<p>Order before 4 PM for <strong>same-day delivery in Doha</strong>, 1–2 days elsewhere in Qatar, plus GCC and UK shipping. See <a href='/pages/shipping-delivery'>Shipping & Delivery</a>.</p>"
-          }
-        },
-        "returns": {
-          "type": "faq",
-          "settings": {
-            "question": "What is your return policy?",
-            "answer": "<p>You can return within <strong>7 days</strong> of delivery in the original, unused packaging. See our <a href='/pages/returns-refunds'>Returns & Refunds</a> page.</p>"
-          }
-        },
-        "warranty": {
-          "type": "faq",
-          "settings": {
-            "question": "Are products covered by warranty?",
-            "answer": "<p>Yes. Every product is genuine and covered by a <strong>local warranty</strong> handled by our Doha team.</p>"
-          }
-        },
-        "bulk": {
-          "type": "faq",
-          "settings": {
-            "question": "Do you offer bulk or trade pricing?",
-            "answer": "<p>Yes. For projects, offices and villas we offer volume pricing. Request a quote on our <a href='/pages/bulk-orders'>Bulk Orders</a> page.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "compat",
-        "ship",
-        "returns",
-        "warranty",
-        "bulk"
-      ]
+    "main": {
+      "type": "faq-full",
+      "settings": {}
     }
   },
   "order": [
-    "breadcrumb",
-    "hero",
-    "faqs"
+    "main"
   ]
 }

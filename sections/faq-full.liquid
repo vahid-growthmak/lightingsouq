@@ -1,0 +1,322 @@
+{%- comment -%}
+  FAQs page (doc 05) — 7 anchored sets, sticky jump nav, still-need-help band,
+  single FAQPage + BreadcrumbList JSON-LD. All answers in the initial HTML.
+{%- endcomment -%}
+{%- liquid
+  assign wa_num = settings.whatsapp_number | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
+-%}
+<section class="section bg-white" id="FaqFull--{{ section.id }}">
+  <div class="container">
+    <nav class="breadcrumb" aria-label="Breadcrumb"><a href="{{ routes.root_url }}">Home</a> / <span>FAQs</span></nav>
+    <h1 class="section-title">Frequently asked questions</h1>
+    <p class="section-sub" style="max-width:760px;">Everything people usually ask us about delivery, warranty, brands and choosing the right light. If your question is not here, message us on WhatsApp and a real person will answer.</p>
+    <div class="faq-jumpnav">
+      <a href="#delivery" class="faq-chip">Delivery and shipping</a>
+      <a href="#genuine" class="faq-chip">Genuine products and warranty</a>
+      <a href="#payment" class="faq-chip">Payment, pricing and orders</a>
+      <a href="#returns" class="faq-chip">Returns, refunds and cancellations</a>
+      <a href="#choosing" class="faq-chip">Choosing the right light</a>
+      <a href="#smart" class="faq-chip">Smart lighting and smart home</a>
+      <a href="#bulk" class="faq-chip">Bulk, trade and projects</a>
+    </div>
+    <div class="faq-set" id="delivery">
+      <h2 class="faq-set-title">Delivery and shipping</h2>
+      <div class="faq-wrap">
+        <div class="collapsible-row active" id="delivery-1">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How fast is delivery in Qatar? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Our own delivery fleet reaches most Qatar addresses in as fast as 3 hours from order confirmation, subject to product availability and your address. Where we use our third-party courier partner, delivery is typically 6 to 8 hours from order confirmation.</p></div>
+        </div>
+        <div class="collapsible-row" id="delivery-2">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do you deliver across all of Qatar? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. All orders are dispatched from our warehouse in Qatar, and our own fleet is available for most Qatar addresses. Delivery time depends on product availability and how far the address is from our warehouse.</p></div>
+        </div>
+        <div class="collapsible-row" id="delivery-3">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How much does delivery cost? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Shipping is calculated automatically at checkout based on your delivery destination, the weight and size of your order, and the carrier selected. The exact cost is always shown before you complete payment, so you will never be charged a shipping fee you have not seen and agreed to first.</p></div>
+        </div>
+        <div class="collapsible-row" id="delivery-4">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do you ship outside Qatar? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. We ship to a defined list of more than 40 countries across the GCC, the wider Middle East, Asia, Europe and North America. You will see whether we ship to your country at checkout, based on your delivery address.</p></div>
+        </div>
+        <div class="collapsible-row" id="delivery-5">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How long does international delivery take? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>For the GCC, including the UAE, Saudi Arabia, Kuwait, Bahrain and Oman, orders typically arrive in 2 to 4 business days. For all other confirmed destinations, transit is typically 7 to 10 business days including handling. In-stock orders are usually prepared within 24 hours of confirmation.</p></div>
+        </div>
+        <div class="collapsible-row" id="delivery-6">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Which couriers do you use? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>For GCC deliveries we use Aramex and DHL. For other international destinations we use DHL, UPS and FedEx. Inside Qatar we use our own delivery fleet or our third-party courier partner.</p></div>
+        </div>
+        <div class="collapsible-row" id="delivery-7">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Will I pay customs duties on an international order? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Possibly. Your local customs authority may apply import duties, taxes or fees when your order arrives. These are not included in our shipping charge and are the responsibility of the customer. We recommend checking your country&#x27;s import rules before ordering, particularly for electronic and battery-containing products.</p></div>
+        </div>
+        <div class="collapsible-row" id="delivery-8">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can I track my order? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. Once your order ships you will receive a tracking number by email so you can follow its progress with the carrier directly.</p></div>
+        </div>
+        <div class="collapsible-row" id="delivery-9">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What if my order has not arrived? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>If your order has not arrived within the estimated window, contact us at info@lightingsouq.com or on WhatsApp and we will investigate with the carrier on your behalf.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-set" id="genuine">
+      <h2 class="faq-set-title">Genuine products and warranty</h2>
+      <div class="faq-wrap">
+        <div class="collapsible-row active" id="genuine-1">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Are your products genuine? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. Lighting Souq is an authorised reseller and distributor of established lighting brands including Philips, OSRAM and LEDVANCE, and we hold direct distributor or dealership agreements with select manufacturers. Every product we list is sourced through authorised channels.</p></div>
+        </div>
+        <div class="collapsible-row" id="genuine-2">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Is Lighting Souq an authorised reseller? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. We are an authorised reseller of Philips, OSRAM and LEDVANCE, and we hold direct distributor agreements with select manufacturers. We are also the brand owner for Vettam, Wink and Glint, which are manufactured to our specifications. Lighting Souq is certified under Qatar&#x27;s Theqa program.</p></div>
+        </div>
+        <div class="collapsible-row" id="genuine-3">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What is Theqa certification? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Theqa is Qatar&#x27;s Ministry-backed authentication mark. It verifies that a business is registered, trustworthy and compliant with Qatari e-commerce regulation. It means you are buying from a business that has been checked, not an anonymous seller. Our Theqa certification is displayed on our site.</p></div>
+        </div>
+        <div class="collapsible-row" id="genuine-4">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Is there a warranty on my purchase? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>It depends on the brand. Products from brands where we hold an official distributor or dealership agreement, including Philips, OSRAM, LEDVANCE and Inventronics, come with a 1-year manufacturer warranty from the date of delivery. Vettam, Wink and Glint products also carry a 1-year warranty. For other products we do not offer an extended warranty beyond the 24-hour damaged or defective window. The applicable warranty is stated on each product page.</p></div>
+        </div>
+        <div class="collapsible-row" id="genuine-5">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Who handles a warranty claim, you or the manufacturer? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>We do. For distributor-agreement brands we handle claims directly on the manufacturer&#x27;s behalf, and for Vettam, Wink and Glint our customer service team handles them. You do not need to deal with an overseas manufacturer.</p></div>
+        </div>
+        <div class="collapsible-row" id="genuine-6">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How do I make a warranty claim? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Email info@lightingsouq.com with your order number, a description of the issue, and photos or video if possible. We will confirm whether the product is covered and arrange a repair, replacement or manufacturer referral as applicable.</p></div>
+        </div>
+        <div class="collapsible-row" id="genuine-7">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What is not covered by warranty? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Normal wear and tear; damage from misuse, improper installation or unauthorised repair; damage from power surges, incorrect voltage or electrical installation not carried out by a qualified electrician; and cosmetic damage that does not affect function and is reported after the 24-hour delivery inspection window.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-set" id="payment">
+      <h2 class="faq-set-title">Payment, pricing and orders</h2>
+      <div class="faq-wrap">
+        <div class="collapsible-row active" id="payment-1">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What payment methods do you accept? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>We accept Visa, Mastercard, American Express, Apple Pay, Google Pay and regional debit methods including NAPS and KNET through MyFatoorah, plus PayPal and Telr. Pay Later installment options are available where offered.</p></div>
+        </div>
+        <div class="collapsible-row" id="payment-2">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Is it safe to pay on your site? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. All card and payment data is processed directly by our payment providers over encrypted, PCI DSS-compliant connections. Lighting Souq does not store your full card details.</p></div>
+        </div>
+        <div class="collapsible-row" id="payment-3">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Are your prices in Qatari Riyal? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Prices are shown in Qatari Riyal (QAR) by default. You can switch the displayed currency using the currency selector on the site.</p></div>
+        </div>
+        <div class="collapsible-row" id="payment-4">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do your prices include customs duties? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>No. For international orders, any import duties, taxes or fees applied by your local customs authority are separate from our shipping charge and are the responsibility of the customer.</p></div>
+        </div>
+        <div class="collapsible-row" id="payment-5">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Why is your price different from a marketplace listing? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Our prices are for genuine stock sourced through authorised channels, held in our warehouse in Qatar, and backed by a team you can reach. For distributor-agreement brands that includes a 1-year manufacturer warranty we handle ourselves. A marketplace listing may be a grey import with no warranty support in Qatar and no one to call. That difference is what you are paying for.</p></div>
+        </div>
+        <div class="collapsible-row" id="payment-6">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can I change or cancel my order after placing it? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>You can cancel free of charge at any time before your order has been dispatched. Contact us as soon as possible at info@lightingsouq.com or on WhatsApp. Once an order has been handed to the carrier it can no longer be cancelled, though you may still be eligible for a return under our returns policy once it arrives.</p></div>
+        </div>
+        <div class="collapsible-row" id="payment-7">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What if an item is out of stock? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Where an item is out of stock we display an estimated restock or lead time on the product page, typically 4 to 6 weeks for items awaiting resupply. We may limit quantities per customer or per order to keep availability fair.</p></div>
+        </div>
+        <div class="collapsible-row" id="payment-8">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do you offer discounts for large orders? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. For project and bulk quantities we quote project pricing. Send your list through the bulk orders page and our team will come back with pricing and stock availability.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-set" id="returns">
+      <h2 class="faq-set-title">Returns, refunds and cancellations</h2>
+      <div class="faq-wrap">
+        <div class="collapsible-row active" id="returns-1">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can I return a product if I change my mind? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Once a smart lighting or electronic product has been opened, installed or used, we are unable to accept a change-of-mind return, in the same way consumer electronics like smartphones typically cannot be returned once activated. This protects both our customers and us from the safety issues of reselling used electrical products.</p></div>
+        </div>
+        <div class="collapsible-row" id="returns-2">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What if the product is still sealed? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>If a product is still sealed in its original, unopened packaging, contact us within 48 hours of delivery and we will assess the request case by case. An approved return of an unopened item may be subject to a restocking fee of up to 10% to cover handling and repackaging, deducted from your refund.</p></div>
+        </div>
+        <div class="collapsible-row" id="returns-3">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What if my order arrives damaged, faulty or incorrect? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Contact us within 24 hours of receiving your delivery. We will arrange, at no cost to you, a replacement unit, a repair where applicable under manufacturer warranty, or a full refund if a replacement or repair is not possible.</p></div>
+        </div>
+        <div class="collapsible-row" id="returns-4">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How long do refunds take? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Refunds are processed to your original payment method within 7 to 10 working days of approval.</p></div>
+        </div>
+        <div class="collapsible-row" id="returns-5">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Will I be charged a fee for a refund? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>No, not for a refund arising from a damaged, defective or incorrect item. For an approved return of an unopened, non-defective item, a restocking fee of up to 10% may apply.</p></div>
+        </div>
+        <div class="collapsible-row" id="returns-6">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How do I start a return or refund? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Email info@lightingsouq.com or contact us on WhatsApp with your order number and a brief description of the issue. Our team responds within a few hours during support hours, Sunday to Thursday, 9am to 6pm Qatar time.</p></div>
+        </div>
+        <div class="collapsible-row" id="returns-7">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>I received a free gift with my order. Do I have to return it? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. If a free gift or promotional item was included with your order and you return the main product, the free gift or promotional item must be returned as well.</p></div>
+        </div>
+        <div class="collapsible-row" id="returns-8">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What if I ordered the wrong bulb base or size? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Contact us on WhatsApp with your order number and the fitting you actually need. If the item is still sealed in its original packaging, contact us within 48 hours of delivery and we will assess an exchange. Once a bulb has been opened or installed we cannot accept it back. To avoid this, send us a photo of the old bulb or fitting before ordering and we will confirm the right match.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-set" id="choosing">
+      <h2 class="faq-set-title">Choosing the right light</h2>
+      <div class="faq-wrap">
+        <div class="collapsible-row active" id="choosing-1">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How do I know which bulb base I need? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>The base is the part that connects to the fitting. The most common are E27 (large screw), E14 (small screw), B22 (bayonet, push and twist), GU10 (twist-lock spotlight) and G9 (small pin). The easiest way is to take out the old bulb and read the code printed on it, or send us a photo on WhatsApp and we will identify it.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-2">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What is the difference between warm white and cool white? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>It is the colour temperature, measured in Kelvin. Warm white (around 2700K to 3000K) is a soft, yellow-toned light suited to living rooms, bedrooms and majlis. Neutral white (around 4000K) is balanced and suits kitchens and bathrooms. Cool white or daylight (5000K to 6500K) is crisp and bright and suits offices, shops, garages and task areas.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-3">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How many watts do I need to replace my old bulb? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>LED bulbs use far fewer watts for the same brightness, so compare lumens rather than watts. As a rough guide, a 60W incandescent is about 800 lumens, which an LED delivers at around 8W to 10W. A 100W incandescent is about 1600 lumens, or roughly 15W to 18W in LED.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-4">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What is the difference between lumens and watts? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Lumens measure how much light you get. Watts measure how much electricity is used. With old incandescent bulbs the two moved together, so people learned to shop by watts. With LED they do not, so lumens is the number to compare when you want to know how bright a bulb will be.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-5">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Which lights work outdoors in Qatar? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Look for the IP rating. IP65 or higher is suitable for outdoor use exposed to rain and dust, and IP44 is suitable for covered areas like a porch or balcony. In Qatar also consider heat: our outdoor and solar ranges are selected for high ambient temperatures.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-6">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do solar lights work well in Qatar? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. Qatar has strong, consistent sunlight, which is close to ideal for solar lighting. Solar lights need no mains wiring, which makes them practical for gardens, driveways, compound walls and villa perimeters. Panel placement matters most: keep the panel in direct sun and clear of dust for the best runtime.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-7">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What lighting is best for a majlis? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Warm white (2700K to 3000K) suits a majlis because it is comfortable for long sitting and flatters the room. Many customers combine a decorative central fitting with dimmable downlights or smart bulbs so the same room can go from bright for guests to soft in the evening.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-8">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can I dim any LED bulb? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>No. Only bulbs marked dimmable can be dimmed, and they also need a compatible dimmer switch. Putting a non-dimmable LED on a dimmer causes flicker, buzzing and early failure, and that is not a manufacturing defect, so it is not covered by warranty. Check the product page for dimmable and ask us if you are unsure which dimmer to use.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-9">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>What is CRI and should I care about it? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>CRI (Colour Rendering Index) measures how accurately a light shows colours, on a scale to 100. For most homes, CRI 80 or above is fine. If colour accuracy matters, in a retail display, a gallery, a salon or a wardrobe area, look for CRI 90 or above.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-10">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How long do LED bulbs actually last? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>LED lamps are typically rated for tens of thousands of hours, far longer than incandescent or halogen. Real life depends on heat, switching frequency and the quality of the driver. Enclosed fittings and high ambient heat shorten life, which is worth remembering in Qatar.</p></div>
+        </div>
+        <div class="collapsible-row" id="choosing-11">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do you sell solar lighting? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. We carry a range of solar-powered lighting and sustainable energy products designed to reduce both electricity costs and environmental impact, including solar street, garden and flood lighting.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-set" id="smart">
+      <h2 class="faq-set-title">Smart lighting and smart home</h2>
+      <div class="faq-wrap">
+        <div class="collapsible-row active" id="smart-1">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do I need to rewire to install smart lighting? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>No, not to start. Smart bulbs screw into your existing fittings and connect over WiFi, so you can make a room smart in minutes. Rewiring only comes in if you choose smart wall switches, which replace the existing switch and should be fitted by a qualified electrician. Damage from installation not carried out by a qualified electrician is not covered by warranty.</p></div>
+        </div>
+        <div class="collapsible-row" id="smart-2">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do your smart lights work with Alexa and Google Home? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. Our Wink, Xiaomi, Yeelight, Sonoff and Philips Hue ranges all work with Amazon Alexa and Google Home for voice control. Philips Hue also works with Apple HomeKit.</p></div>
+        </div>
+        <div class="collapsible-row" id="smart-3">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can I mix smart brands in one home? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes, with one caveat. Most brands work together through Alexa or Google Home, so you can control them by voice and in the same routines. What does not happen is a device from one brand joining another brand&#x27;s hub: a Wink bulb will not join a Philips Hue Bridge, and a Yeelight will not join the Mi hub. If you are planning a mixed setup, tell us what you already have and we will confirm what works with it.</p></div>
+        </div>
+        <div class="collapsible-row" id="smart-4">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Which app do I need? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>It depends on the brand. Wink and Sonoff devices use the Tuya or Smart Life app, Xiaomi uses the Mi Home app, Philips Hue uses the Hue app, and Yeelight uses the Yeelight app. Most can then be linked into Alexa or Google Home so you control everything from one place by voice.</p></div>
+        </div>
+        <div class="collapsible-row" id="smart-5">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do smart lights work if my internet goes down? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>The switch on the wall still works, so you will not be left in the dark. App and voice control need the internet, and scheduled routines that depend on the cloud will pause until the connection returns.</p></div>
+        </div>
+        <div class="collapsible-row" id="smart-6">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do I need a hub for smart lighting? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>For our WiFi-based ranges, no. Wink, Xiaomi, Yeelight and Sonoff devices connect straight to your home WiFi. Philips Hue is the exception: its full range works best with the Hue Bridge.</p></div>
+        </div>
+        <div class="collapsible-row" id="smart-7">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can I control my lights while I am abroad? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. Because these are WiFi devices connected through their app, you can switch lights on and off and change schedules from anywhere with an internet connection.</p></div>
+        </div>
+        <div class="collapsible-row" id="smart-8">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Where do I start if I want a smart home? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Start with one room and one type of device, usually smart bulbs, and add from there. Our Smart Home Hub page explains what works with what so you buy the right thing first. If you would rather ask, message us on WhatsApp and describe the room.</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="faq-set" id="bulk">
+      <h2 class="faq-set-title">Bulk, trade and projects</h2>
+      <div class="faq-wrap">
+        <div class="collapsible-row active" id="bulk-1">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do you supply lighting for projects and contractors? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. Since 2018 we have supplied homes, offices, hospitality venues and businesses across Qatar and the wider region, with project pricing and stock availability confirmed before you commit.</p></div>
+        </div>
+        <div class="collapsible-row" id="bulk-2">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>How do I get a bulk quote? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Send your list through the bulk orders page or message us on WhatsApp. Include quantities, specifications and your timeline, and our team will come back with pricing and availability. Our team is available Sunday to Thursday.</p></div>
+        </div>
+        <div class="collapsible-row" id="bulk-3">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can you help me specify the right products for a project? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. Send us the drawings, the existing fittings, or simply photos of the site, and our team will help match the right lamps, fittings and control gear. This is where most project problems start, matching a driver or ballast to a lamp, and it is worth getting right before you order.</p></div>
+        </div>
+        <div class="collapsible-row" id="bulk-4">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do you hold stock for large orders? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>For project quantities we confirm stock and lead times as part of the quote. If an item needs to be brought in we will tell you the timeline upfront rather than after you order. Items awaiting resupply typically show a 4 to 6 week lead time.</p></div>
+        </div>
+        <div class="collapsible-row" id="bulk-5">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Can you supply a brand you do not list on the site? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Often, yes. For project and bulk orders we source beyond our listed range. Send us the brand and product details and our team will confirm whether we can get it and how long it will take.</p></div>
+        </div>
+        <div class="collapsible-row" id="bulk-6">
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>Do you deliver to site? <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content"><p>Yes. All orders are dispatched from our warehouse in Qatar and we deliver to site using our own fleet or our courier partner. Tell us the site access and timing constraints when you order.</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section bg-gray">
+  <div class="container" style="text-align:center;">
+    <h2 class="section-title">Still have a question?</h2>
+    <p class="section-sub" style="max-width:600px;margin:0.5rem auto 1.5rem;">Message us and a person who knows lighting will answer, Sunday to Thursday.</p>
+    <div class="row" style="justify-content:center;">
+      {%- if wa_num != blank -%}<a class="btn-primary" style="background:#22c55e;border-color:#22c55e;" href="https://wa.me/{{ wa_num }}?text={{ 'Hi! I have a question.' | url_encode }}" target="_blank" rel="noopener">Message us on WhatsApp</a>{%- endif -%}
+      <a class="btn-primary" href="/pages/contact">Contact us</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('FaqFull--{{ section.id }}'); if (!root) return;
+    root.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-accordion]'); if (!t || !root.contains(t)) return;
+      var row = t.closest('.collapsible-row'); if (row) row.classList.toggle('active');
+    });
+  })();
+</script>
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "FAQPage", "@id": "{{ shop.url }}/pages/faqs#faq", "isPartOf": { "@id": "{{ shop.url }}/#website" }, "mainEntity": [
+{ "@type": "Question", "name": "How fast is delivery in Qatar?", "acceptedAnswer": { "@type": "Answer", "text": "Our own delivery fleet reaches most Qatar addresses in as fast as 3 hours from order confirmation, subject to product availability and your address. Where we use our third-party courier partner, delivery is typically 6 to 8 hours from order confirmation." } },{ "@type": "Question", "name": "Do you deliver across all of Qatar?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. All orders are dispatched from our warehouse in Qatar, and our own fleet is available for most Qatar addresses. Delivery time depends on product availability and how far the address is from our warehouse." } },{ "@type": "Question", "name": "How much does delivery cost?", "acceptedAnswer": { "@type": "Answer", "text": "Shipping is calculated automatically at checkout based on your delivery destination, the weight and size of your order, and the carrier selected. The exact cost is always shown before you complete payment, so you will never be charged a shipping fee you have not seen and agreed to first." } },{ "@type": "Question", "name": "Do you ship outside Qatar?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We ship to a defined list of more than 40 countries across the GCC, the wider Middle East, Asia, Europe and North America. You will see whether we ship to your country at checkout, based on your delivery address." } },{ "@type": "Question", "name": "How long does international delivery take?", "acceptedAnswer": { "@type": "Answer", "text": "For the GCC, including the UAE, Saudi Arabia, Kuwait, Bahrain and Oman, orders typically arrive in 2 to 4 business days. For all other confirmed destinations, transit is typically 7 to 10 business days including handling. In-stock orders are usually prepared within 24 hours of confirmation." } },{ "@type": "Question", "name": "Which couriers do you use?", "acceptedAnswer": { "@type": "Answer", "text": "For GCC deliveries we use Aramex and DHL. For other international destinations we use DHL, UPS and FedEx. Inside Qatar we use our own delivery fleet or our third-party courier partner." } },{ "@type": "Question", "name": "Will I pay customs duties on an international order?", "acceptedAnswer": { "@type": "Answer", "text": "Possibly. Your local customs authority may apply import duties, taxes or fees when your order arrives. These are not included in our shipping charge and are the responsibility of the customer. We recommend checking your country's import rules before ordering, particularly for electronic and battery-containing products." } },{ "@type": "Question", "name": "Can I track my order?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Once your order ships you will receive a tracking number by email so you can follow its progress with the carrier directly." } },{ "@type": "Question", "name": "What if my order has not arrived?", "acceptedAnswer": { "@type": "Answer", "text": "If your order has not arrived within the estimated window, contact us at info@lightingsouq.com or on WhatsApp and we will investigate with the carrier on your behalf." } },{ "@type": "Question", "name": "Are your products genuine?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Lighting Souq is an authorised reseller and distributor of established lighting brands including Philips, OSRAM and LEDVANCE, and we hold direct distributor or dealership agreements with select manufacturers. Every product we list is sourced through authorised channels." } },{ "@type": "Question", "name": "Is Lighting Souq an authorised reseller?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We are an authorised reseller of Philips, OSRAM and LEDVANCE, and we hold direct distributor agreements with select manufacturers. We are also the brand owner for Vettam, Wink and Glint, which are manufactured to our specifications. Lighting Souq is certified under Qatar's Theqa program." } },{ "@type": "Question", "name": "What is Theqa certification?", "acceptedAnswer": { "@type": "Answer", "text": "Theqa is Qatar's Ministry-backed authentication mark. It verifies that a business is registered, trustworthy and compliant with Qatari e-commerce regulation. It means you are buying from a business that has been checked, not an anonymous seller. Our Theqa certification is displayed on our site." } },{ "@type": "Question", "name": "Is there a warranty on my purchase?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on the brand. Products from brands where we hold an official distributor or dealership agreement, including Philips, OSRAM, LEDVANCE and Inventronics, come with a 1-year manufacturer warranty from the date of delivery. Vettam, Wink and Glint products also carry a 1-year warranty. For other products we do not offer an extended warranty beyond the 24-hour damaged or defective window. The applicable warranty is stated on each product page." } },{ "@type": "Question", "name": "Who handles a warranty claim, you or the manufacturer?", "acceptedAnswer": { "@type": "Answer", "text": "We do. For distributor-agreement brands we handle claims directly on the manufacturer's behalf, and for Vettam, Wink and Glint our customer service team handles them. You do not need to deal with an overseas manufacturer." } },{ "@type": "Question", "name": "How do I make a warranty claim?", "acceptedAnswer": { "@type": "Answer", "text": "Email info@lightingsouq.com with your order number, a description of the issue, and photos or video if possible. We will confirm whether the product is covered and arrange a repair, replacement or manufacturer referral as applicable." } },{ "@type": "Question", "name": "What is not covered by warranty?", "acceptedAnswer": { "@type": "Answer", "text": "Normal wear and tear; damage from misuse, improper installation or unauthorised repair; damage from power surges, incorrect voltage or electrical installation not carried out by a qualified electrician; and cosmetic damage that does not affect function and is reported after the 24-hour delivery inspection window." } },{ "@type": "Question", "name": "What payment methods do you accept?", "acceptedAnswer": { "@type": "Answer", "text": "We accept Visa, Mastercard, American Express, Apple Pay, Google Pay and regional debit methods including NAPS and KNET through MyFatoorah, plus PayPal and Telr. Pay Later installment options are available where offered." } },{ "@type": "Question", "name": "Is it safe to pay on your site?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. All card and payment data is processed directly by our payment providers over encrypted, PCI DSS-compliant connections. Lighting Souq does not store your full card details." } },{ "@type": "Question", "name": "Are your prices in Qatari Riyal?", "acceptedAnswer": { "@type": "Answer", "text": "Prices are shown in Qatari Riyal (QAR) by default. You can switch the displayed currency using the currency selector on the site." } },{ "@type": "Question", "name": "Do your prices include customs duties?", "acceptedAnswer": { "@type": "Answer", "text": "No. For international orders, any import duties, taxes or fees applied by your local customs authority are separate from our shipping charge and are the responsibility of the customer." } },{ "@type": "Question", "name": "Why is your price different from a marketplace listing?", "acceptedAnswer": { "@type": "Answer", "text": "Our prices are for genuine stock sourced through authorised channels, held in our warehouse in Qatar, and backed by a team you can reach. For distributor-agreement brands that includes a 1-year manufacturer warranty we handle ourselves. A marketplace listing may be a grey import with no warranty support in Qatar and no one to call. That difference is what you are paying for." } },{ "@type": "Question", "name": "Can I change or cancel my order after placing it?", "acceptedAnswer": { "@type": "Answer", "text": "You can cancel free of charge at any time before your order has been dispatched. Contact us as soon as possible at info@lightingsouq.com or on WhatsApp. Once an order has been handed to the carrier it can no longer be cancelled, though you may still be eligible for a return under our returns policy once it arrives." } },{ "@type": "Question", "name": "What if an item is out of stock?", "acceptedAnswer": { "@type": "Answer", "text": "Where an item is out of stock we display an estimated restock or lead time on the product page, typically 4 to 6 weeks for items awaiting resupply. We may limit quantities per customer or per order to keep availability fair." } },{ "@type": "Question", "name": "Do you offer discounts for large orders?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. For project and bulk quantities we quote project pricing. Send your list through the bulk orders page and our team will come back with pricing and stock availability." } },{ "@type": "Question", "name": "Can I return a product if I change my mind?", "acceptedAnswer": { "@type": "Answer", "text": "Once a smart lighting or electronic product has been opened, installed or used, we are unable to accept a change-of-mind return, in the same way consumer electronics like smartphones typically cannot be returned once activated. This protects both our customers and us from the safety issues of reselling used electrical products." } },{ "@type": "Question", "name": "What if the product is still sealed?", "acceptedAnswer": { "@type": "Answer", "text": "If a product is still sealed in its original, unopened packaging, contact us within 48 hours of delivery and we will assess the request case by case. An approved return of an unopened item may be subject to a restocking fee of up to 10% to cover handling and repackaging, deducted from your refund." } },{ "@type": "Question", "name": "What if my order arrives damaged, faulty or incorrect?", "acceptedAnswer": { "@type": "Answer", "text": "Contact us within 24 hours of receiving your delivery. We will arrange, at no cost to you, a replacement unit, a repair where applicable under manufacturer warranty, or a full refund if a replacement or repair is not possible." } },{ "@type": "Question", "name": "How long do refunds take?", "acceptedAnswer": { "@type": "Answer", "text": "Refunds are processed to your original payment method within 7 to 10 working days of approval." } },{ "@type": "Question", "name": "Will I be charged a fee for a refund?", "acceptedAnswer": { "@type": "Answer", "text": "No, not for a refund arising from a damaged, defective or incorrect item. For an approved return of an unopened, non-defective item, a restocking fee of up to 10% may apply." } },{ "@type": "Question", "name": "How do I start a return or refund?", "acceptedAnswer": { "@type": "Answer", "text": "Email info@lightingsouq.com or contact us on WhatsApp with your order number and a brief description of the issue. Our team responds within a few hours during support hours, Sunday to Thursday, 9am to 6pm Qatar time." } },{ "@type": "Question", "name": "I received a free gift with my order. Do I have to return it?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. If a free gift or promotional item was included with your order and you return the main product, the free gift or promotional item must be returned as well." } },{ "@type": "Question", "name": "What if I ordered the wrong bulb base or size?", "acceptedAnswer": { "@type": "Answer", "text": "Contact us on WhatsApp with your order number and the fitting you actually need. If the item is still sealed in its original packaging, contact us within 48 hours of delivery and we will assess an exchange. Once a bulb has been opened or installed we cannot accept it back. To avoid this, send us a photo of the old bulb or fitting before ordering and we will confirm the right match." } },{ "@type": "Question", "name": "How do I know which bulb base I need?", "acceptedAnswer": { "@type": "Answer", "text": "The base is the part that connects to the fitting. The most common are E27 (large screw), E14 (small screw), B22 (bayonet, push and twist), GU10 (twist-lock spotlight) and G9 (small pin). The easiest way is to take out the old bulb and read the code printed on it, or send us a photo on WhatsApp and we will identify it." } },{ "@type": "Question", "name": "What is the difference between warm white and cool white?", "acceptedAnswer": { "@type": "Answer", "text": "It is the colour temperature, measured in Kelvin. Warm white (around 2700K to 3000K) is a soft, yellow-toned light suited to living rooms, bedrooms and majlis. Neutral white (around 4000K) is balanced and suits kitchens and bathrooms. Cool white or daylight (5000K to 6500K) is crisp and bright and suits offices, shops, garages and task areas." } },{ "@type": "Question", "name": "How many watts do I need to replace my old bulb?", "acceptedAnswer": { "@type": "Answer", "text": "LED bulbs use far fewer watts for the same brightness, so compare lumens rather than watts. As a rough guide, a 60W incandescent is about 800 lumens, which an LED delivers at around 8W to 10W. A 100W incandescent is about 1600 lumens, or roughly 15W to 18W in LED." } },{ "@type": "Question", "name": "What is the difference between lumens and watts?", "acceptedAnswer": { "@type": "Answer", "text": "Lumens measure how much light you get. Watts measure how much electricity is used. With old incandescent bulbs the two moved together, so people learned to shop by watts. With LED they do not, so lumens is the number to compare when you want to know how bright a bulb will be." } },{ "@type": "Question", "name": "Which lights work outdoors in Qatar?", "acceptedAnswer": { "@type": "Answer", "text": "Look for the IP rating. IP65 or higher is suitable for outdoor use exposed to rain and dust, and IP44 is suitable for covered areas like a porch or balcony. In Qatar also consider heat: our outdoor and solar ranges are selected for high ambient temperatures." } },{ "@type": "Question", "name": "Do solar lights work well in Qatar?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Qatar has strong, consistent sunlight, which is close to ideal for solar lighting. Solar lights need no mains wiring, which makes them practical for gardens, driveways, compound walls and villa perimeters. Panel placement matters most: keep the panel in direct sun and clear of dust for the best runtime." } },{ "@type": "Question", "name": "What lighting is best for a majlis?", "acceptedAnswer": { "@type": "Answer", "text": "Warm white (2700K to 3000K) suits a majlis because it is comfortable for long sitting and flatters the room. Many customers combine a decorative central fitting with dimmable downlights or smart bulbs so the same room can go from bright for guests to soft in the evening." } },{ "@type": "Question", "name": "Can I dim any LED bulb?", "acceptedAnswer": { "@type": "Answer", "text": "No. Only bulbs marked dimmable can be dimmed, and they also need a compatible dimmer switch. Putting a non-dimmable LED on a dimmer causes flicker, buzzing and early failure, and that is not a manufacturing defect, so it is not covered by warranty. Check the product page for dimmable and ask us if you are unsure which dimmer to use." } },{ "@type": "Question", "name": "What is CRI and should I care about it?", "acceptedAnswer": { "@type": "Answer", "text": "CRI (Colour Rendering Index) measures how accurately a light shows colours, on a scale to 100. For most homes, CRI 80 or above is fine. If colour accuracy matters, in a retail display, a gallery, a salon or a wardrobe area, look for CRI 90 or above." } },{ "@type": "Question", "name": "How long do LED bulbs actually last?", "acceptedAnswer": { "@type": "Answer", "text": "LED lamps are typically rated for tens of thousands of hours, far longer than incandescent or halogen. Real life depends on heat, switching frequency and the quality of the driver. Enclosed fittings and high ambient heat shorten life, which is worth remembering in Qatar." } },{ "@type": "Question", "name": "Do you sell solar lighting?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We carry a range of solar-powered lighting and sustainable energy products designed to reduce both electricity costs and environmental impact, including solar street, garden and flood lighting." } },{ "@type": "Question", "name": "Do I need to rewire to install smart lighting?", "acceptedAnswer": { "@type": "Answer", "text": "No, not to start. Smart bulbs screw into your existing fittings and connect over WiFi, so you can make a room smart in minutes. Rewiring only comes in if you choose smart wall switches, which replace the existing switch and should be fitted by a qualified electrician. Damage from installation not carried out by a qualified electrician is not covered by warranty." } },{ "@type": "Question", "name": "Do your smart lights work with Alexa and Google Home?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Our Wink, Xiaomi, Yeelight, Sonoff and Philips Hue ranges all work with Amazon Alexa and Google Home for voice control. Philips Hue also works with Apple HomeKit." } },{ "@type": "Question", "name": "Can I mix smart brands in one home?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, with one caveat. Most brands work together through Alexa or Google Home, so you can control them by voice and in the same routines. What does not happen is a device from one brand joining another brand's hub: a Wink bulb will not join a Philips Hue Bridge, and a Yeelight will not join the Mi hub. If you are planning a mixed setup, tell us what you already have and we will confirm what works with it." } },{ "@type": "Question", "name": "Which app do I need?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on the brand. Wink and Sonoff devices use the Tuya or Smart Life app, Xiaomi uses the Mi Home app, Philips Hue uses the Hue app, and Yeelight uses the Yeelight app. Most can then be linked into Alexa or Google Home so you control everything from one place by voice." } },{ "@type": "Question", "name": "Do smart lights work if my internet goes down?", "acceptedAnswer": { "@type": "Answer", "text": "The switch on the wall still works, so you will not be left in the dark. App and voice control need the internet, and scheduled routines that depend on the cloud will pause until the connection returns." } },{ "@type": "Question", "name": "Do I need a hub for smart lighting?", "acceptedAnswer": { "@type": "Answer", "text": "For our WiFi-based ranges, no. Wink, Xiaomi, Yeelight and Sonoff devices connect straight to your home WiFi. Philips Hue is the exception: its full range works best with the Hue Bridge." } },{ "@type": "Question", "name": "Can I control my lights while I am abroad?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Because these are WiFi devices connected through their app, you can switch lights on and off and change schedules from anywhere with an internet connection." } },{ "@type": "Question", "name": "Where do I start if I want a smart home?", "acceptedAnswer": { "@type": "Answer", "text": "Start with one room and one type of device, usually smart bulbs, and add from there. Our Smart Home Hub page explains what works with what so you buy the right thing first. If you would rather ask, message us on WhatsApp and describe the room." } },{ "@type": "Question", "name": "Do you supply lighting for projects and contractors?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Since 2018 we have supplied homes, offices, hospitality venues and businesses across Qatar and the wider region, with project pricing and stock availability confirmed before you commit." } },{ "@type": "Question", "name": "How do I get a bulk quote?", "acceptedAnswer": { "@type": "Answer", "text": "Send your list through the bulk orders page or message us on WhatsApp. Include quantities, specifications and your timeline, and our team will come back with pricing and availability. Our team is available Sunday to Thursday." } },{ "@type": "Question", "name": "Can you help me specify the right products for a project?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. Send us the drawings, the existing fittings, or simply photos of the site, and our team will help match the right lamps, fittings and control gear. This is where most project problems start, matching a driver or ballast to a lamp, and it is worth getting right before you order." } },{ "@type": "Question", "name": "Do you hold stock for large orders?", "acceptedAnswer": { "@type": "Answer", "text": "For project quantities we confirm stock and lead times as part of the quote. If an item needs to be brought in we will tell you the timeline upfront rather than after you order. Items awaiting resupply typically show a 4 to 6 week lead time." } },{ "@type": "Question", "name": "Can you supply a brand you do not list on the site?", "acceptedAnswer": { "@type": "Answer", "text": "Often, yes. For project and bulk orders we source beyond our listed range. Send us the brand and product details and our team will confirm whether we can get it and how long it will take." } },{ "@type": "Question", "name": "Do you deliver to site?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. All orders are dispatched from our warehouse in Qatar and we deliver to site using our own fleet or our courier partner. Tell us the site access and timing constraints when you order." } }
+] }
+</script>
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": [
+  { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}/" },
+  { "@type": "ListItem", "position": 2, "name": "FAQs", "item": "{{ shop.url }}/pages/faqs" }
+] }
+</script>
+
+{% schema %}
+{ "name": "FAQ page", "tag": "div", "settings": [ { "type": "paragraph", "content": "All 47 Q&As, jump nav, help band and schema are built in. Edit in the section file." } ] }
+{% endschema %}

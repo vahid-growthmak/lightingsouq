@@ -1,59 +1,252 @@
 {%- comment -%}
-  Brand page — dedicated page per brand (page template "brand").
-  Resolves the brand collection from the page title (handleized), shows the
-  logo, summary (page content), popular products and a link to the full
-  brand collection. Safe when the collection is missing or empty.
+  Brand page — reusable template (page.brand), metafield-driven (doc 03/04).
+  Sections: breadcrumb, header, About, What we stock, Why buy, Shop by category,
+  Popular products, FAQ, Related brands + JSON-LD. Every section hides itself
+  when its metafield is empty, so one template serves all 51 brands.
+
+  Metafields (namespace "brand", on the page):
+    sub_line          single line  — under H1
+    cta_label         single line  — header primary CTA label
+    about_heading     single line
+    about_body        multi line (HTML)
+    stock_heading     single line
+    stock_body        multi line (HTML)
+    why_buy           multi line — one point per line: "Title ^ Body"
+    categories        multi line — one card per line: "Label ^ collection-handle"
+    faqs              multi line — one per line: "Question ^ Answer (HTML ok)"
+    related           single line — comma-separated brand handles
+    sameas            multi line — one URL per line
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
+  assign brand = page.title
   assign bslug = page.title | handleize
   assign bcol = collections[bslug]
-  assign blink = '/pages/' | append: bslug
+  assign mf = page.metafields.brand
+  assign vendor_filter = '?filter.p.vendor=' | append: brand | url_encode | replace: '%3Ffilter', '?filter'
 -%}
-<section class="section bg-white">
+
+<section class="section bg-white" id="BrandPage--{{ section.id }}">
   <div class="container">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="{{ routes.root_url }}">Home</a> /
-      <a href="{{ s.brands_link | default: '/pages/brands' }}">{{ s.crumb_brands | default: 'Brands' | escape }}</a> /
-      <span>{{ page.title }}</span>
+      <a href="{{ routes.root_url }}">Home</a> / <a href="/pages/brands">Brands</a> / <span>{{ brand }}</span>
     </nav>
+
+    {%- comment -%} 2. Brand header {%- endcomment -%}
     <div class="brand-hero">
-      <div class="brand-hero-logo">
-        {%- render 'brand-logo', name: page.title, link: blink -%}
-      </div>
+      <div class="brand-hero-logo">{%- render 'brand-logo', name: brand, link: '/pages/' | append: bslug -%}</div>
       <div class="brand-hero-body">
-        <h1 class="brand-hero-title">{{ page.title }}</h1>
-        {%- if bcol != blank and bcol.products_count > 0 -%}
-          <p class="brand-hero-meta">{{ bcol.products_count }} {{ s.meta_suffix | default: 'products available in Qatar' | escape }}</p>
-          <a class="btn-primary-sm" href="{{ bcol.url }}">{{ s.cta_label | default: 'Shop all' | escape }} {{ page.title }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">arrow_forward</span></a>
-        {%- endif -%}
+        <h1 class="brand-hero-title">{{ brand }} in Qatar</h1>
+        {%- if mf.sub_line != blank -%}<p class="brand-hero-meta">{{ mf.sub_line }}</p>
+        {%- elsif bcol != blank -%}<p class="brand-hero-meta">{{ bcol.products_count }} {{ brand }} products in stock.</p>{%- endif -%}
+        <div class="brand-hero-cta">
+          {%- if mf.categories != blank -%}
+            <a class="btn-primary-sm" href="#shop-by-category" data-brand-scroll>{{ mf.cta_label | default: 'Find' | append: ' ' | append: brand | append: ' collections' }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">expand_more</span></a>
+          {%- elsif bcol != blank -%}
+            <a class="btn-primary-sm" href="{{ bcol.url }}">Shop all {{ brand }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">arrow_forward</span></a>
+          {%- endif -%}
+          {%- if bcol != blank and mf.categories != blank -%}<a class="brand-hero-secondary" href="{{ bcol.url }}">Shop all {{ brand }}</a>{%- endif -%}
+        </div>
       </div>
     </div>
-    {%- if page.content != blank -%}
-      <div class="lsq-prose brand-summary">{{ page.content }}</div>
+
+    {%- comment -%} 3. About the brand {%- endcomment -%}
+    {%- if mf.about_body != blank -%}
+      <div class="brand-block">
+        <h2 class="brand-h2">{{ mf.about_heading | default: 'About ' | append: brand }}</h2>
+        <div class="lsq-prose">{{ mf.about_body }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} 4. What we stock {%- endcomment -%}
+    {%- if mf.stock_body != blank -%}
+      <div class="brand-block">
+        <h2 class="brand-h2">{{ mf.stock_heading | default: 'What we stock from ' | append: brand }}</h2>
+        <div class="lsq-prose">{{ mf.stock_body }}</div>
+      </div>
+    {%- endif -%}
+
+    {%- comment -%} 5. Why buy {%- endcomment -%}
+    {%- if mf.why_buy != blank -%}
+      <div class="brand-block">
+        <h2 class="brand-h2">Why buy {{ brand }} from Lighting Souq</h2>
+        <div class="brand-whybuy">
+          {%- assign wb_lines = mf.why_buy | newline_to_br | split: '<br />' -%}
+          {%- for line in wb_lines -%}
+            {%- assign line = line | strip -%}
+            {%- if line contains '^' -%}
+              {%- assign wp = line | split: '^' -%}
+              <div class="brand-whybuy-item"><span class="material-symbols-outlined">check_circle</span><div><strong>{{ wp[0] | strip }}</strong><p>{{ wp[1] | strip }}</p></div></div>
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </div>
     {%- endif -%}
   </div>
 </section>
 
-{%- if bcol.products.size > 0 -%}
-<section class="section bg-gray">
+{%- comment -%} 6. Shop by category {%- endcomment -%}
+{%- if mf.categories != blank -%}
+<section class="section bg-gray" id="shop-by-category">
   <div class="container">
-    <div class="section-header">
-      <div>
-        <h2 class="section-title">{{ s.products_heading | default: 'Popular from' | escape }} {{ page.title }}</h2>
-        <p class="section-sub">{{ s.products_subtitle | default: 'Genuine, Theqa-certified stock with local warranty.' | escape }}</p>
-      </div>
-    </div>
-    <div class="grid-4">
-      {%- for p in bcol.products limit: s.products_to_show -%}
-        {%- render 'product-card', product: p -%}
+    <h2 class="section-title">Shop {{ brand }} by category</h2>
+    <p class="section-sub">Jump straight to the part of the {{ brand }} range you need.</p>
+    <div class="brand-cat-grid">
+      {%- assign cat_lines = mf.categories | newline_to_br | split: '<br />' -%}
+      {%- for line in cat_lines -%}
+        {%- assign line = line | strip -%}
+        {%- if line contains '^' -%}
+          {%- assign cp = line | split: '^' -%}
+          {%- assign clabel = cp[0] | strip -%}
+          {%- assign chandle = cp[1] | strip -%}
+          {%- assign ccol = collections[chandle] -%}
+          {%- if ccol != blank -%}
+            <a class="brand-cat-card" href="/collections/{{ chandle }}?filter.p.vendor={{ brand | url_encode }}">
+              <span class="brand-cat-label">{{ clabel }}</span>
+              <span class="material-symbols-outlined">arrow_forward</span>
+            </a>
+          {%- endif -%}
+        {%- endif -%}
       {%- endfor -%}
-    </div>
-    <div style="text-align:center;margin-top:2rem;">
-      <a class="btn-view-more" href="{{ bcol.url }}">{{ s.view_all_label | default: 'View all' | escape }} {{ bcol.products_count }} {{ s.view_all_suffix | default: 'products' | escape }} <span class="material-symbols-outlined">arrow_forward</span></a>
     </div>
   </div>
 </section>
+{%- endif -%}
+
+{%- comment -%} 7. Popular products {%- endcomment -%}
+{%- if bcol.products.size > 0 -%}
+<section class="section bg-white">
+  <div class="container">
+    <div class="section-header"><div>
+      <h2 class="section-title">Popular from {{ brand }}</h2>
+      <p class="section-sub">Genuine, Theqa-certified stock.</p>
+    </div></div>
+    <div class="grid-4">
+      {%- for p in bcol.products limit: 8 -%}{%- render 'product-card', product: p -%}{%- endfor -%}
+    </div>
+    <div style="text-align:center;margin-top:2rem;">
+      <a class="btn-view-more" href="/collections/all?filter.p.vendor={{ brand | url_encode }}">View all {{ bcol.products_count }} products <span class="material-symbols-outlined">arrow_forward</span></a>
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{%- comment -%} 8. FAQ {%- endcomment -%}
+{%- if mf.faqs != blank -%}
+<section class="section bg-gray" id="BrandFAQ--{{ section.id }}">
+  <div class="container">
+    <h2 class="section-title text-center">{{ brand }} questions, answered</h2>
+    <div class="faq-wrap">
+      {%- assign faq_lines = mf.faqs | newline_to_br | split: '<br />' -%}
+      {%- for line in faq_lines -%}
+        {%- assign line = line | strip -%}
+        {%- if line contains '^' -%}
+          {%- assign fp = line | split: '^' -%}
+          <div class="collapsible-row">
+            <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>{{ fp[0] | strip }} <span class="material-symbols-outlined">expand_more</span></button></h3>
+            <div class="collapsible-content">{{ fp[1] | strip }}</div>
+          </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+{%- comment -%} 9. Related brands {%- endcomment -%}
+{%- if mf.related != blank -%}
+<section class="section bg-white">
+  <div class="container">
+    <h2 class="section-title text-center">Brands related to {{ brand }}</h2>
+    <div class="brands-index-grid" style="margin-top:1.5rem;">
+      {%- assign rel = mf.related | split: ',' -%}
+      {%- for r in rel -%}
+        {%- assign rslug = r | strip -%}
+        {%- assign rcol = collections[rslug] -%}
+        {%- if rcol != blank -%}
+          {%- comment -%} title-case-ish display from vendor list {%- endcomment -%}
+          {%- assign rname = rslug -%}
+          {%- for v in shop.vendors -%}{%- if v | handleize == rslug -%}{%- assign rname = v -%}{%- break -%}{%- endif -%}{%- endfor -%}
+          <div class="brand-index-card">{%- render 'brand-logo', name: rname, link: '/pages/' | append: rslug -%}<a class="brand-index-meta" href="/pages/{{ rslug }}">{{ rcol.products_count }} products</a></div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+{%- endif -%}
+
+<script>
+  (function () {
+    ['BrandPage--{{ section.id }}','BrandFAQ--{{ section.id }}'].forEach(function (id) {
+      var root = document.getElementById(id); if (!root) return;
+      root.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-accordion]'); if (!t || !root.contains(t)) return;
+        var row = t.closest('.collapsible-row'); if (row) row.classList.toggle('active');
+      });
+    });
+    document.querySelectorAll('[data-brand-scroll]').forEach(function (a) {
+      a.addEventListener('click', function (e) {
+        var tgt = document.getElementById('shop-by-category');
+        if (tgt) { e.preventDefault(); tgt.scrollIntoView({ behavior: 'smooth' }); }
+      });
+    });
+  })();
+</script>
+
+{%- comment -%} JSON-LD: CollectionPage + Brand, BreadcrumbList, FAQPage {%- endcomment -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "{{ shop.url }}/pages/{{ bslug }}#page",
+  "name": "{{ brand }} in Qatar",
+  "url": "{{ shop.url }}/pages/{{ bslug }}",
+  "isPartOf": { "@id": "{{ shop.url }}/#website" },
+  "about": {
+    "@type": "Brand",
+    "name": {{ brand | json }}
+    {%- if mf.sameas != blank -%},
+    "sameAs": [
+      {%- assign sa = mf.sameas | newline_to_br | split: '<br />' -%}
+      {%- assign san = 0 -%}
+      {%- for u in sa -%}{%- assign u = u | strip -%}{%- if u != blank -%}{%- if san > 0 -%},{%- endif -%}{%- assign san = san | plus: 1 -%}{{ u | json }}{%- endif -%}{%- endfor -%}
+    ]
+    {%- endif -%}
+  }
+  {%- if bcol.products.size > 0 -%},
+  "mainEntity": { "@type": "ItemList", "name": "Popular {{ brand }} products at Lighting Souq", "itemListElement": [
+    {%- for p in bcol.products limit: 8 -%}{%- unless forloop.first -%},{%- endunless -%}{ "@type": "ListItem", "position": {{ forloop.index }}, "url": "{{ shop.url }}{{ p.url }}" }{%- endfor -%}
+  ] }
+  {%- endif -%}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Brands", "item": "{{ shop.url }}/pages/brands" },
+    { "@type": "ListItem", "position": 3, "name": {{ brand | json }}, "item": "{{ shop.url }}/pages/{{ bslug }}" }
+  ]
+}
+</script>
+{%- if mf.faqs != blank -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign faq_lines = mf.faqs | newline_to_br | split: '<br />' -%}
+    {%- assign fq = 0 -%}
+    {%- for line in faq_lines -%}{%- assign line = line | strip -%}{%- if line contains '^' -%}
+      {%- assign fp = line | split: '^' -%}
+      {%- if fq > 0 -%},{%- endif -%}{%- assign fq = fq | plus: 1 -%}
+      { "@type": "Question", "name": {{ fp[0] | strip | strip_html | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ fp[1] | strip | strip_html | strip | json }} } }
+    {%- endif -%}{%- endfor -%}
+  ]
+}
+</script>
 {%- endif -%}
 
 {% schema %}
@@ -61,15 +254,7 @@
   "name": "Brand page",
   "tag": "div",
   "settings": [
-    { "type": "text", "id": "crumb_brands", "label": "Breadcrumb brands label", "default": "Brands" },
-    { "type": "url", "id": "brands_link", "label": "All brands page link" },
-    { "type": "text", "id": "meta_suffix", "label": "Product count suffix", "default": "products available in Qatar" },
-    { "type": "text", "id": "cta_label", "label": "Hero CTA label", "default": "Shop all" },
-    { "type": "text", "id": "products_heading", "label": "Products heading prefix", "default": "Popular from" },
-    { "type": "text", "id": "products_subtitle", "label": "Products subtitle", "default": "Genuine, Theqa-certified stock with local warranty." },
-    { "type": "range", "id": "products_to_show", "label": "Products to show", "min": 4, "max": 16, "step": 4, "default": 8 },
-    { "type": "text", "id": "view_all_label", "label": "View all label", "default": "View all" },
-    { "type": "text", "id": "view_all_suffix", "label": "View all suffix", "default": "products" }
+    { "type": "paragraph", "content": "Content comes from the page's brand.* metafields. Empty sections hide automatically." }
   ]
 }
 {% endschema %}

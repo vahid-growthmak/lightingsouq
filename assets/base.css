@@ -1495,6 +1495,23 @@ details.filter-group[open] > summary { margin-bottom: 0.75rem; }
 /* FAQ trigger heading reset (used across FAQ accordions) */
 .collapsible-trigger-h { margin: 0; font-size: inherit; font-weight: inherit; }
 .collapsible-trigger-h .collapsible-trigger { width: 100%; }
+/* Brand page template */
+.brand-block { margin: 2rem 0; }
+.brand-h2 { font-size: 1.25rem; font-weight: 800; margin-bottom: 0.75rem; }
+.brand-hero-cta { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin-top: 0.75rem; }
+.brand-hero-secondary { font-size: 0.85rem; color: var(--brand-primary); font-weight: 600; }
+.brand-whybuy { display: grid; grid-template-columns: 1fr; gap: 1rem; }
+@media (min-width: 768px) { .brand-whybuy { grid-template-columns: 1fr 1fr; } }
+.brand-whybuy-item { display: flex; gap: 0.7rem; align-items: flex-start; }
+.brand-whybuy-item .material-symbols-outlined { color: var(--brand-primary); flex-shrink: 0; }
+.brand-whybuy-item strong { display: block; margin-bottom: 0.15rem; }
+.brand-whybuy-item p { font-size: 0.9rem; color: var(--gray-600); margin: 0; }
+.brand-cat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-top: 1.25rem; }
+@media (min-width: 768px) { .brand-cat-grid { grid-template-columns: repeat(3, 1fr); } }
+.brand-cat-card { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; padding: 0.9rem 1.1rem; background: #fff; border: 1px solid var(--gray-200); border-radius: var(--radius); font-weight: 600; font-size: 0.9rem; color: var(--brand-text); transition: border-color var(--transition), box-shadow var(--transition); }
+.brand-cat-card:hover { border-color: var(--brand-primary); box-shadow: 0 4px 14px rgba(0,0,0,0.06); color: var(--brand-primary); }
+.brand-cat-card .material-symbols-outlined { font-size: 1.1rem; color: var(--gray-400); }
+.brand-cat-card:hover .material-symbols-outlined { color: var(--brand-primary); }
 /* ---- Birse Visual Search button inside the search bar ---- */
 .search-wrap .search-input { padding-right: 2.9rem; }
 .search-wrap birse-img-upload-button.in-searchbar { position: absolute !important; inset: auto 6px auto auto !important; top: 50% !important; transform: translateY(-50%); width: 36px !important; height: 36px !important; margin: 0 !important; display: flex !important; align-items: center; justify-content: center; background: transparent !important; box-shadow: none !important; border: 0 !important; border-radius: 8px; color: var(--gray-500) !important; cursor: pointer; z-index: 2; }

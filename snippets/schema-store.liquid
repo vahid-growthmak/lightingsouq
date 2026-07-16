@@ -1,0 +1,65 @@
+{%- comment -%}
+  Organization/Store + WebSite JSON-LD for the homepage.
+  Uses shop.url so @id and url auto-adjust when the custom domain is connected.
+  Render once on the index template.
+{%- endcomment -%}
+{%- liquid
+  assign base = shop.url
+  assign logo_src = ''
+  if settings.logo_image != blank
+    assign logo_src = settings.logo_image | image_url: width: 600 | prepend: 'https:'
+  endif
+-%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Store",
+  "@id": "{{ base }}/#store",
+  "name": "Lighting Souq",
+  "legalName": "Go Green International Trading W.L.L.",
+  "description": "Online lighting and smart home retailer in Doha, Qatar, supplying LED bulbs, tubes, solar and outdoor lights, fixtures, fans and smart home devices since 2018.",
+  "url": "{{ base }}/",
+  {% if logo_src != blank %}"logo": {{ logo_src | json }},{% endif %}
+  "telephone": "+974 5552 9088",
+  "email": "info@lightingsouq.com",
+  "currenciesAccepted": "QAR",
+  "paymentAccepted": "Visa, Mastercard, American Express, Apple Pay, Google Pay, NAPS, KNET, PayPal",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Doha",
+    "addressCountry": "QA"
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["Sunday","Monday","Tuesday","Wednesday","Thursday"],
+    "opens": "09:00",
+    "closes": "18:00"
+  }],
+  "areaServed": [
+    { "@type": "Country", "name": "Qatar" },
+    { "@type": "Country", "name": "United Arab Emirates" },
+    { "@type": "Country", "name": "Saudi Arabia" },
+    { "@type": "Country", "name": "Kuwait" },
+    { "@type": "Country", "name": "Bahrain" },
+    { "@type": "Country", "name": "Oman" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": "{{ base }}/#website",
+  "url": "{{ base }}/",
+  "name": "Lighting Souq",
+  "publisher": { "@id": "{{ base }}/#store" },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": {
+      "@type": "EntryPoint",
+      "urlTemplate": "{{ base }}/search?q={search_term_string}"
+    },
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>

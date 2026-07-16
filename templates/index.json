@@ -17,12 +17,12 @@
           "settings": {
             "fallback_asset": "hero-banner.png",
             "badge": "Up to 15% Off",
-            "title": "Qatar's Lighting Supermarket",
-            "subtitle": "Bulbs, tubes, lamps, solar lights, smart switches & more — all in one place.",
-            "btn1_label": "Shop Now",
+            "title": "Qatar's Lighting & Smart Home Souq",
+            "subtitle": "Bulbs, tubes, fixtures, solar and smart lighting from the brands you already trust. Delivered in as fast as 3 hours in Qatar, and shipped to more than 40 countries.",
+            "btn1_label": "Shop all lighting",
             "btn1_link": "/collections/all",
-            "btn2_label": "View Offers",
-            "btn2_link": "/collections/deals"
+            "btn2_label": "Explore smart home",
+            "btn2_link": "/pages/smart-home-hub"
           }
         },
         "slide_nT7tCV": {
@@ -91,32 +91,36 @@
           "type": "item",
           "settings": {
             "icon": "truck",
-            "label": "Free Delivery Across Qatar",
-            "link": ""
+            "label": "Theqa-certified retailer",
+            "link": "",
+            "sublabel": "Verified by Qatar's e-commerce trustmark"
           }
         },
         "item_kiaRwV": {
           "type": "item",
           "settings": {
             "icon": "chat",
-            "label": "WhatsApp Support",
-            "link": ""
+            "label": "Delivery in as fast as 3 hours",
+            "link": "",
+            "sublabel": "Our own fleet, across Qatar"
           }
         },
         "item_HqeFGd": {
           "type": "item",
           "settings": {
             "icon": "card",
-            "label": "Cash on Delivery",
-            "link": ""
+            "label": "Authorised reseller",
+            "link": "",
+            "sublabel": "Genuine stock, 1-year warranty on distributor brands"
           }
         },
         "item_AGUfza": {
           "type": "item",
           "settings": {
             "icon": "shield",
-            "label": "Secure Checkout",
-            "link": ""
+            "label": "Shipping to 40+ countries",
+            "link": "",
+            "sublabel": "GCC in 2 to 4 business days"
           }
         }
       },
@@ -415,8 +419,9 @@
       ],
       "name": "Shop by Category",
       "settings": {
-        "heading": "Shop by Category",
-        "bg": "bg-white"
+        "heading": "Shop lighting by category",
+        "bg": "bg-white",
+        "intro": "Everything from a QAR 10 bulb to a full villa lighting scheme."
       }
     },
     "brand_strip_BNbKpK": {
@@ -523,9 +528,11 @@
       ],
       "name": "Brand Strip",
       "settings": {
-        "heading": "Shop by Brand",
-        "subtitle": "From value picks to premium ecosystems — go straight to your brand.",
-        "bg": "bg-gray"
+        "heading": "Shop by brand",
+        "subtitle": "Genuine stock from 50+ lighting, smart home and electrical brands, sourced through authorised channels.",
+        "bg": "bg-gray",
+        "view_all_label": "View all brands",
+        "view_all_link": "/pages/brands"
       }
     },
     "product_collection_iKwMPk": {
@@ -604,7 +611,7 @@
       ],
       "name": "Product Collection",
       "settings": {
-        "heading": "Best Selling Products",
+        "heading": "Best sellers in Qatar this month",
         "subtitle": "",
         "collection": "best-sellers",
         "products_to_show": 10,
@@ -661,10 +668,10 @@
         "bg": "bg-gray",
         "image_alt": "Smart-lit living room controlled from a phone",
         "eyebrow": "Smart Lighting Specialists",
-        "title": "A smart home in an afternoon — no rewiring",
-        "text": "Retrofit your existing fittings with app-controlled bulbs, strips and switches. Set scenes, schedules and colour from your phone or voice — the way generalists and marketplaces simply can't guide you.",
-        "btn1_label": "Shop Smart Lights",
-        "btn1_link": "shopify://collections/smart-lights",
+        "title": "Build your smart home, one light at a time",
+        "text": "Start with a single smart bulb and grow into full app and voice control. We stock Wink, Xiaomi, Philips Hue, Yeelight, Sonoff, Amazon Alexa and Google Home devices that work together. Our Smart Home Hub explains what works with what, so you buy the right thing the first time.",
+        "btn1_label": "Visit the Smart Home Hub",
+        "btn1_link": "/pages/smart-home-hub",
         "btn2_label": "Explore Smart Home Hub",
         "btn2_link": "shopify://pages/smart-home-hub"
       }
@@ -732,8 +739,9 @@
       ],
       "name": "Shop Lighting by Space",
       "settings": {
-        "heading": "Shop Lighting by Space",
-        "bg": "bg-white"
+        "heading": "Find the right light for every room",
+        "bg": "bg-white",
+        "intro": "Not sure where to start? Pick the space you are lighting."
       }
     },
     "featured_banner_w7EaNY": {
@@ -885,7 +893,7 @@
       ],
       "name": "Why Shop",
       "settings": {
-        "heading": "Why Shop from Lighting Souq",
+        "heading": "Why buyers in Qatar choose Lighting Souq",
         "bg": "bg-gray"
       }
     },
@@ -893,10 +901,73 @@
       "type": "bulk-band",
       "name": "Bulk Band",
       "settings": {
-        "title": "Buying in volume for a project, cafe or villa?",
-        "subtitle": "Add items to a quote and our team sends volume pricing — same-day Doha & GCC delivery.",
-        "button_label": "Request a Bulk Quote",
-        "button_link": "shopify://pages/bulk-orders"
+        "title": "Buying lighting in bulk for a project?",
+        "subtitle": "Contractors, hotels, hospitality venues and facilities teams: send us a list and we will come back with project pricing and stock availability.",
+        "button_label": "Request a bulk quote",
+        "button_link": "/pages/bulk-orders"
+      }
+    },
+    "home_faq": {
+      "type": "faq-section",
+      "blocks": {
+        "faq_1": {
+          "type": "faq",
+          "settings": {
+            "question": "How fast is delivery in Qatar?",
+            "answer": "<p>Our own delivery fleet reaches most Qatar addresses in as fast as 3 hours from order confirmation, subject to product availability and your address. Where we use our courier partner, delivery is typically 6 to 8 hours.</p>"
+          }
+        },
+        "faq_2": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you ship outside Qatar?",
+            "answer": "<p>Yes. We ship to more than 40 countries across the GCC, the wider Middle East, Asia, Europe and North America. GCC orders typically arrive in 2 to 4 business days, and other destinations in 7 to 10 business days including handling. You will see whether we ship to your country at checkout.</p>"
+          }
+        },
+        "faq_3": {
+          "type": "faq",
+          "settings": {
+            "question": "Are your products genuine?",
+            "answer": "<p>Yes. Lighting Souq is an authorised reseller and distributor of established lighting brands including Philips, OSRAM and LEDVANCE, and we hold direct distributor or dealership agreements with select manufacturers. Every product we list is sourced through authorised channels, and we are certified under Qatar's Theqa program.</p>"
+          }
+        },
+        "faq_4": {
+          "type": "faq",
+          "settings": {
+            "question": "Which lighting brands do you stock?",
+            "answer": "<p>We stock over 50 brands. That includes Osram, Philips, LEDVANCE, GE, Sylvania, Tungsram, Kosnic and Bell Lighting in lighting; Xiaomi, Philips Hue, Yeelight, Sonoff, Amazon and Google in smart home; KDK and Panasonic in fans; and Vettam, Wink and Glint, which are manufactured to our specifications and sold exclusively through Lighting Souq.</p>"
+          }
+        },
+        "faq_5": {
+          "type": "faq",
+          "settings": {
+            "question": "What payment methods do you accept?",
+            "answer": "<p>We accept Visa, Mastercard, American Express, Apple Pay, Google Pay and regional debit cards including NAPS and KNET through MyFatoorah, plus PayPal, Telr and Pay Later installment options where available.</p>"
+          }
+        },
+        "faq_6": {
+          "type": "faq",
+          "settings": {
+            "question": "Do you supply lighting for projects and bulk orders?",
+            "answer": "<p>Yes. We supply homes, offices, hospitality venues and businesses across Qatar and the wider region. Send your list through the bulk orders page and our team will return project pricing and stock availability.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_1",
+        "faq_2",
+        "faq_3",
+        "faq_4",
+        "faq_5",
+        "faq_6"
+      ],
+      "settings": {
+        "heading": "Lighting questions, answered",
+        "subtitle": "",
+        "footer_label": "See all FAQs",
+        "footer_link": "/pages/faqs",
+        "emit_schema": true,
+        "bg": "bg-gray"
       }
     }
   },
@@ -913,6 +984,7 @@
     "featured_banner_w7EaNY",
     "testimonials_wxgiXt",
     "why_shop_VtWb3m",
+    "home_faq",
     "bulk_band_cRJ3kt"
   ]
 }

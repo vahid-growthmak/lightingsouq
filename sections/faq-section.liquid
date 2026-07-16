@@ -11,14 +11,42 @@
     {%- endif -%}
     <div class="faq-wrap">
       {%- for block in section.blocks -%}
+        {%- if block.type == 'faq' -%}
         <div class="collapsible-row{% if forloop.first %} active{% endif %}" {{ block.shopify_attributes }}>
-          <button class="collapsible-trigger" type="button" data-accordion>{{ block.settings.question }} <span class="material-symbols-outlined">expand_more</span></button>
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>{{ block.settings.question }} <span class="material-symbols-outlined">expand_more</span></button></h3>
           <div class="collapsible-content">{{ block.settings.answer }}</div>
         </div>
+        {%- endif -%}
       {%- endfor -%}
     </div>
+    {%- if section.settings.footer_label != blank -%}
+      <p class="text-center mt-8"><a class="btn-view-more" href="{{ section.settings.footer_link | default: '/pages/faqs' }}">{{ section.settings.footer_label }} <span class="material-symbols-outlined">arrow_forward</span></a></p>
+    {%- endif -%}
   </div>
 </section>
+
+{%- comment -%} FAQPage JSON-LD — answers pulled from the same blocks so schema and page never drift {%- endcomment -%}
+{%- capture faq_ld -%}
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign fq = 0 -%}
+    {%- for block in section.blocks -%}
+      {%- if block.type == 'faq' and block.settings.question != blank -%}
+        {%- if fq > 0 -%},{%- endif -%}
+        {%- assign fq = fq | plus: 1 -%}
+        {
+          "@type": "Question",
+          "name": {{ block.settings.question | strip_html | json }},
+          "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | strip | json }} }
+        }
+      {%- endif -%}
+    {%- endfor -%}
+  ]
+}
+{%- endcapture -%}
+{%- if section.settings.emit_schema -%}<script type="application/ld+json">{{ faq_ld }}</script>{%- endif -%}
 
 <script>
   (function () {
@@ -40,6 +68,9 @@
   "settings": [
     { "type": "text", "id": "heading", "label": "Heading", "default": "Frequently Asked Questions" },
     { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Answers to the questions we hear most." },
+    { "type": "text", "id": "footer_label", "label": "Footer link label (optional)" },
+    { "type": "url", "id": "footer_link", "label": "Footer link" },
+    { "type": "checkbox", "id": "emit_schema", "label": "Output FAQ schema (JSON-LD)", "default": true },
     {
       "type": "select",
       "id": "bg",

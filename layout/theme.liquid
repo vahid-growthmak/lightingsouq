@@ -66,6 +66,7 @@
     </style>
 
     {{ content_for_header }}
+    {%- if template.name == 'index' -%}{%- render 'schema-store' -%}{%- endif -%}
   </head>
 
   <body class="template-{{ request.page_type | handle }}">

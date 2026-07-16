@@ -19,7 +19,7 @@
               {%- if block.settings.badge != blank -%}
                 <div class="hero-badge">{{ block.settings.badge }}</div>
               {%- endif -%}
-              <h1 class="hero-title">{{ block.settings.title }}</h1>
+              {%- if forloop.first -%}<h1 class="hero-title">{{ block.settings.title }}</h1>{%- else -%}<p class="hero-title" role="heading" aria-level="2">{{ block.settings.title }}</p>{%- endif -%}
               <p class="hero-subtitle">{{ block.settings.subtitle }}</p>
               <div class="hero-btns">
                 {%- if block.settings.btn1_label != blank -%}

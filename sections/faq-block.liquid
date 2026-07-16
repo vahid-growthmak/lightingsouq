@@ -1,0 +1,64 @@
+{%- comment -%}
+  Reusable FAQ accordion — block-driven, with FAQPage JSON-LD.
+  Answers render in the initial HTML (collapsed). Use on any page that needs an on-page FAQ.
+{%- endcomment -%}
+{%- assign s = section.settings -%}
+{%- if section.blocks.size > 0 -%}
+<section class="section {{ s.bg | default: 'bg-white' }}" id="FaqBlock--{{ section.id }}">
+  <div class="container">
+    {%- if s.heading != blank -%}<h2 class="section-title text-center">{{ s.heading }}</h2>{%- endif -%}
+    <div class="faq-wrap" style="margin-top:1.5rem;">
+      {%- for block in section.blocks -%}
+        {%- if block.settings.question != blank -%}
+        <div class="collapsible-row" {{ block.shopify_attributes }}>
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>{{ block.settings.question }} <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content">{{ block.settings.answer }}</div>
+        </div>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.getElementById('FaqBlock--{{ section.id }}'); if (!root) return;
+    root.addEventListener('click', function (e) {
+      var t = e.target.closest('[data-accordion]'); if (!t || !root.contains(t)) return;
+      var row = t.closest('.collapsible-row'); if (row) row.classList.toggle('active');
+    });
+  })();
+</script>
+
+<script type="application/ld+json">
+{ "@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [
+  {%- assign n = 0 -%}
+  {%- for block in section.blocks -%}{%- if block.settings.question != blank -%}
+    {%- if n > 0 -%},{%- endif -%}{%- assign n = n | plus: 1 -%}
+    { "@type": "Question", "name": {{ block.settings.question | strip_html | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | strip | json }} } }
+  {%- endif -%}{%- endfor -%}
+] }
+</script>
+{%- endif -%}
+
+{% schema %}
+{
+  "name": "FAQ block",
+  "tag": "div",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Frequently asked questions" },
+    { "type": "select", "id": "bg", "label": "Background", "options": [ { "value": "bg-white", "label": "White" }, { "value": "bg-gray", "label": "Gray" } ], "default": "bg-white" }
+  ],
+  "blocks": [
+    {
+      "type": "qa",
+      "name": "Q&A",
+      "settings": [
+        { "type": "text", "id": "question", "label": "Question" },
+        { "type": "richtext", "id": "answer", "label": "Answer" }
+      ]
+    }
+  ],
+  "presets": [ { "name": "FAQ block" } ]
+}
+{% endschema %}

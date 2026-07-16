@@ -12,8 +12,8 @@
     "hero": {
       "type": "page-hero",
       "settings": {
-        "heading": "Customer Reviews",
-        "subtitle": "Real feedback from lighting shoppers across Qatar.",
+        "heading": "What our customers say",
+        "subtitle": "4.9 stars from 84 Google reviews. These are real reviews from real customers, published as they were written.",
         "bg": "bg-gray"
       }
     },
@@ -44,7 +44,7 @@
       "settings": {
         "title": "See all our reviews on Google",
         "subtitle": "Rated 4.9★ from 84 verified Google reviews.",
-        "button_label": "Read Google reviews",
+        "button_label": "Read all reviews on Google",
         "button_link": "https://www.google.com/search?q=lighting+souq+google+reviews"
       }
     }

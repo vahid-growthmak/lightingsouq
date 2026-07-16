@@ -2,7 +2,12 @@
   "sections": {
     "main": {
       "type": "main-wishlist",
-      "settings": {}
+      "settings": {
+        "heading": "Your wishlist",
+        "intro": "Saved for later. Prices and availability update automatically, so check before you order.",
+        "empty_title": "Nothing saved yet.",
+        "empty_text": "Tap the heart on any product to keep it here while you decide."
+      }
     },
     "recommend": {
       "type": "product-collection",

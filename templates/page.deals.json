@@ -4,14 +4,14 @@
       "type": "breadcrumb",
       "settings": {
         "home_label": "Home",
-        "current": "Today's Deals"
+        "current": "Deals"
       }
     },
     "hero": {
       "type": "page-hero",
       "settings": {
-        "heading": "Today's Deals",
-        "subtitle": "Price-led picks refreshed weekly — bulbs, smart kits and outdoor lighting at their best value.",
+        "heading": "Deals and offers",
+        "subtitle": "Current offers across our range. Same genuine stock, same warranty, same delivery.",
         "bg": "bg-gray"
       }
     },

@@ -19,27 +19,46 @@
     "hero": {
       "type": "page-hero",
       "settings": {
-        "heading": "Bulk and trade orders",
-        "subtitle": "GGI-backed sourcing, volume pricing and same-day Doha delivery for cafes, salons, villas and projects.",
+        "heading": "Bulk and project lighting in Qatar",
+        "subtitle": "We have supplied lighting to homes, offices, hospitality venues and businesses across Qatar and the wider region since 2018. Send us your list, your drawings, or photos of the site, and our team comes back with project pricing, stock availability and lead times before you commit to anything.",
         "bg": "bg-gray"
       }
+    },
+    "value": {
+      "type": "feature-columns",
+      "settings": {
+        "heading": "What you get that a marketplace cannot give you",
+        "subtitle": "We supply contractors and electrical subcontractors, hotels and hospitality venues, restaurants and cafes, villas and residential compounds, offices, retail, and facilities and maintenance teams.",
+        "grid_class": "grid-3",
+        "bg": "bg-white"
+      },
+      "blocks": {
+        "v1": { "type": "item", "settings": { "icon": "engineering", "title": "Specification help before you order", "text": "Send the drawings, the existing fittings, or just photos of the site. Matching a driver to a lamp or a ballast to a fitting is where most project problems start, and it is worth getting right before the order, not after." } },
+        "v2": { "type": "item", "settings": { "icon": "inventory", "title": "Stock and lead times confirmed upfront", "text": "We tell you what is here and what needs bringing in, with the timeline, before you commit. Items awaiting resupply typically run 4 to 6 weeks." } },
+        "v3": { "type": "item", "settings": { "icon": "verified", "title": "Brands we can stand behind", "text": "We are an authorised reseller and distributor of Philips, OSRAM and LEDVANCE, with a 1-year manufacturer warranty handled by our team here in Qatar rather than by an overseas manufacturer." } },
+        "v4": { "type": "item", "settings": { "icon": "search", "title": "Sourcing beyond the catalogue", "text": "For project and bulk orders we source beyond our listed range. If the brand or product you need is not on the site, tell us and we will confirm whether we can get it." } },
+        "v5": { "type": "item", "settings": { "icon": "local_shipping", "title": "Delivery to site", "text": "All orders dispatch from our warehouse in Qatar. Tell us the site access and timing constraints and we will work to them." } }
+      },
+      "block_order": ["v1", "v2", "v3", "v4", "v5"]
     },
     "rfq": {
       "type": "contact-form",
       "settings": {
-        "bg": "bg-white",
+        "bg": "bg-gray",
         "heading": "Request a quote",
-        "subtitle": "Tell us what you need and the quantities — we send volume pricing fast.",
+        "subtitle": "Send us your list, your drawings or photos of the site, with quantities where you have them.",
+        "note_title": "",
+        "note_text": "Our team is available Sunday to Thursday, 9am to 6pm Qatar time, and usually responds within a few hours. If it is urgent, message us on WhatsApp.",
         "name_label": "Name",
         "email_label": "Work email",
         "phone_label": "Phone (optional)",
         "message_label": "What are you sourcing? Include items and quantities.",
         "submit_label": "Request quote",
         "success_title": "Thanks — quote request received",
-        "success_text": "Our trade team will reply with volume pricing shortly. For urgent needs, reach us on WhatsApp.",
+        "success_text": "Our team will reply with project pricing shortly. For urgent needs, reach us on WhatsApp.",
         "show_channels": true,
         "channels_title": "Prefer to talk it through?",
-        "channels_text": "Relationship-driven buyer? Reach the trade team directly."
+        "channels_text": "Reach the team directly."
       },
       "blocks": {
         "c1": {
@@ -47,15 +66,17 @@
           "settings": {
             "icon": "chat",
             "label": "WhatsApp",
-            "value": "+974 0000 0000"
+            "value": "+974 5552 9088",
+            "link": "https://wa.me/97455529088"
           }
         },
         "c2": {
           "type": "channel",
           "settings": {
             "icon": "call",
-            "label": "Trade line",
-            "value": "+974 0000 0000"
+            "label": "Call us",
+            "value": "+974 5552 9088",
+            "link": "tel:+97455529088"
           }
         },
         "c3": {
@@ -63,7 +84,8 @@
           "settings": {
             "icon": "mail",
             "label": "Email",
-            "value": "trade@lightingsouq.qa"
+            "value": "info@lightingsouq.com",
+            "link": "mailto:info@lightingsouq.com"
           }
         }
       },
@@ -114,6 +136,19 @@
         "h2",
         "h3"
       ]
+    },
+    "faq": {
+      "type": "faq-block",
+      "settings": { "heading": "Project questions, answered", "bg": "bg-white" },
+      "blocks": {
+        "q1": { "type": "qa", "settings": { "question": "What counts as a bulk order?", "answer": "<p>There is no fixed threshold. If you are buying enough that the list price does not make sense, send us the list and we will quote it. Project pricing depends on the quantities, the items and the timeline.</p>" } },
+        "q2": { "type": "qa", "settings": { "question": "Can you help me specify the right products?", "answer": "<p>Yes, and this is the part worth using. Send drawings, existing fittings or photos of the site and our team will match the lamps, fittings and control gear. Matching a driver to a lamp or a ballast to a fitting is where most project problems start.</p>" } },
+        "q3": { "type": "qa", "settings": { "question": "Can you supply a brand you do not list on the site?", "answer": "<p>Often, yes. For project and bulk orders we source beyond our listed range. Send us the brand and product details and we will confirm whether we can get it and how long it will take.</p>" } },
+        "q4": { "type": "qa", "settings": { "question": "What are your lead times?", "answer": "<p>For items we hold, delivery is as fast as 3 hours in Qatar with our own fleet. For items that need bringing in, we confirm the timeline in the quote rather than after you order. Resupply typically runs 4 to 6 weeks.</p>" } },
+        "q5": { "type": "qa", "settings": { "question": "Do you deliver to site?", "answer": "<p>Yes. All orders dispatch from our warehouse in Qatar. Tell us the site access and timing constraints when you order.</p>" } },
+        "q6": { "type": "qa", "settings": { "question": "Do project orders come with warranty?", "answer": "<p>The same warranty as any other order. Products from brands where we hold a distributor agreement, including Philips, OSRAM and LEDVANCE, carry a 1-year manufacturer warranty handled by our team. Vettam, Wink and Glint carry a 1-year warranty. Other products are covered for manufacturing defects reported within 24 hours of delivery.</p>" } }
+      },
+      "block_order": ["q1", "q2", "q3", "q4", "q5", "q6"]
     },
     "selector": {
       "type": "product-collection",
@@ -193,8 +228,10 @@
   "order": [
     "breadcrumb",
     "hero",
+    "value",
     "rfq",
     "how",
+    "faq",
     "selector",
     "direct",
     "trusted"

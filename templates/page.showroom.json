@@ -10,8 +10,8 @@
     "hero": {
       "type": "page-hero",
       "settings": {
-        "heading": "Visit our Doha showroom",
-        "subtitle": "See the lights in person, get spec advice from the team, and collect online orders in store.",
+        "heading": "Our lighting showroom in Doha",
+        "subtitle": "See it lit before you buy it. Our showroom has the range on display, and our team can identify a part from a photo or the old bulb in your hand.",
         "bg": "bg-gray"
       }
     },
@@ -25,7 +25,7 @@
         "showroom_name": "Lighting Souq Showroom",
         "address": "Street address, Doha, Qatar",
         "hours": "Sat to Thu, 9am to 9pm · Fri 4pm to 9pm",
-        "phone": "+974 0000 0000",
+        "phone": "+974 5552 9088",
         "directions_label": "Get directions",
         "directions_link": "/",
         "map_placeholder": "Add a Google Maps embed URL in the theme editor to show the showroom location here.",
@@ -37,17 +37,18 @@
     "advice": {
       "type": "feature-columns",
       "settings": {
-        "heading": "In-store advice and Click & Collect",
-        "subtitle": "Turn the showroom advantage into an easy online-to-store journey.",
-        "grid_class": "grid-3",
+        "heading": "Why visit",
+        "subtitle": "",
+        "grid_class": "grid-2",
         "bg": "bg-gray"
       },
       "blocks": {
-        "a1": { "type": "item", "settings": { "icon": "lightbulb", "title": "See it lit", "text": "View fittings switched on in real rooms before you commit." } },
-        "a2": { "type": "item", "settings": { "icon": "support_agent", "title": "Expert on hand", "text": "Bring your questions — the team confirms fit and compatibility.", "link": "/pages/contact", "link_label": "Ask ahead" } },
-        "a3": { "type": "item", "settings": { "icon": "local_mall", "title": "Collect in store", "text": "Buy online and pick up the same day at the showroom counter." } }
+        "a1": { "type": "item", "settings": { "icon": "palette", "title": "Colour temperature is easier to see than to read", "text": "The difference between 2700K, 4000K and 6500K is obvious when it is lit in front of you and almost meaningless on a screen. If you are choosing lighting for a majlis or a whole villa, come and look." } },
+        "a2": { "type": "item", "settings": { "icon": "search", "title": "Bring the old part", "text": "A dead bulb, a failed ballast or a photo of the fitting. Our team identifies parts every day, and it is faster in person than over any messaging app." } },
+        "a3": { "type": "item", "settings": { "icon": "local_mall", "title": "Collect an online order", "text": "Order on the site and choose collection at checkout. Wait for the confirmation that it is ready before you travel." } },
+        "a4": { "type": "item", "settings": { "icon": "engineering", "title": "Talk through a project", "text": "If you are lighting a villa, a cafe or a site, bring the drawings. The specification conversation is the part that saves money later." } }
       },
-      "block_order": ["a1", "a2", "a3"]
+      "block_order": ["a1", "a2", "a3", "a4"]
     },
     "reviews": {
       "type": "testimonials",

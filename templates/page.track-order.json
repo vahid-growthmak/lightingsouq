@@ -15,8 +15,8 @@
     "hero": {
       "type": "page-hero",
       "settings": {
-        "heading": "Track Your Order",
-        "subtitle": "Check the status of your delivery any time.",
+        "heading": "Track your order",
+        "subtitle": "Enter your order number and the email you ordered with. You will also have received a tracking number by email once your order shipped.",
         "bg": "bg-gray"
       }
     },
@@ -24,7 +24,7 @@
       "type": "rich-text",
       "settings": {
         "heading": "How to track your order",
-        "content": "<p>The quickest way to check your order is with the tracking link we send by email and SMS once your order ships.</p><ul><li>Open the tracking link from your shipping confirmation.</li><li>Or sign in and view your orders from your <a href='/account'>account</a>.</li><li>Enter your order number and email in the tracking widget below when it is available.</li></ul><p>Order tracking is powered by our tracking app — the live lookup will appear on this page. If you cannot find your order, <a href='/pages/contact'>contact our team</a> and we will locate it for you.</p>",
+        "content": "<p>The quickest way to check your order is with the tracking link we send by email once your order ships. Open that link, or sign in and view your orders from your <a href='/account'>account</a>, or enter your order number and email in the tracking widget on this page.</p><p>If your order has not arrived within the estimated window, message us on WhatsApp or email <a href='mailto:info@lightingsouq.com'>info@lightingsouq.com</a> and we will investigate with the carrier on your behalf. You can also review our <a href='/pages/shipping-delivery'>shipping and delivery policy</a> or <a href='/pages/contact'>contact the team</a> directly.</p>",
         "bg": "bg-white"
       }
     }

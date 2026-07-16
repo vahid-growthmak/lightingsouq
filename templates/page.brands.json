@@ -11,54 +11,8 @@
   "sections": {
     "main": {
       "type": "brands-index",
-      "settings": {},
-      "blocks": {
-        "faq_1": {
-          "type": "faq",
-          "settings": {
-            "question": "Are all your branded products genuine?",
-            "answer": "<p>Yes. Lighting Souq is an authorised reseller and distributor of established lighting brands including Philips, OSRAM and LEDVANCE, and we hold direct distributor or dealership agreements with select manufacturers. Every product we list is sourced through authorised channels, and we are certified under Qatar's Theqa program.</p>"
-          }
-        },
-        "faq_2": {
-          "type": "faq",
-          "settings": {
-            "question": "What warranty comes with a branded product?",
-            "answer": "<p>Products from brands where we hold an official distributor or dealership agreement, including Philips, OSRAM, LEDVANCE and Inventronics, come with a 1-year manufacturer warranty from the date of delivery, and we handle claims directly on the manufacturer's behalf. Vettam, Wink and Glint products carry a 1-year warranty handled by our team. Other products are covered for manufacturing defects reported within 24 hours of delivery. The applicable warranty is stated on each product page.</p>"
-          }
-        },
-        "faq_3": {
-          "type": "faq",
-          "settings": {
-            "question": "What is the difference between Osram and LEDVANCE?",
-            "answer": "<p>They were one company until 2016, when Osram spun off its general lighting lamp business as LEDVANCE. LEDVANCE is now the exclusive licensee of the Osram brand for general lighting lamps, so an Osram-branded LED bulb today is made by LEDVANCE, while ams OSRAM continues in automotive, specialty and opto-semiconductor lighting. We are an authorised reseller of both.</p>"
-          }
-        },
-        "faq_4": {
-          "type": "faq",
-          "settings": {
-            "question": "Which brands are made to your own specifications?",
-            "answer": "<p><a href=\"/pages/vettam\">Vettam</a>, <a href=\"/pages/wink\">Wink</a> and <a href=\"/pages/glint\">Glint</a> are manufactured to our specifications and sold exclusively through Lighting Souq and our affiliated stores. Vettam covers solar and outdoor lighting, Wink covers smart home and lighting, and Glint covers LED, grow and aquarium lighting. All three carry a 1-year warranty handled by our team in Qatar.</p>"
-          }
-        },
-        "faq_5": {
-          "type": "faq",
-          "settings": {
-            "question": "Can you supply a brand that is not listed here?",
-            "answer": "<p>Often, yes. For project and bulk orders we source beyond our listed range. Send us the brand and product details through the bulk orders page or on WhatsApp and our team will confirm availability and pricing.</p>"
-          }
-        }
-      },
-      "block_order": [
-        "faq_1",
-        "faq_2",
-        "faq_3",
-        "faq_4",
-        "faq_5"
-      ]
+      "settings": {}
     }
   },
-  "order": [
-    "main"
-  ]
+  "order": ["main"]
 }

@@ -10,7 +10,7 @@
 {
   "sections": {
     "main": {
-      "type": "brand-page-v2",
+      "type": "brand-page",
       "settings": {}
     }
   },

@@ -23,6 +23,7 @@
   assign bslug = page.title | handleize
   assign bcol = collections[bslug]
   assign mf = page.metafields.brand
+  assign bd = mf.brand_display | default: brand
   assign vendor_filter = '?filter.p.vendor=' | append: brand | url_encode | replace: '%3Ffilter', '?filter'
   # count category cards whose collection actually exists, so we can hide an all-empty section
   assign cat_exist = 0
@@ -52,7 +53,7 @@
       {%- assign hero_link = '/pages/' | append: bslug -%}
       <div class="brand-hero-logo">{%- render 'brand-logo', name: brand, link: hero_link -%}</div>
       <div class="brand-hero-body">
-        <h1 class="brand-hero-title">{{ brand }} in Qatar</h1>
+        <h1 class="brand-hero-title">{{ bd }} in Qatar</h1>
         {%- if mf.sub_line != blank -%}<p class="brand-hero-meta">{{ mf.sub_line }}</p>
         {%- elsif bcol != blank -%}<p class="brand-hero-meta">{{ bcol.products_count }} {{ brand }} products in stock.</p>{%- endif -%}
         <div class="brand-hero-cta">
@@ -221,12 +222,12 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "@id": "{{ shop.url }}/pages/{{ bslug }}#page",
-  "name": "{{ brand }} in Qatar",
+  "name": "{{ bd }} in Qatar",
   "url": "{{ shop.url }}/pages/{{ bslug }}",
   "isPartOf": { "@id": "{{ shop.url }}/#website" },
   "about": {
     "@type": "Brand",
-    "name": {{ brand | json }}
+    "name": {{ bd | json }}
     {%- if mf.sameas != blank -%},
     "sameAs": [
       {%- assign sa = mf.sameas | newline_to_br | split: '<br />' -%}
@@ -235,8 +236,8 @@
     ]
     {%- endif -%}
   }
-  {%- if bcol.products.size > 0 -%},
-  "mainEntity": { "@type": "ItemList", "name": "Popular {{ brand }} products at Lighting Souq", "itemListElement": [
+  {%- if bcol.products.size > 1 -%},
+  "mainEntity": { "@type": "ItemList", "name": "Popular {{ bd }} products at Lighting Souq", "itemListElement": [
     {%- for p in bcol.products limit: 8 -%}{%- unless forloop.first -%},{%- endunless -%}{ "@type": "ListItem", "position": {{ forloop.index }}, "url": "{{ shop.url }}{{ p.url }}" }{%- endfor -%}
   ] }
   {%- endif -%}

@@ -11,6 +11,7 @@
       "type": "contact-form",
       "settings": {
         "bg": "bg-white",
+        "heading_tag": "h1",
         "heading": "Contact us",
         "subtitle": "WhatsApp is the fastest way to reach us. Our team is available Sunday to Thursday, 9am to 6pm Qatar time, and usually replies within a few hours.",
         "note_title": "Before you write",

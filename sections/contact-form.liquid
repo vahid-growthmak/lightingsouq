@@ -2,7 +2,7 @@
   <div class="container">
     {%- if section.settings.heading != blank -%}
       <div class="section-header">
-        <h2 class="section-title">{{ section.settings.heading }}</h2>
+        {%- if section.settings.heading_tag == 'h1' -%}<h1 class="section-title">{{ section.settings.heading }}</h1>{%- else -%}<h2 class="section-title">{{ section.settings.heading }}</h2>{%- endif -%}
         {%- if section.settings.subtitle != blank -%}<p class="section-sub">{{ section.settings.subtitle }}</p>{%- endif -%}
       </div>
     {%- endif -%}
@@ -159,6 +159,7 @@
       "default": "bg-white"
     },
     { "type": "header", "content": "Heading" },
+    { "type": "select", "id": "heading_tag", "label": "Heading level", "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" } ], "default": "h2" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Send us a message" },
     { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Tell us what you need and our Doha team replies fast — usually the same day." },
     { "type": "header", "content": "Field labels" },

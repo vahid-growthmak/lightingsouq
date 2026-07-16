@@ -1,52 +1,179 @@
 {%- comment -%}
-  All-brands index — one tile per vendor in the store, linking to that
-  brand's dedicated page (/pages/<brand-handle>). Fully dynamic: new vendors
-  appear automatically after their products are imported.
+  Our Brands hub — grouped brand grid, intro, closing band and FAQ, with
+  CollectionPage+ItemList / BreadcrumbList / FAQPage JSON-LD. Brands are
+  grouped by what they sell (doc 02). Cards render only for vendors that
+  exist in the store; live product counts come from the brand collection.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
+  assign wa_num = settings.whatsapp_number | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
+
+  comment 7 groups + Other. Pipe-separated: heading ^ intro ^ brand,brand,... endcomment
+  assign g1 = 'Lighting brands^Lamps, tubes, fixtures and fittings from the names that built the lighting industry.^Osram,Philips,LEDVANCE,GE,Sylvania,Tungsram,Kosnic,Bell Lighting,BESA,Rabalux,Al Babtain,Saudi Lighting,GG LED,Glint,Lordex,Luxzony,MP2,Tenia,Topstar,Weiss,Alix,Skywatch'
+  assign g2 = 'Smart home brands^App and voice-controlled lighting and devices that work with Alexa, Google Home and Apple.^Wink,Xiaomi,Philips Hue,Yeelight,Sonoff,Amazon,Google'
+  assign g3 = 'Solar and outdoor^Solar lighting, flood lighting and outdoor fittings built for the Gulf climate.^Vettam,GIAX'
+  assign g4 = 'Components and control gear^Ballasts, LED drivers, capacitors, ignitors and switchgear for professional installations.^Tridonic,Helvar,VS,Hager,Electronicon,MECO,Thomas & Betts,GIAX,Sonoff'
+  assign g5 = 'Fans and air^Ceiling, exhaust, cabinet and ventilation fans for homes and buildings in the Gulf climate.^KDK,Panasonic,Sirocco'
+  assign g6 = 'Batteries and power^Batteries, chargers and power accessories.^Energizer,Ronix'
+  assign g7 = 'Electronics and wearables^Smartwatches, audio and everyday electronics stocked alongside the lighting range.^Amazfit,Huawei,Sony,Xiaomi'
+  assign g8 = 'Other brands^Additional lines we stock across the catalogue.^BMC,CAPF,Chink,Generic,Lighting Souq'
+  assign groups = g1 | append: '~~' | append: g2 | append: '~~' | append: g3 | append: '~~' | append: g4 | append: '~~' | append: g5 | append: '~~' | append: g6 | append: '~~' | append: g7 | append: '~~' | append: g8 | split: '~~'
 -%}
-<section class="section {{ s.bg }}">
+<section class="section {{ s.bg }}" id="BrandsIndex--{{ section.id }}">
   <div class="container">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="{{ routes.root_url }}">Home</a> / <span>{{ s.heading | escape }}</span>
+      <a href="{{ routes.root_url }}">Home</a> / <span>Brands</span>
     </nav>
-    <h1 class="section-title text-center">{{ s.heading }}</h1>
-    <p class="section-sub text-center mb-8">{{ s.subtitle }}</p>
-    <div class="brands-index-grid">
-      {%- for v in shop.vendors -%}
-        {%- if v == 'VS (Vossloh-Schwabe)' -%}{%- continue -%}{%- endif -%}
-        {%- assign vslug = v | handleize -%}
-        {%- assign vcol = collections[vslug] -%}
-        {%- assign vlink = '/pages/' | append: vslug -%}
-        <div class="brand-index-card">
-          {%- render 'brand-logo', name: v, link: vlink -%}
-          <a class="brand-index-meta" href="{{ vlink }}">{% if vcol != blank %}{{ vcol.products_count }} {{ s.count_suffix | default: 'products' | escape }}{% else %}{{ s.view_label | default: 'View brand' | escape }}{% endif %}</a>
+    <h1 class="section-title">{{ s.heading }}</h1>
+    <div class="lsq-prose brands-intro">
+      <p>Lighting Souq stocks more than 50 brands across lighting, smart home, fans, batteries and electrical components. That includes lighting names you already know, like <a href="/pages/osram">Osram</a>, <a href="/pages/philips">Philips</a>, <a href="/pages/ledvance">LEDVANCE</a>, GE and Sylvania; smart home ecosystems from Xiaomi, Philips Hue, Yeelight, Sonoff, Amazon and Google; fans from KDK and Panasonic; and control gear from Tridonic, Helvar, VS and Hager.</p>
+      <p>We are an authorised reseller and distributor of established lighting brands, and we hold direct distributor or dealership agreements with select manufacturers. Every product on this page is genuine and sourced through authorised channels. Products from brands where we hold a distributor agreement, and our Vettam, <a href="/pages/wink">Wink</a> and Glint lines, carry a 1-year warranty handled by our team in Qatar.</p>
+    </div>
+
+    {%- assign gi = 0 -%}
+    {%- for grp in groups -%}
+      {%- assign gi = gi | plus: 1 -%}
+      {%- assign parts = grp | split: '^' -%}
+      {%- assign g_heading = parts[0] -%}
+      {%- assign g_intro = parts[1] -%}
+      {%- assign g_brands = parts[2] | split: ',' -%}
+      {%- comment -%} count present brands so an all-missing group is skipped {%- endcomment -%}
+      {%- assign present = 0 -%}
+      {%- for b in g_brands -%}
+        {%- assign bslug = b | handleize -%}
+        {%- assign bcol = collections[bslug] -%}
+        {%- if bcol != blank -%}{%- assign present = present | plus: 1 -%}{%- endif -%}
+      {%- endfor -%}
+      {%- if present > 0 -%}
+        <div class="brand-group">
+          <h2 class="brand-group-title">{{ g_heading }}</h2>
+          {%- if g_intro != blank -%}<p class="brand-group-intro">{{ g_intro }}</p>{%- endif -%}
+          <div class="brands-index-grid">
+            {%- for b in g_brands -%}
+              {%- assign bslug = b | handleize -%}
+              {%- assign bcol = collections[bslug] -%}
+              {%- if bcol != blank -%}
+                {%- assign blink = '/pages/' | append: bslug -%}
+                <div class="brand-index-card">
+                  {%- render 'brand-logo', name: b, link: blink -%}
+                  <a class="brand-index-meta" href="{{ blink }}">{{ bcol.products_count }} products</a>
+                </div>
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
         </div>
+      {%- endif -%}
+    {%- endfor -%}
+  </div>
+</section>
+
+{%- comment -%} Closing band {%- endcomment -%}
+<section class="section bg-blue brands-cta-band">
+  <div class="container" style="text-align:center;">
+    <h2 style="color:#fff;">Cannot find the brand you are looking for?</h2>
+    <p style="color:rgba(255,255,255,0.9);max-width:640px;margin:0.5rem auto 1.5rem;">We source beyond our listed range for projects and bulk orders. Tell us the brand and the product and our team will come back on availability, Sunday to Thursday.</p>
+    <div class="row" style="justify-content:center;">
+      {%- if wa_num != blank -%}<a class="btn-primary" style="background:#22c55e;border-color:#22c55e;" href="https://wa.me/{{ wa_num }}?text={{ 'Hi! I am looking for a brand not listed on your site.' | url_encode }}" target="_blank" rel="noopener">Message us on WhatsApp</a>{%- endif -%}
+      <a class="btn-primary" style="background:#fff;color:var(--brand-primary);" href="/pages/bulk-orders">Request a bulk quote</a>
+    </div>
+  </div>
+</section>
+
+{%- comment -%} Brand FAQ {%- endcomment -%}
+<section class="section bg-white" id="BrandsFAQ--{{ section.id }}">
+  <div class="container">
+    <h2 class="section-title text-center">Questions about our brands</h2>
+    <div class="faq-wrap">
+      {%- for block in section.blocks -%}
+        {%- if block.type == 'faq' -%}
+        <div class="collapsible-row" {{ block.shopify_attributes }}>
+          <h3 class="collapsible-trigger-h"><button class="collapsible-trigger" type="button" data-accordion>{{ block.settings.question }} <span class="material-symbols-outlined">expand_more</span></button></h3>
+          <div class="collapsible-content">{{ block.settings.answer }}</div>
+        </div>
+        {%- endif -%}
       {%- endfor -%}
     </div>
   </div>
 </section>
+
+<script>
+  (function () {
+    ['BrandsIndex--{{ section.id }}','BrandsFAQ--{{ section.id }}'].forEach(function (id) {
+      var root = document.getElementById(id); if (!root) return;
+      root.addEventListener('click', function (e) {
+        var t = e.target.closest('[data-accordion]'); if (!t || !root.contains(t)) return;
+        var row = t.closest('.collapsible-row'); if (row) row.classList.toggle('active');
+      });
+    });
+  })();
+</script>
+
+{%- comment -%} JSON-LD: CollectionPage + ItemList (generated from the grid), BreadcrumbList, FAQPage {%- endcomment -%}
+{%- capture brand_items -%}
+  {%- assign pos = 0 -%}
+  {%- for grp in groups -%}
+    {%- assign parts = grp | split: '^' -%}
+    {%- assign g_brands = parts[2] | split: ',' -%}
+    {%- for b in g_brands -%}
+      {%- assign bslug = b | handleize -%}
+      {%- assign bcol = collections[bslug] -%}
+      {%- if bcol != blank -%}
+        {%- if pos > 0 -%},{%- endif -%}
+        {%- assign pos = pos | plus: 1 -%}
+        { "@type": "ListItem", "position": {{ pos }}, "item": { "@type": "Brand", "name": {{ b | json }}, "url": "{{ shop.url }}/pages/{{ bslug }}" } }
+      {%- endif -%}
+    {%- endfor -%}
+  {%- endfor -%}
+{%- endcapture -%}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": "{{ shop.url }}/pages/brands#page",
+  "name": "Lighting and smart home brands we stock in Qatar",
+  "description": "The 50+ lighting, smart home, fan, battery and component brands stocked by Lighting Souq in Qatar, an authorised reseller and distributor.",
+  "url": "{{ shop.url }}/pages/brands",
+  "isPartOf": { "@id": "{{ shop.url }}/#website" },
+  "mainEntity": { "@type": "ItemList", "itemListElement": [ {{ brand_items }} ] }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}/" },
+    { "@type": "ListItem", "position": 2, "name": "Brands", "item": "{{ shop.url }}/pages/brands" }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {%- assign fq = 0 -%}
+    {%- for block in section.blocks -%}{%- if block.type == 'faq' and block.settings.question != blank -%}
+      {%- if fq > 0 -%},{%- endif -%}{%- assign fq = fq | plus: 1 -%}
+      { "@type": "Question", "name": {{ block.settings.question | strip_html | json }}, "acceptedAnswer": { "@type": "Answer", "text": {{ block.settings.answer | strip_html | strip | json }} } }
+    {%- endif -%}{%- endfor -%}
+  ]
+}
+</script>
 
 {% schema %}
 {
   "name": "Brands index",
   "tag": "div",
   "settings": [
-    { "type": "text", "id": "heading", "label": "Heading", "default": "Our Brands" },
-    { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "Every brand we stock — genuine, Theqa-certified, with local warranty." },
-    { "type": "text", "id": "count_suffix", "label": "Count suffix", "default": "products" },
-    { "type": "text", "id": "view_label", "label": "Fallback label", "default": "View brand" },
-    {
-      "type": "select",
-      "id": "bg",
-      "label": "Background",
-      "options": [
-        { "value": "bg-white", "label": "White" },
-        { "value": "bg-gray", "label": "Gray" }
-      ],
-      "default": "bg-white"
-    }
+    { "type": "text", "id": "heading", "label": "Heading", "default": "Lighting and smart home brands we stock in Qatar" },
+    { "type": "select", "id": "bg", "label": "Background", "options": [ { "value": "bg-white", "label": "White" }, { "value": "bg-gray", "label": "Gray" } ], "default": "bg-white" }
+  ],
+  "blocks": [
+    { "type": "faq", "name": "FAQ item", "settings": [
+      { "type": "text", "id": "question", "label": "Question" },
+      { "type": "richtext", "id": "answer", "label": "Answer" }
+    ] }
   ]
 }
 {% endschema %}

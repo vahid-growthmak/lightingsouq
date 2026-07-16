@@ -47,7 +47,7 @@
 <section class="section bg-white" id="BrandPage--{{ section.id }}">
   <div class="container">
     <nav class="breadcrumb" aria-label="Breadcrumb">
-      <a href="{{ routes.root_url }}">Home</a> / <a href="/pages/brands">Brands</a> / <span>{{ brand }}</span>
+      <a href="{{ routes.root_url }}">Home</a> / <a href="/pages/brands">Brands</a> / <span>{{ bd }}</span>
     </nav>
 
     {%- comment -%} 2. Brand header {%- endcomment -%}
@@ -57,16 +57,16 @@
       <div class="brand-hero-body">
         <h1 class="brand-hero-title">{% if mf.h1_override != blank %}{{ mf.h1_override }}{% else %}{{ bd }} in Qatar{% endif %}</h1>
         {%- if mf.sub_line != blank -%}<p class="brand-hero-meta">{{ mf.sub_line }}</p>
-        {%- elsif bcol != blank -%}<p class="brand-hero-meta">{{ bcol.products_count }} {{ brand }} products in stock.</p>{%- endif -%}
+        {%- elsif bcol != blank -%}<p class="brand-hero-meta">{{ bcol.products_count }} {{ bd }} products in stock.</p>{%- endif -%}
         <div class="brand-hero-cta">
           {%- if cat_exist > 0 -%}
-            {%- capture cta_lbl -%}{% if mf.cta_label != blank %}{{ mf.cta_label }}{% else %}Find {{ brand }} collections{% endif %}{%- endcapture -%}
+            {%- capture cta_lbl -%}{% if mf.cta_label != blank %}{{ mf.cta_label }}{% else %}Find {{ bd }} collections{% endif %}{%- endcapture -%}
             <a class="btn-primary-sm" href="#shop-by-category" data-brand-scroll>{{ cta_lbl }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">expand_more</span></a>
           {%- elsif bcol != blank -%}
-            {%- capture cta_lbl2 -%}{% if mf.cta_label != blank %}{{ mf.cta_label }}{% else %}Shop all {{ brand }}{% endif %}{%- endcapture -%}
+            {%- capture cta_lbl2 -%}{% if mf.cta_label != blank %}{{ mf.cta_label }}{% else %}Shop all {{ bd }}{% endif %}{%- endcapture -%}
             <a class="btn-primary-sm" href="{{ bcol.url }}">{{ cta_lbl2 }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">arrow_forward</span></a>
           {%- endif -%}
-          {%- if bcol != blank and cat_exist > 0 -%}<a class="brand-hero-secondary" href="{{ bcol.url }}">Shop all {{ brand }}</a>{%- endif -%}
+          {%- if bcol != blank and cat_exist > 0 -%}<a class="brand-hero-secondary" href="{{ bcol.url }}">Shop all {{ bd }}</a>{%- endif -%}
         </div>
       </div>
     </div>
@@ -74,7 +74,7 @@
     {%- comment -%} 3. About the brand {%- endcomment -%}
     {%- if mf.about_body != blank -%}
       <div class="brand-block">
-        {%- unless mf.about_heading == '-' -%}<h2 class="brand-h2">{% if mf.about_heading != blank %}{{ mf.about_heading }}{% else %}About {{ brand }}{% endif %}</h2>{%- endunless -%}
+        {%- unless mf.about_heading == '-' -%}<h2 class="brand-h2">{% if mf.about_heading != blank %}{{ mf.about_heading }}{% else %}About {{ bd }}{% endif %}</h2>{%- endunless -%}
         <div class="lsq-prose">{{ mf.about_body }}</div>
       </div>
     {%- endif -%}
@@ -82,7 +82,7 @@
     {%- comment -%} 4. What we stock {%- endcomment -%}
     {%- if mf.stock_body != blank -%}
       <div class="brand-block">
-        <h2 class="brand-h2">{% if mf.stock_heading != blank %}{{ mf.stock_heading }}{% else %}What we stock from {{ brand }}{% endif %}</h2>
+        <h2 class="brand-h2">{% if mf.stock_heading != blank %}{{ mf.stock_heading }}{% else %}What we stock from {{ bd }}{% endif %}</h2>
         <div class="lsq-prose">{{ mf.stock_body }}</div>
       </div>
     {%- endif -%}
@@ -90,7 +90,7 @@
     {%- comment -%} 5. Why buy {%- endcomment -%}
     {%- if mf.why_buy != blank -%}
       <div class="brand-block">
-        <h2 class="brand-h2">Why buy {{ brand }} from Lighting Souq</h2>
+        <h2 class="brand-h2">Why buy {{ bd }} from Lighting Souq</h2>
         <div class="brand-whybuy">
           {%- assign wb_lines = mf.why_buy | newline_to_br | split: '<br />' -%}
           {%- for line in wb_lines -%}
@@ -110,8 +110,8 @@
 {%- if cat_exist > 0 -%}
 <section class="section bg-gray" id="shop-by-category">
   <div class="container">
-    <h2 class="section-title">Shop {{ brand }} by category</h2>
-    <p class="section-sub">Jump straight to the part of the {{ brand }} range you need.</p>
+    <h2 class="section-title">Shop {{ bd }} by category</h2>
+    <p class="section-sub">Jump straight to the part of the {{ bd }} range you need.</p>
     <div class="brand-cat-grid">
       {%- assign cat_lines = mf.categories | newline_to_br | split: '<br />' -%}
       {%- for line in cat_lines -%}
@@ -142,7 +142,7 @@
 <section class="section bg-white">
   <div class="container">
     <div class="section-header"><div>
-      <h2 class="section-title">Popular from {{ brand }}</h2>
+      <h2 class="section-title">Popular from {{ bd }}</h2>
       <p class="section-sub">Genuine, Theqa-certified stock.</p>
     </div></div>
     <div class="grid-4">
@@ -159,7 +159,7 @@
 {%- if mf.related != blank -%}
 <section class="section bg-white">
   <div class="container">
-    <h2 class="section-title text-center">{% if mf.related_heading != blank %}{{ mf.related_heading }}{% else %}Brands related to {{ brand }}{% endif %}</h2>
+    <h2 class="section-title text-center">{% if mf.related_heading != blank %}{{ mf.related_heading }}{% else %}Brands related to {{ bd }}{% endif %}</h2>
     <div class="brands-index-grid" style="margin-top:1.5rem;">
       {%- assign rel = mf.related | split: ',' -%}
       {%- for r in rel -%}
@@ -182,7 +182,7 @@
 {%- if mf.faqs != blank -%}
 <section class="section bg-gray" id="BrandFAQ--{{ section.id }}">
   <div class="container">
-    <h2 class="section-title text-center">{{ brand }} questions, answered</h2>
+    <h2 class="section-title text-center">{{ bd }} questions, answered</h2>
     <div class="faq-wrap">
       {%- assign faq_lines = mf.faqs | newline_to_br | split: '<br />' -%}
       {%- for line in faq_lines -%}
@@ -254,7 +254,7 @@
   "itemListElement": [
     { "@type": "ListItem", "position": 1, "name": "Home", "item": "{{ shop.url }}/" },
     { "@type": "ListItem", "position": 2, "name": "Brands", "item": "{{ shop.url }}/pages/brands" },
-    { "@type": "ListItem", "position": 3, "name": {{ brand | json }}, "item": "{{ shop.url }}/pages/{{ bslug }}" }
+    { "@type": "ListItem", "position": 3, "name": {{ bd | json }}, "item": "{{ shop.url }}/pages/{{ bslug }}" }
   ]
 }
 </script>

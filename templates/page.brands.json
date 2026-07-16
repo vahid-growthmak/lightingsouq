@@ -10,7 +10,7 @@
 {
   "sections": {
     "main": {
-      "type": "brands-index",
+      "type": "brands-index-v2",
       "settings": {},
       "blocks": {
         "faq_1": {

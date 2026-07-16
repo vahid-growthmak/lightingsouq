@@ -10,9 +10,11 @@
 {
   "sections": {
     "main": {
-      "type": "brand-page",
+      "type": "brand-page-v2",
       "settings": {}
     }
   },
-  "order": ["main"]
+  "order": [
+    "main"
+  ]
 }

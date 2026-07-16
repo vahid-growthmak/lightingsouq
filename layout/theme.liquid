@@ -9,10 +9,14 @@
       <link rel="icon" type="image/png" href="{{ settings.favicon | image_url: width: 32, height: 32 }}">
     {%- endif -%}
 
-    <title>{{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
-
-    {%- if page_description -%}
-      <meta name="description" content="{{ page_description | escape }}">
+    {%- if template.name == 'index' and page_title == shop.name -%}
+      <title>Lighting Souq | Lights, Bulbs &amp; Smart Home in Qatar</title>
+      <meta name="description" content="Qatar's online lighting store since 2018. LED bulbs, tubes, solar and outdoor lights, fixtures and smart home devices from Osram, Philips, LEDVANCE and more. Delivery in as fast as 3 hours.">
+    {%- else -%}
+      <title>{{ page_title }}{% if current_tags %} &ndash; {{ current_tags | join: ', ' }}{% endif %}{% if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{% endif %}{% unless page_title contains shop.name %} &ndash; {{ shop.name }}{% endunless %}</title>
+      {%- if page_description -%}
+        <meta name="description" content="{{ page_description | escape }}">
+      {%- endif -%}
     {%- endif -%}
 
     {%- render 'meta-tags' -%}

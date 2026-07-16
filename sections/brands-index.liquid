@@ -8,7 +8,7 @@
   assign s = section.settings
   assign wa_num = settings.whatsapp_number | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
 
-  comment 7 groups + Other. Pipe-separated: heading ^ intro ^ brand,brand,... endcomment
+  # 7 groups + Other. Pipe-separated: heading ^ intro ^ brand,brand,...
   assign g1 = 'Lighting brands^Lamps, tubes, fixtures and fittings from the names that built the lighting industry.^Osram,Philips,LEDVANCE,GE,Sylvania,Tungsram,Kosnic,Bell Lighting,BESA,Rabalux,Al Babtain,Saudi Lighting,GG LED,Glint,Lordex,Luxzony,MP2,Tenia,Topstar,Weiss,Alix,Skywatch'
   assign g2 = 'Smart home brands^App and voice-controlled lighting and devices that work with Alexa, Google Home and Apple.^Wink,Xiaomi,Philips Hue,Yeelight,Sonoff,Amazon,Google'
   assign g3 = 'Solar and outdoor^Solar lighting, flood lighting and outdoor fittings built for the Gulf climate.^Vettam,GIAX'

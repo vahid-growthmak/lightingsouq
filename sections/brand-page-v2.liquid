@@ -34,14 +34,16 @@
 
     {%- comment -%} 2. Brand header {%- endcomment -%}
     <div class="brand-hero">
-      <div class="brand-hero-logo">{%- render 'brand-logo', name: brand, link: '/pages/' | append: bslug -%}</div>
+      {%- assign hero_link = '/pages/' | append: bslug -%}
+      <div class="brand-hero-logo">{%- render 'brand-logo', name: brand, link: hero_link -%}</div>
       <div class="brand-hero-body">
         <h1 class="brand-hero-title">{{ brand }} in Qatar</h1>
         {%- if mf.sub_line != blank -%}<p class="brand-hero-meta">{{ mf.sub_line }}</p>
         {%- elsif bcol != blank -%}<p class="brand-hero-meta">{{ bcol.products_count }} {{ brand }} products in stock.</p>{%- endif -%}
         <div class="brand-hero-cta">
           {%- if mf.categories != blank -%}
-            <a class="btn-primary-sm" href="#shop-by-category" data-brand-scroll>{{ mf.cta_label | default: 'Find' | append: ' ' | append: brand | append: ' collections' }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">expand_more</span></a>
+            {%- capture cta_lbl -%}{% if mf.cta_label != blank %}{{ mf.cta_label }}{% else %}Find {{ brand }} collections{% endif %}{%- endcapture -%}
+            <a class="btn-primary-sm" href="#shop-by-category" data-brand-scroll>{{ cta_lbl }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">expand_more</span></a>
           {%- elsif bcol != blank -%}
             <a class="btn-primary-sm" href="{{ bcol.url }}">Shop all {{ brand }} <span class="material-symbols-outlined" style="font-size:1rem;vertical-align:-3px;">arrow_forward</span></a>
           {%- endif -%}
@@ -53,7 +55,7 @@
     {%- comment -%} 3. About the brand {%- endcomment -%}
     {%- if mf.about_body != blank -%}
       <div class="brand-block">
-        <h2 class="brand-h2">{{ mf.about_heading | default: 'About ' | append: brand }}</h2>
+        <h2 class="brand-h2">{% if mf.about_heading != blank %}{{ mf.about_heading }}{% else %}About {{ brand }}{% endif %}</h2>
         <div class="lsq-prose">{{ mf.about_body }}</div>
       </div>
     {%- endif -%}
@@ -61,7 +63,7 @@
     {%- comment -%} 4. What we stock {%- endcomment -%}
     {%- if mf.stock_body != blank -%}
       <div class="brand-block">
-        <h2 class="brand-h2">{{ mf.stock_heading | default: 'What we stock from ' | append: brand }}</h2>
+        <h2 class="brand-h2">{% if mf.stock_heading != blank %}{{ mf.stock_heading }}{% else %}What we stock from {{ brand }}{% endif %}</h2>
         <div class="lsq-prose">{{ mf.stock_body }}</div>
       </div>
     {%- endif -%}
@@ -166,8 +168,9 @@
         {%- if rcol != blank -%}
           {%- comment -%} title-case-ish display from vendor list {%- endcomment -%}
           {%- assign rname = rslug -%}
-          {%- for v in shop.vendors -%}{%- if v | handleize == rslug -%}{%- assign rname = v -%}{%- break -%}{%- endif -%}{%- endfor -%}
-          <div class="brand-index-card">{%- render 'brand-logo', name: rname, link: '/pages/' | append: rslug -%}<a class="brand-index-meta" href="/pages/{{ rslug }}">{{ rcol.products_count }} products</a></div>
+          {%- for v in shop.vendors -%}{%- assign vh = v | handleize -%}{%- if vh == rslug -%}{%- assign rname = v -%}{%- break -%}{%- endif -%}{%- endfor -%}
+          {%- assign rlink = '/pages/' | append: rslug -%}
+          <div class="brand-index-card">{%- render 'brand-logo', name: rname, link: rlink -%}<a class="brand-index-meta" href="/pages/{{ rslug }}">{{ rcol.products_count }} products</a></div>
         {%- endif -%}
       {%- endfor -%}
     </div>

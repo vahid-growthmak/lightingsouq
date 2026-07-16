@@ -110,8 +110,8 @@
 {%- if cat_exist > 0 -%}
 <section class="section bg-gray" id="shop-by-category">
   <div class="container">
-    <h2 class="section-title">Shop {{ bd }} by category</h2>
-    <p class="section-sub">Jump straight to the part of the {{ bd }} range you need.</p>
+    <h2 class="section-title">{% if mf.cat_heading != blank %}{{ mf.cat_heading }}{% else %}Shop {{ bd }} by category{% endif %}</h2>
+    {%- unless mf.cat_sub == '-' -%}<p class="section-sub">{% if mf.cat_sub != blank %}{{ mf.cat_sub }}{% else %}Jump straight to the part of the {{ bd }} range you need.{% endif %}</p>{%- endunless -%}
     <div class="brand-cat-grid">
       {%- assign cat_lines = mf.categories | newline_to_br | split: '<br />' -%}
       {%- for line in cat_lines -%}

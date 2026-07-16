@@ -240,7 +240,7 @@
     {%- endif -%}
   }
   {%- endunless -%}
-  {%- if mf.no_brand_schema != 'true' and bcol.products.size > 1 -%},
+  {%- if mf.no_brand_schema != 'true' and mf.no_itemlist != 'true' and bcol.products.size > 1 -%},
   "mainEntity": { "@type": "ItemList", "name": "Popular {{ bd }} products at Lighting Souq", "itemListElement": [
     {%- for p in bcol.products limit: 8 -%}{%- unless forloop.first -%},{%- endunless -%}{ "@type": "ListItem", "position": {{ forloop.index }}, "url": "{{ shop.url }}{{ p.url }}" }{%- endfor -%}
   ] }

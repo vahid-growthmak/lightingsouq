@@ -24,6 +24,8 @@
   assign bcol = collections[bslug]
   assign mf = page.metafields.brand
   assign bd = mf.brand_display | default: brand
+  # bv = the real vendor value for filtering/where (display name can differ, e.g. "GgLED" shown but vendor is "GG LED")
+  assign bv = mf.vendor_value | default: bd
   assign vendor_filter = '?filter.p.vendor=' | append: brand | url_encode | replace: '%3Ffilter', '?filter'
   # count category cards whose collection actually exists, so we can hide an all-empty section
   assign cat_exist = 0
@@ -53,7 +55,7 @@
       {%- assign hero_link = '/pages/' | append: bslug -%}
       <div class="brand-hero-logo">{%- render 'brand-logo', name: brand, link: hero_link -%}</div>
       <div class="brand-hero-body">
-        <h1 class="brand-hero-title">{{ bd }} in Qatar</h1>
+        <h1 class="brand-hero-title">{% if mf.h1_override != blank %}{{ mf.h1_override }}{% else %}{{ bd }} in Qatar{% endif %}</h1>
         {%- if mf.sub_line != blank -%}<p class="brand-hero-meta">{{ mf.sub_line }}</p>
         {%- elsif bcol != blank -%}<p class="brand-hero-meta">{{ bcol.products_count }} {{ brand }} products in stock.</p>{%- endif -%}
         <div class="brand-hero-cta">
@@ -72,7 +74,7 @@
     {%- comment -%} 3. About the brand {%- endcomment -%}
     {%- if mf.about_body != blank -%}
       <div class="brand-block">
-        <h2 class="brand-h2">{% if mf.about_heading != blank %}{{ mf.about_heading }}{% else %}About {{ brand }}{% endif %}</h2>
+        {%- unless mf.about_heading == '-' -%}<h2 class="brand-h2">{% if mf.about_heading != blank %}{{ mf.about_heading }}{% else %}About {{ brand }}{% endif %}</h2>{%- endunless -%}
         <div class="lsq-prose">{{ mf.about_body }}</div>
       </div>
     {%- endif -%}
@@ -120,9 +122,9 @@
           {%- assign chandle = cp[1] | strip -%}
           {%- assign ccol = collections[chandle] -%}
           {%- if ccol != blank -%}
-            {%- assign bpc = ccol.products | where: 'vendor', bd -%}
+            {%- assign bpc = ccol.products | where: 'vendor', bv -%}
             {%- assign cimg = bpc.first.featured_image | default: ccol.products.first.featured_image -%}
-            <a class="brand-cat-card" href="/collections/{{ chandle }}?filter.p.vendor={{ bd | url_encode }}">
+            <a class="brand-cat-card" href="/collections/{{ chandle }}?filter.p.vendor={{ bv | url_encode }}">
               {%- if cimg != blank -%}<img class="brand-cat-img" src="{{ cimg | image_url: width: 140 }}" alt="{{ clabel }}" width="52" height="52" loading="lazy">{%- endif -%}
               <span class="brand-cat-label">{{ clabel }}</span>
               <span class="material-symbols-outlined">arrow_forward</span>
@@ -147,7 +149,7 @@
       {%- for p in bcol.products limit: 8 -%}{%- render 'product-card', product: p -%}{%- endfor -%}
     </div>
     <div style="text-align:center;margin-top:2rem;">
-      <a class="btn-view-more" href="/collections/all?filter.p.vendor={{ bd | url_encode }}">View all {{ bcol.products_count }} products <span class="material-symbols-outlined">arrow_forward</span></a>
+      <a class="btn-view-more" href="/collections/all?filter.p.vendor={{ bv | url_encode }}">View all {{ bcol.products_count }} products <span class="material-symbols-outlined">arrow_forward</span></a>
     </div>
   </div>
 </section>
@@ -222,9 +224,10 @@
   "@context": "https://schema.org",
   "@type": "CollectionPage",
   "@id": "{{ shop.url }}/pages/{{ bslug }}#page",
-  "name": "{{ bd }} in Qatar",
+  "name": {% if mf.h1_override != blank %}{{ mf.h1_override | json }}{% else %}"{{ bd }} in Qatar"{% endif %},
   "url": "{{ shop.url }}/pages/{{ bslug }}",
-  "isPartOf": { "@id": "{{ shop.url }}/#website" },
+  "isPartOf": { "@id": "{{ shop.url }}/#website" }
+  {%- unless mf.no_brand_schema == 'true' -%},
   "about": {
     "@type": "Brand",
     "name": {{ bd | json }}
@@ -236,7 +239,8 @@
     ]
     {%- endif -%}
   }
-  {%- if bcol.products.size > 1 -%},
+  {%- endunless -%}
+  {%- if mf.no_brand_schema != 'true' and bcol.products.size > 1 -%},
   "mainEntity": { "@type": "ItemList", "name": "Popular {{ bd }} products at Lighting Souq", "itemListElement": [
     {%- for p in bcol.products limit: 8 -%}{%- unless forloop.first -%},{%- endunless -%}{ "@type": "ListItem", "position": {{ forloop.index }}, "url": "{{ shop.url }}{{ p.url }}" }{%- endfor -%}
   ] }

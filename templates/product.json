@@ -134,69 +134,6 @@
         "delivery_content": "<p>Pick up from our showroom or get it delivered. <strong>Delivery in 1–2 Days.</strong> Working hours: Sat – Thu 8.00am – 7.30pm.</p>"
       }
     },
-    "compatibility": {
-      "type": "product-compatibility",
-      "blocks": {
-        "b0": {
-          "type": "voice",
-          "settings": {
-            "label": "Amazon Alexa",
-            "icon": "check_circle"
-          }
-        },
-        "b1": {
-          "type": "voice",
-          "settings": {
-            "label": "Google Home",
-            "icon": "check_circle"
-          }
-        },
-        "b2": {
-          "type": "voice",
-          "settings": {
-            "label": "Apple Siri",
-            "icon": "check_circle"
-          }
-        },
-        "b3": {
-          "type": "app",
-          "settings": {
-            "label": "Tuya / Smart Life",
-            "icon": "smartphone"
-          }
-        },
-        "b4": {
-          "type": "app",
-          "settings": {
-            "label": "Mi Home",
-            "icon": "smartphone"
-          }
-        },
-        "b5": {
-          "type": "app",
-          "settings": {
-            "label": "Philips Hue",
-            "icon": "smartphone"
-          }
-        }
-      },
-      "block_order": [
-        "b0",
-        "b1",
-        "b2",
-        "b3",
-        "b4",
-        "b5"
-      ],
-      "settings": {
-        "smart_only": false,
-        "heading": "Will it work with my setup?",
-        "subtitle": "Retrofits your existing fittings — no rewiring, no electrician.",
-        "group1_title": "Voice Assistants",
-        "group2_title": "Apps",
-        "note": "Screws into your existing E27 socket and connects over 2.4GHz Wi-Fi in about 2 minutes."
-      }
-    },
     "reviews": {
       "type": "judgeme-reviews",
       "settings": {
@@ -520,7 +457,6 @@
   },
   "order": [
     "main",
-    "compatibility",
     "reviews",
     "trust",
     "expert",

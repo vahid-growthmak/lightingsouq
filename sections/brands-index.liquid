@@ -50,7 +50,7 @@
       {%- for b in g_brands -%}
         {%- assign bslug = b | handleize -%}
         {%- assign bcol = collections[bslug] -%}
-        {%- if bcol != blank -%}{%- assign present = present | plus: 1 -%}{%- endif -%}
+        {%- if bcol != blank and bcol.products_count > 0 -%}{%- assign present = present | plus: 1 -%}{%- endif -%}
       {%- endfor -%}
       {%- if present > 0 -%}
         <div class="brand-group">
@@ -60,7 +60,7 @@
             {%- for b in g_brands -%}
               {%- assign bslug = b | handleize -%}
               {%- assign bcol = collections[bslug] -%}
-              {%- if bcol != blank -%}
+              {%- if bcol != blank and bcol.products_count > 0 -%}
                 {%- assign blink = '/pages/' | append: bslug -%}
                 <div class="brand-index-card">
                   {%- render 'brand-logo', name: b, link: blink -%}
@@ -124,7 +124,7 @@
     {%- for b in g_brands -%}
       {%- assign bslug = b | handleize -%}
       {%- assign bcol = collections[bslug] -%}
-      {%- if bcol != blank -%}
+      {%- if bcol != blank and bcol.products_count > 0 -%}
         {%- if pos > 0 -%},{%- endif -%}
         {%- assign pos = pos | plus: 1 -%}
         { "@type": "ListItem", "position": {{ pos }}, "item": { "@type": "Brand", "name": {{ b | json }}, "url": "{{ shop.url }}/pages/{{ bslug }}" } }

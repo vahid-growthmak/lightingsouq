@@ -9,14 +9,14 @@
   assign wa_num = settings.whatsapp_number | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
 
   # 7 groups + Other. Pipe-separated: heading ^ intro ^ brand,brand,...
-  assign g1 = 'Lighting brands^Lamps, tubes, fixtures and fittings from the names that built the lighting industry.^Osram,Philips,LEDVANCE,GE,Sylvania,Tungsram,Kosnic,Bell Lighting,BESA,Rabalux,Al Babtain,Saudi Lighting,GG LED,Glint,Lordex,Luxzony,MP2,Tenia,Topstar,Weiss,Alix,Skywatch'
-  assign g2 = 'Smart home brands^App and voice-controlled lighting and devices that work with Alexa, Google Home and Apple.^Wink,Xiaomi,Philips Hue,Yeelight,Sonoff,Amazon,Google'
+  assign g1 = 'Lighting brands^Lamps, tubes, fixtures and fittings from the names that built the lighting industry.^Osram,Philips,LEDVANCE,GE,Sylvania,Tungsram,Kosnic,Bell Lighting,BESA,Rabalux,Al Babtain,Saudi Lighting,GG LED,Glint,Luxzony,MP2,Tenia,Weiss,Alix,Skywatch'
+  assign g2 = 'Smart home brands^App and voice-controlled lighting and devices that work with Alexa, Google Home and Apple.^Wink,Xiaomi,Philips Hue,Sonoff,Amazon,Google'
   assign g3 = 'Solar and outdoor^Solar lighting, flood lighting and outdoor fittings built for the Gulf climate.^Vettam,GIAX'
   assign g4 = 'Components and control gear^Ballasts, LED drivers, capacitors, ignitors and switchgear for professional installations.^Tridonic,Helvar,VS,Hager,Electronicon,MECO,Thomas & Betts,GIAX,Sonoff'
   assign g5 = 'Fans and air^Ceiling, exhaust, cabinet and ventilation fans for homes and buildings in the Gulf climate.^KDK,Panasonic,Sirocco'
   assign g6 = 'Batteries and power^Batteries, chargers and power accessories.^Energizer,Ronix'
-  assign g7 = 'Electronics and wearables^Smartwatches, audio and everyday electronics stocked alongside the lighting range.^Amazfit,Huawei,Sony,Xiaomi'
-  assign g8 = 'Other brands^Additional lines we stock across the catalogue.^BMC,CAPF,Chink,Generic,Lighting Souq'
+  assign g7 = 'Electronics and wearables^Smartwatches, audio and everyday electronics stocked alongside the lighting range.^Huawei,Sony,Xiaomi'
+  assign g8 = 'Other brands^Additional lines we stock across the catalogue.^BMC,Chink,Generic,Lighting Souq'
   assign groups = g1 | append: '~~' | append: g2 | append: '~~' | append: g3 | append: '~~' | append: g4 | append: '~~' | append: g5 | append: '~~' | append: g6 | append: '~~' | append: g7 | append: '~~' | append: g8 | split: '~~'
 
   # Brand FAQ (doc 02 section 4) — Question ^ Answer(HTML)
@@ -34,7 +34,7 @@
     </nav>
     <h1 class="section-title">{{ s.heading }}</h1>
     <div class="lsq-prose brands-intro">
-      <p>Lighting Souq stocks more than 50 brands across lighting, smart home, fans, batteries and electrical components. That includes lighting names you already know, like <a href="/pages/osram">Osram</a>, <a href="/pages/philips">Philips</a>, <a href="/pages/ledvance">LEDVANCE</a>, GE and Sylvania; smart home ecosystems from Xiaomi, Philips Hue, Yeelight, Sonoff, Amazon and Google; fans from KDK and Panasonic; and control gear from Tridonic, Helvar, VS and Hager.</p>
+      <p>Lighting Souq stocks more than 50 brands across lighting, smart home, fans, batteries and electrical components. That includes lighting names you already know, like <a href="/pages/osram">Osram</a>, <a href="/pages/philips">Philips</a>, <a href="/pages/ledvance">LEDVANCE</a>, GE and Sylvania; smart home ecosystems from Xiaomi, Philips Hue, Sonoff, Amazon and Google; fans from KDK and Panasonic; and control gear from Tridonic, Helvar, VS and Hager.</p>
       <p>We are an authorised reseller and distributor of established lighting brands, and we hold direct distributor or dealership agreements with select manufacturers. Every product on this page is genuine and sourced through authorised channels. Products from brands where we hold a distributor agreement, and our Vettam, <a href="/pages/wink">Wink</a> and Glint lines, carry a 1-year warranty handled by our team in Qatar.</p>
     </div>
 

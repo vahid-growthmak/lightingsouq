@@ -1,3 +1,7 @@
+{%- liquid
+  assign wa_raw = section.settings.wa_number | default: settings.whatsapp_number
+  assign wa_number = wa_raw | remove: ' ' | remove: '-' | remove: '+' | remove: '(' | remove: ')'
+-%}
 <section class="section {{ section.settings.bg }}" id="Sec--{{ section.id }}">
   <div class="container">
     {%- if section.settings.heading != blank -%}
@@ -15,46 +19,110 @@
 
     <div class="cf-layout">
       <div class="cf-form-col">
-        {%- if form.posted_successfully? -%}
-          <div class="cf-success" role="status">
-            <span class="material-symbols-outlined">check_circle</span>
-            <div>
-              <p class="cf-success-title">{{ section.settings.success_title }}</p>
-              <p class="cf-success-text">{{ section.settings.success_text }}</p>
-            </div>
-          </div>
-        {%- endif -%}
-
         {%- form 'contact', class: 'cf-form' -%}
-          {%- if form.errors -%}
-            <div class="cf-errors" role="alert">
-              {{ form.errors | default_errors }}
+          {%- if form.posted_successfully? -%}
+            {%- comment -%} Success state — form object is only available inside the form tag {%- endcomment -%}
+            <div class="cf-success" role="status">
+              <span class="material-symbols-outlined">check_circle</span>
+              <div>
+                <p class="cf-success-title">{{ section.settings.success_title }}</p>
+                <p class="cf-success-text">{{ section.settings.success_text }}</p>
+                {%- if section.settings.wa_enabled and wa_number != blank -%}
+                  <a class="cf-success-wa" data-cf-wa-btn href="https://wa.me/{{ wa_number }}" target="_blank" rel="noopener"><span class="material-symbols-outlined">chat</span> {{ section.settings.wa_button_label }}</a>
+                {%- endif -%}
+              </div>
             </div>
+
+            {%- if section.settings.wa_enabled and wa_number != blank -%}
+              <div class="cf-wa-modal" data-cf-wa-modal aria-hidden="true">
+                <div class="cf-wa-backdrop" data-cf-wa-close></div>
+                <div class="cf-wa-card" role="dialog" aria-modal="true" aria-labelledby="cfWaTitle-{{ section.id }}">
+                  <button type="button" class="cf-wa-x" data-cf-wa-close aria-label="Close">&times;</button>
+                  <span class="cf-wa-emoji material-symbols-outlined">forum</span>
+                  <h3 class="cf-wa-title" id="cfWaTitle-{{ section.id }}">{{ section.settings.wa_popup_title }}</h3>
+                  <p class="cf-wa-text">{{ section.settings.wa_popup_text }}</p>
+                  <a class="cf-wa-cta" data-cf-wa-btn href="https://wa.me/{{ wa_number }}" target="_blank" rel="noopener"><span class="material-symbols-outlined">chat</span> {{ section.settings.wa_button_label }}</a>
+                  <button type="button" class="cf-wa-dismiss" data-cf-wa-close>{{ section.settings.wa_dismiss_label }}</button>
+                </div>
+              </div>
+              <script>
+                (function () {
+                  var root = document.getElementById('Sec--{{ section.id }}');
+                  if (!root) return;
+                  var modal = root.querySelector('[data-cf-wa-modal]');
+                  if (!modal) return;
+                  var num = {{ wa_number | json }};
+                  var name = '', msg = '';
+                  try { name = sessionStorage.getItem('cfWaName') || ''; msg = sessionStorage.getItem('cfWaMsg') || ''; } catch (e) {}
+                  var text;
+                  if (name || msg) {
+                    text = {{ section.settings.wa_draft_template | json }};
+                    text = text.split('{name}').join(name || '-').split('{message}').join(msg || '-');
+                  } else {
+                    text = {{ section.settings.wa_draft_fallback | json }};
+                  }
+                  var href = 'https://wa.me/' + num + '?text=' + encodeURIComponent(text);
+                  root.querySelectorAll('[data-cf-wa-btn]').forEach(function (b) { b.setAttribute('href', href); });
+                  function openM() { modal.classList.add('active'); modal.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+                  function closeM() { modal.classList.remove('active'); modal.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+                  modal.querySelectorAll('[data-cf-wa-close]').forEach(function (el) { el.addEventListener('click', closeM); });
+                  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeM(); });
+                  try { sessionStorage.removeItem('cfWaName'); sessionStorage.removeItem('cfWaMsg'); } catch (e) {}
+                  setTimeout(openM, 350);
+                })();
+              </script>
+            {%- endif -%}
+          {%- else -%}
+            {%- if form.errors -%}
+              <div class="cf-errors" role="alert">
+                {{ form.errors | default_errors }}
+              </div>
+            {%- endif -%}
+
+            <div class="cf-field">
+              <label for="cf-name-{{ section.id }}">{{ section.settings.name_label }}</label>
+              <input type="text" id="cf-name-{{ section.id }}" name="contact[name]" value="{{ form.name }}" autocomplete="name" required>
+            </div>
+
+            <div class="cf-row">
+              <div class="cf-field">
+                <label for="cf-email-{{ section.id }}">{{ section.settings.email_label }}</label>
+                <input type="email" id="cf-email-{{ section.id }}" name="contact[email]" value="{{ form.email }}" autocomplete="email" required>
+              </div>
+              <div class="cf-field">
+                <label for="cf-phone-{{ section.id }}">{{ section.settings.phone_label }}</label>
+                <input type="tel" id="cf-phone-{{ section.id }}" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel">
+              </div>
+            </div>
+
+            <div class="cf-field">
+              <label for="cf-message-{{ section.id }}">{{ section.settings.message_label }}</label>
+              <textarea id="cf-message-{{ section.id }}" name="contact[body]" rows="5" required>{{ form.body }}</textarea>
+            </div>
+
+            <button type="submit" class="btn-primary">{{ section.settings.submit_label }}</button>
           {%- endif -%}
-
-          <div class="cf-field">
-            <label for="cf-name-{{ section.id }}">{{ section.settings.name_label }}</label>
-            <input type="text" id="cf-name-{{ section.id }}" name="contact[name]" value="{{ form.name }}" autocomplete="name" required>
-          </div>
-
-          <div class="cf-row">
-            <div class="cf-field">
-              <label for="cf-email-{{ section.id }}">{{ section.settings.email_label }}</label>
-              <input type="email" id="cf-email-{{ section.id }}" name="contact[email]" value="{{ form.email }}" autocomplete="email" required>
-            </div>
-            <div class="cf-field">
-              <label for="cf-phone-{{ section.id }}">{{ section.settings.phone_label }}</label>
-              <input type="tel" id="cf-phone-{{ section.id }}" name="contact[phone]" value="{{ form.phone }}" autocomplete="tel">
-            </div>
-          </div>
-
-          <div class="cf-field">
-            <label for="cf-message-{{ section.id }}">{{ section.settings.message_label }}</label>
-            <textarea id="cf-message-{{ section.id }}" name="contact[body]" rows="5" required>{{ form.body }}</textarea>
-          </div>
-
-          <button type="submit" class="btn-primary">{{ section.settings.submit_label }}</button>
         {%- endform -%}
+
+        {%- if section.settings.wa_enabled and wa_number != blank -%}
+          {%- comment -%} Capture what the visitor typed so the WhatsApp draft is dynamic after the redirect {%- endcomment -%}
+          <script>
+            (function () {
+              var root = document.getElementById('Sec--{{ section.id }}');
+              if (!root) return;
+              var f = root.querySelector('form.cf-form');
+              if (!f) return;
+              f.addEventListener('submit', function () {
+                try {
+                  var n = f.querySelector('[name="contact[name]"]');
+                  var m = f.querySelector('[name="contact[body]"]');
+                  sessionStorage.setItem('cfWaName', n ? n.value : '');
+                  sessionStorage.setItem('cfWaMsg', m ? m.value : '');
+                } catch (e) {}
+              });
+            })();
+          </script>
+        {%- endif -%}
       </div>
 
       {%- if section.settings.show_channels -%}
@@ -112,6 +180,39 @@
   #Sec--{{ section.id }} .cf-success .material-symbols-outlined { color: var(--success); }
   #Sec--{{ section.id }} .cf-success-title { font-weight: 800; }
   #Sec--{{ section.id }} .cf-success-text { font-size: 0.9rem; color: #047857; }
+
+  /* WhatsApp fast-reply button + popup */
+  #Sec--{{ section.id }} .cf-success-wa,
+  #Sec--{{ section.id }} .cf-wa-cta {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.45rem; margin-top: 0.9rem;
+    background: #22c55e; color: #fff; font-weight: 700; text-decoration: none;
+    padding: 0.7rem 1.15rem; border-radius: var(--radius); border: none; cursor: pointer;
+    transition: background var(--transition), transform var(--transition);
+  }
+  #Sec--{{ section.id }} .cf-success-wa:hover,
+  #Sec--{{ section.id }} .cf-wa-cta:hover { background: #16a34a; transform: translateY(-1px); }
+  #Sec--{{ section.id }} .cf-success-wa .material-symbols-outlined,
+  #Sec--{{ section.id }} .cf-wa-cta .material-symbols-outlined { color: #fff; font-size: 20px; }
+
+  #Sec--{{ section.id }} .cf-wa-modal { position: fixed; inset: 0; z-index: 9999; display: none; align-items: center; justify-content: center; padding: 1rem; }
+  #Sec--{{ section.id }} .cf-wa-modal.active { display: flex; }
+  #Sec--{{ section.id }} .cf-wa-backdrop { position: absolute; inset: 0; background: rgba(17,24,39,0.55); }
+  #Sec--{{ section.id }} .cf-wa-card {
+    position: relative; z-index: 1; background: #fff; border-radius: 16px; max-width: 420px; width: 100%;
+    padding: 2.25rem 1.75rem 1.75rem; text-align: center; box-shadow: 0 24px 60px rgba(0,0,0,0.28);
+    animation: cfWaIn 0.28s ease-out;
+  }
+  @keyframes cfWaIn { from { opacity: 0; transform: translateY(18px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+  #Sec--{{ section.id }} .cf-wa-x { position: absolute; top: 0.55rem; right: 0.75rem; background: none; border: none; font-size: 1.6rem; line-height: 1; color: var(--gray-500); cursor: pointer; }
+  #Sec--{{ section.id }} .cf-wa-x:hover { color: var(--gray-700); }
+  #Sec--{{ section.id }} .cf-wa-emoji { font-size: 40px; color: #16a34a; background: #dcfce7; width: 74px; height: 74px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; margin-bottom: 0.85rem; }
+  #Sec--{{ section.id }} .cf-wa-title { font-size: 1.3rem; font-weight: 800; color: var(--brand-text); margin-bottom: 0.4rem; }
+  #Sec--{{ section.id }} .cf-wa-text { font-size: 0.95rem; color: var(--gray-600); margin-bottom: 1.25rem; line-height: 1.55; }
+  #Sec--{{ section.id }} .cf-wa-cta { width: 100%; padding: 0.85rem; font-size: 1rem; margin-top: 0; }
+  #Sec--{{ section.id }} .cf-wa-dismiss { display: block; width: 100%; margin-top: 0.6rem; background: none; border: none; color: var(--gray-500); font: inherit; cursor: pointer; padding: 0.5rem; }
+  #Sec--{{ section.id }} .cf-wa-dismiss:hover { color: var(--gray-700); text-decoration: underline; }
+  @media (prefers-reduced-motion: reduce) { #Sec--{{ section.id }} .cf-wa-card { animation: none; } }
+
   #Sec--{{ section.id }} .cf-channels {
     background: var(--gray-50); border: 1px solid var(--gray-200); border-radius: var(--radius); padding: 1.75rem;
   }
@@ -161,7 +262,7 @@
     { "type": "header", "content": "Heading" },
     { "type": "select", "id": "heading_tag", "label": "Heading level", "options": [ { "value": "h1", "label": "H1" }, { "value": "h2", "label": "H2" } ], "default": "h2" },
     { "type": "text", "id": "heading", "label": "Heading", "default": "Send us a message" },
-    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Tell us what you need and our Doha team replies fast — usually the same day." },
+    { "type": "textarea", "id": "subtitle", "label": "Subtitle", "default": "Tell us what you need and our Doha team usually replies within a few hours. If it is urgent, message us on WhatsApp." },
     { "type": "header", "content": "Field labels" },
     { "type": "text", "id": "name_label", "label": "Name label", "default": "Your name" },
     { "type": "text", "id": "email_label", "label": "Email label", "default": "Email address" },
@@ -174,6 +275,15 @@
     { "type": "header", "content": "Success message" },
     { "type": "text", "id": "success_title", "label": "Success title", "default": "Thanks — message received" },
     { "type": "textarea", "id": "success_text", "label": "Success text", "default": "We will get back to you shortly. For urgent help, reach us on WhatsApp." },
+    { "type": "header", "content": "WhatsApp fast-reply popup" },
+    { "type": "checkbox", "id": "wa_enabled", "label": "Show WhatsApp popup after submit", "default": true },
+    { "type": "text", "id": "wa_number", "label": "WhatsApp number", "info": "Digits only, with country code. Leave blank to use the store's default WhatsApp number." },
+    { "type": "text", "id": "wa_popup_title", "label": "Popup title", "default": "Message received ✓" },
+    { "type": "textarea", "id": "wa_popup_text", "label": "Popup text", "default": "Want a faster reply? Continue on WhatsApp — we've already drafted your message, just press send." },
+    { "type": "text", "id": "wa_button_label", "label": "WhatsApp button label", "default": "Continue on WhatsApp" },
+    { "type": "text", "id": "wa_dismiss_label", "label": "Dismiss link label", "default": "No thanks, I'll wait for email" },
+    { "type": "textarea", "id": "wa_draft_template", "label": "WhatsApp draft (uses {name} and {message})", "default": "Hi Lighting Souq! I just sent a message through your website contact form.\n\nName: {name}\n\nMessage: {message}\n\nCould I please get a quick reply here?" },
+    { "type": "textarea", "id": "wa_draft_fallback", "label": "WhatsApp draft — fallback", "info": "Used if the typed details are unavailable.", "default": "Hi Lighting Souq! I just sent a message through your website contact form and wanted a quick reply here please." },
     { "type": "header", "content": "Direct channels" },
     { "type": "checkbox", "id": "show_channels", "label": "Show direct channels column", "default": true },
     { "type": "text", "id": "channels_title", "label": "Channels title", "default": "Prefer to talk now?" },

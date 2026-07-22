@@ -18,6 +18,8 @@
     "brand_background": "#FFFFFF",
     "corner_radius": 10,
     "theqa_image": "shopify://shop_images/imgi_23_Badge-success.jpg_EB41E.jpg",
+    "favicon": "shopify://shop_images/ChatGPT_Image_Jul_22_2026_04_19_25_PM.png",
+    "default_product_image": "shopify://shop_images/lightingsouq.png",
     "whatsapp_number": "97455529088",
     "content_for_index": [],
     "blocks": {

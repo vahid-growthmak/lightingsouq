@@ -32,7 +32,7 @@
       data-title="{{ product.title | escape }}"
       data-url="{{ product.url }}"
       data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 400 }}{% else %}{{ fb_src }}{% endif %}"
-      data-price="{{ product.price | money }}"><span class="material-symbols-outlined">favorite</span></button>
+      data-price="{{ product.price | money | strip_html | escape }}"><span class="material-symbols-outlined">favorite</span></button>
   </div>
   <div class="product-body">
     {%- if product.type != blank -%}<p class="product-type">{{ product.type }}</p>{%- endif -%}

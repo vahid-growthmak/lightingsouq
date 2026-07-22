@@ -71,7 +71,7 @@
               data-title="{{ product.title | escape }}"
               data-url="{{ product.url }}"
               data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 400 }}{% elsif settings.default_product_image != blank %}{{ settings.default_product_image | image_url: width: 400 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}"
-              data-price="{{ cur.price | money }}"><span class="material-symbols-outlined">favorite</span></button>
+              data-price="{{ cur.price | money | strip_html | escape }}"><span class="material-symbols-outlined">favorite</span></button>
             <button class="pdp-tool-btn" type="button" aria-label="{{ s.label_share | default: 'Share' | escape }}" data-share><span class="material-symbols-outlined">share</span></button>
           </div>
           <img id="MainImg--{{ section.id }}" src="{% if product.featured_image %}{{ product.featured_image | image_url: width: 900 }}{% elsif settings.default_product_image != blank %}{{ settings.default_product_image | image_url: width: 900 }}{% else %}{{ 'prod-bulb.png' | asset_url }}{% endif %}" alt="{{ product.featured_image.alt | default: product.title | escape }}" width="900" height="900">
@@ -179,7 +179,7 @@
               data-variant="{{ cur.title | escape }}"
               data-sku="{{ cur.sku }}"
               data-handle="{{ product.handle }}"
-              data-price="{{ cur.price | money }}"
+              data-price="{{ cur.price | money | strip_html | escape }}"
               data-image="{% if product.featured_image != blank %}{{ product.featured_image | image_url: width: 96 }}{% endif %}"><span class="material-symbols-outlined" style="font-size:1.1rem;">request_quote</span> {{ s.bulk_label }}</a>{%- endif -%}
             {%- for block in section.blocks -%}
               {%- if block.type == '@app' -%}

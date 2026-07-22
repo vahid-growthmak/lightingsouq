@@ -92,8 +92,8 @@
           "settings": {
             "icon": "truck",
             "label": "Theqa-certified retailer",
-            "link": "",
-            "sublabel": "Verified by Qatar's e-commerce trustmark"
+            "sublabel": "Verified by Qatar's e-commerce trustmark",
+            "link": ""
           }
         },
         "item_kiaRwV": {
@@ -101,8 +101,8 @@
           "settings": {
             "icon": "chat",
             "label": "Delivery in as fast as 3 hours",
-            "link": "",
-            "sublabel": "Our own fleet, across Qatar"
+            "sublabel": "Our own fleet, across Qatar",
+            "link": ""
           }
         },
         "item_HqeFGd": {
@@ -110,8 +110,8 @@
           "settings": {
             "icon": "card",
             "label": "Authorised reseller",
-            "link": "",
-            "sublabel": "Genuine stock, 1-year warranty on distributor brands"
+            "sublabel": "Genuine stock, 1-year warranty on distributor brands",
+            "link": ""
           }
         },
         "item_AGUfza": {
@@ -119,8 +119,8 @@
           "settings": {
             "icon": "shield",
             "label": "Shipping to 40+ countries",
-            "link": "",
-            "sublabel": "GCC in 2 to 4 business days"
+            "sublabel": "GCC in 2 to 4 business days",
+            "link": ""
           }
         }
       },
@@ -304,6 +304,7 @@
         "heading": "New Arrivals",
         "subtitle": "Fresh stock just added — bulbs, solar, smart lighting and more.",
         "collection": "new-arrivals",
+        "context": "none",
         "products_to_show": 10,
         "bg": "bg-gray",
         "center": false,
@@ -420,8 +421,8 @@
       "name": "Shop by Category",
       "settings": {
         "heading": "Shop lighting by category",
-        "bg": "bg-white",
-        "intro": "Everything from a QAR 10 bulb to a full villa lighting scheme."
+        "intro": "Everything from a QAR 10 bulb to a full villa lighting scheme.",
+        "bg": "bg-white"
       }
     },
     "brand_strip_BNbKpK": {
@@ -530,9 +531,9 @@
       "settings": {
         "heading": "Shop by brand",
         "subtitle": "Genuine stock from 50+ lighting, smart home and electrical brands, sourced through authorised channels.",
-        "bg": "bg-gray",
         "view_all_label": "View all brands",
-        "view_all_link": "/pages/brands"
+        "view_all_link": "/pages/brands",
+        "bg": "bg-gray"
       }
     },
     "product_collection_iKwMPk": {
@@ -614,6 +615,7 @@
         "heading": "Best sellers in Qatar this month",
         "subtitle": "",
         "collection": "best-sellers",
+        "context": "none",
         "products_to_show": 10,
         "bg": "bg-white",
         "center": true,
@@ -667,6 +669,7 @@
       "settings": {
         "bg": "bg-gray",
         "image_alt": "Smart-lit living room controlled from a phone",
+        "title_tag": "h2",
         "eyebrow": "Smart Lighting Specialists",
         "title": "Build your smart home, one light at a time",
         "text": "Start with a single smart bulb and grow into full app and voice control. We stock Wink, Xiaomi, Philips Hue, Yeelight, Sonoff, Amazon Alexa and Google Home devices that work together. Our Smart Home Hub explains what works with what, so you buy the right thing the first time.",
@@ -740,8 +743,8 @@
       "name": "Shop Lighting by Space",
       "settings": {
         "heading": "Find the right light for every room",
-        "bg": "bg-white",
-        "intro": "Not sure where to start? Pick the space you are lighting."
+        "intro": "Not sure where to start? Pick the space you are lighting.",
+        "bg": "bg-white"
       }
     },
     "featured_banner_w7EaNY": {
@@ -760,72 +763,72 @@
         "review_i9cDNp": {
           "type": "review",
           "settings": {
-            "name": "Ahmed Al-Kuwari",
+            "name": "Aizel Cortez",
             "rating": 5,
-            "text": "Great selection of lighting products. Fast delivery and excellent quality.",
+            "text": "Everything I bought is still working great. I got my plant grow lights from them and my plants are thriving. I controlled these with the wifi plug I bought from them as well.",
             "date": "April 2026"
           }
         },
         "review_JpUdhE": {
           "type": "review",
           "settings": {
-            "name": "Fatima Hassan",
+            "name": "Candice Lobo",
             "rating": 5,
-            "text": "Best lighting store in Qatar. WhatsApp support was very helpful.",
-            "date": "April 2026"
+            "text": "I looked all over Doha for a product and only Lighting Souq had the one I needed. Thank you very much for the quick response and even quicker delivery. Highly recommend.",
+            "date": "May 2026"
           }
         },
         "review_h9iJiQ": {
           "type": "review",
           "settings": {
-            "name": "Mohammed Al-Thani",
+            "name": "Nadee Nadeera",
             "rating": 5,
-            "text": "Ordered solar lights for my garden. Very satisfied with the purchase.",
-            "date": "March 2026"
+            "text": "Great collection of lights with affordable prices. Perfect place to find stylish lighting for home or office! Amazing variety and good quality products. Staff were very helpful.",
+            "date": "April 2026"
           }
         },
         "review_TnmkEA": {
           "type": "review",
           "settings": {
-            "name": "Sara Abdullah",
-            "rating": 4,
-            "text": "Good prices and wide variety. Delivery was on time.",
-            "date": "March 2026"
+            "name": "BCP",
+            "rating": 5,
+            "text": "Very nice shop with lots of smart items. Used their smart plugs, lights and other items for a year. They provide the best quality products with reasonable pricing.",
+            "date": "April 2026"
           }
         },
         "review_EBHWHi": {
           "type": "review",
           "settings": {
-            "name": "Khalid Al-Marri",
+            "name": "Mohammed Jaseem",
             "rating": 5,
-            "text": "Bought smart bulbs for the whole majlis. Setup was quick and they look great.",
+            "text": "Prices are reasonable and the quality is excellent. The staff guided us well in choosing the right lights for our space. Highly recommended.",
             "date": "March 2026"
           }
         },
         "review_bThnFF": {
           "type": "review",
           "settings": {
-            "name": "Noora Ibrahim",
-            "rating": 4,
-            "text": "Nice range and the showroom pickup was convenient. Staff were very helpful.",
+            "name": "Anas Mundo",
+            "rating": 5,
+            "text": "Thanks for bringing all smart lighting products to one single platform. It helped me to select the best products.",
             "date": "February 2026"
           }
         },
         "review_mDURXD": {
           "type": "review",
           "settings": {
-            "name": "Yousef Al-Sulaiti",
+            "name": "Siyana NS",
             "rating": 5,
-            "text": "Ordered LED tubes for the office. Bright, even light and fast delivery.",
-            "date": "February 2026"
+            "text": "Lighting Souq offers excellent service and high-quality products. Their commitment to customer satisfaction is impressive. I highly recommend them for their reliability and efficiency.",
+            "date": "January 2026"
           }
         },
         "review_MXxnDJ": {
           "type": "review",
           "settings": {
-            "name": "Maryam Al-Naimi",
+            "name": "Timothy Jackson",
             "rating": 5,
-            "text": "Great prices on solar lights and they actually last through the night.",
+            "text": "Good quality and good service. Would happily shop here again.",
             "date": "January 2026"
           }
         }
@@ -897,16 +900,6 @@
         "bg": "bg-gray"
       }
     },
-    "bulk_band_cRJ3kt": {
-      "type": "bulk-band",
-      "name": "Bulk Band",
-      "settings": {
-        "title": "Buying lighting in bulk for a project?",
-        "subtitle": "Contractors, hotels, hospitality venues and facilities teams: send us a list and we will come back with project pricing and stock availability.",
-        "button_label": "Request a bulk quote",
-        "button_link": "/pages/bulk-orders"
-      }
-    },
     "home_faq": {
       "type": "faq-section",
       "blocks": {
@@ -968,6 +961,16 @@
         "footer_link": "/pages/faqs",
         "emit_schema": true,
         "bg": "bg-gray"
+      }
+    },
+    "bulk_band_cRJ3kt": {
+      "type": "bulk-band",
+      "name": "Bulk Band",
+      "settings": {
+        "title": "Buying lighting in bulk for a project?",
+        "subtitle": "Contractors, hotels, hospitality venues and facilities teams: send us a list and we will come back with project pricing and stock availability.",
+        "button_label": "Request a bulk quote",
+        "button_link": "/pages/bulk-orders"
       }
     }
   },

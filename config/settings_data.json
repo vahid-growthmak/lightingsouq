@@ -51,6 +51,11 @@
         "type": "shopify://apps/storeify-request-a-quote/blocks/embed-app/dac9aba2-251e-4c25-abc3-9fc57dbf7885",
         "disabled": false,
         "settings": {}
+      },
+      "14060646107696862457": {
+        "type": "shopify://apps/judge-me-reviews/blocks/judgeme_core/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+        "disabled": false,
+        "settings": {}
       }
     }
   },

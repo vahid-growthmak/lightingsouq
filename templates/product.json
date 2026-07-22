@@ -72,7 +72,7 @@
           "type": "shopify://apps/storeify-request-a-quote/blocks/button_block/dac9aba2-251e-4c25-abc3-9fc57dbf7885",
           "settings": {
             "font_size": 16,
-            "color_text": "#FFFFFF",
+            "color_text": "#ffffff",
             "bg_button": "#000000",
             "label_btn": "Add to Quote",
             "multi_lang": false,
@@ -134,11 +134,98 @@
         "delivery_content": "<p>Pick up from our showroom or get it delivered. <strong>Delivery in 1–2 Days.</strong> Working hours: Sat – Thu 8.00am – 7.30pm.</p>"
       }
     },
-    "reviews": {
-      "type": "judgeme-reviews",
+    "testimonials_97Fewm": {
+      "type": "testimonials",
+      "blocks": {
+        "review_dpbPfx": {
+          "type": "review",
+          "settings": {
+            "name": "Ahmed Al-Kuwari",
+            "rating": 5,
+            "text": "Great selection of lighting products. Fast delivery and excellent quality.",
+            "date": "April 2026"
+          }
+        },
+        "review_DdDYWw": {
+          "type": "review",
+          "settings": {
+            "name": "Fatima Hassan",
+            "rating": 5,
+            "text": "Best lighting store in Qatar. WhatsApp support was very helpful.",
+            "date": "April 2026"
+          }
+        },
+        "review_VRnrFe": {
+          "type": "review",
+          "settings": {
+            "name": "Mohammed Al-Thani",
+            "rating": 5,
+            "text": "Ordered solar lights for my garden. Very satisfied with the purchase.",
+            "date": "March 2026"
+          }
+        },
+        "review_rNdN6G": {
+          "type": "review",
+          "settings": {
+            "name": "Sara Abdullah",
+            "rating": 4,
+            "text": "Good prices and wide variety. Delivery was on time.",
+            "date": "March 2026"
+          }
+        },
+        "review_mEKFDd": {
+          "type": "review",
+          "settings": {
+            "name": "Khalid Al-Marri",
+            "rating": 5,
+            "text": "Bought smart bulbs for the whole majlis. Setup was quick and they look great.",
+            "date": "March 2026"
+          }
+        },
+        "review_BjVpyq": {
+          "type": "review",
+          "settings": {
+            "name": "Noora Ibrahim",
+            "rating": 4,
+            "text": "Nice range and the showroom pickup was convenient. Staff were very helpful.",
+            "date": "February 2026"
+          }
+        },
+        "review_nqUWYz": {
+          "type": "review",
+          "settings": {
+            "name": "Yousef Al-Sulaiti",
+            "rating": 5,
+            "text": "Ordered LED tubes for the office. Bright, even light and fast delivery.",
+            "date": "February 2026"
+          }
+        },
+        "review_3D6pgF": {
+          "type": "review",
+          "settings": {
+            "name": "Maryam Al-Naimi",
+            "rating": 5,
+            "text": "Great prices on solar lights and they actually last through the night.",
+            "date": "January 2026"
+          }
+        }
+      },
+      "block_order": [
+        "review_dpbPfx",
+        "review_DdDYWw",
+        "review_VRnrFe",
+        "review_rNdN6G",
+        "review_mEKFDd",
+        "review_BjVpyq",
+        "review_nqUWYz",
+        "review_3D6pgF"
+      ],
+      "name": "Testimonials",
       "settings": {
-        "heading": "Customer Reviews",
-        "subtitle": "Verified reviews from Judge.me and our Google Business profile.",
+        "heading": "Trusted by Buyers in Qatar",
+        "initial_count": 4,
+        "view_more_label": "View more reviews",
+        "view_more_link": "",
         "bg": "bg-white"
       }
     },
@@ -457,7 +544,7 @@
   },
   "order": [
     "main",
-    "reviews",
+    "testimonials_97Fewm",
     "trust",
     "expert",
     "related",

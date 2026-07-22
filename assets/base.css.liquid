@@ -2010,20 +2010,3 @@ body.has-sticky-atc { padding-bottom: 76px; }
 
 /* add-to-cart loading state */
 .btn-cart.is-loading, .btn-atc.is-loading { opacity: 0.7; cursor: wait; }
-
-/* --- Hextom (ht-tms) country/currency selector fix ---
-   The app applies the pill background + final top-right position only after its JS
-   adds body.ht-tms-ready (late, triggered on scroll), so on load the selector flashed
-   mis-positioned and half-blue / half-white across the announcement-bar edge.
-   Force the final appearance from first paint so there is no flash. */
-.ht-tms--float,
-.ht-tms--float.ht-tms--float-top {
-  left: auto !important;
-  right: 15px !important;
-  top: 15px !important;
-  bottom: auto !important;
-}
-.ht-tms--float .ht-tms__duo-selector__active-item {
-  background-color: #2f5ba8 !important;
-  border-radius: 6px !important;
-}

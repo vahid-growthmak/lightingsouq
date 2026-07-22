@@ -2010,3 +2010,9 @@ body.has-sticky-atc { padding-bottom: 76px; }
 
 /* add-to-cart loading state */
 .btn-cart.is-loading, .btn-atc.is-loading { opacity: 0.7; cursor: wait; }
+
+/* Mobile/tablet header: show the currency/language selector before the menu (☰) button */
+@media (max-width: 1023px) {
+  .header-actions .ht-tms__duo-selector,
+  .header-actions .ht-tms-selector { order: -1 !important; }
+}

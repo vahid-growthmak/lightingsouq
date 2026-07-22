@@ -56,6 +56,13 @@
         "submit_label": "Request quote",
         "success_title": "Thanks — quote request received",
         "success_text": "Our team will reply with project pricing shortly. For urgent needs, reach us on WhatsApp.",
+        "wa_enabled": true,
+        "wa_popup_title": "Quote request received ✓",
+        "wa_popup_text": "Want faster project pricing? Continue on WhatsApp — we've drafted your request so you just press send.",
+        "wa_button_label": "Continue on WhatsApp",
+        "wa_dismiss_label": "No thanks, I'll wait for email",
+        "wa_draft_template": "Hi Lighting Souq! I just submitted a bulk / project quote request on your website.\n\nName: {name}\n\nWhat I'm sourcing: {message}\n\nCould I please get project pricing here?",
+        "wa_draft_fallback": "Hi Lighting Souq! I just submitted a bulk / project quote request on your website and wanted to continue here for faster project pricing.",
         "show_channels": true,
         "channels_title": "Prefer to talk it through?",
         "channels_text": "Reach the team directly."

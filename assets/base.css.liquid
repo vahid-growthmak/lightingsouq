@@ -1641,7 +1641,7 @@ details.filter-group[open] > summary { margin-bottom: 0.75rem; }
 
 /* Gallery */
 .pdp-gallery { position: relative; }
-@media (min-width: 1024px) { .pdp-gallery { position: sticky; top: 140px; } }
+/* .pdp-gallery sticky removed: the 2-col buy area is short, so it stuck for only ~180px then released, snapping the image up/down on scroll. Let it scroll normally. */
 .pdp-main-img { position: relative; aspect-ratio: 1; background: var(--gray-100); border-radius: var(--radius); overflow: hidden; border: 1px solid var(--gray-200); }
 .pdp-main-img img { width: 100%; height: 100%; object-fit: cover; }
 .pdp-gallery-badge { position: absolute; top: 1rem; left: 1rem; z-index: 2; background: #ef4444; color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.3rem 0.7rem; border-radius: 99px; }

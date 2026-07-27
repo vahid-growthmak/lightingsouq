@@ -89,6 +89,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
 .gap-2 { gap: 0.5rem; }
 .gap-4 { gap: 1rem; }
 .w-full { width: 100%; }
+.relative { position: relative; } /* BUG_27: was missing — cart badge anchored to the whole tile */
 
 @media (min-width: 640px) {
   .sm-row { flex-direction: row; }
@@ -205,7 +206,11 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
 @media (min-width: 768px) { .hide-mobile { display: inline; } }
 
 /* ---- Main Header ---- */
-.main-header { background: #fff; border-bottom: 1px solid var(--gray-200); position: sticky; top: 0; z-index: 130; }
+/* BUG_02: sticky moved to the section-group wrapper — .main-header's own parent is
+   only as tall as the header, so sticky could never travel. The negative top scrolls
+   the announcement bar away and pins logo + nav (--lsq-announce-h set in header.liquid). */
+.shopify-section-group-header-group { position: sticky; top: calc(-1 * var(--lsq-announce-h, 0px)); z-index: 130; }
+.main-header { background: #fff; border-bottom: 1px solid var(--gray-200); }
 .header-inner {
   display: flex;
   align-items: center;
@@ -383,7 +388,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
 .mobile-action-item span:first-child { color: var(--brand-primary); }
 
 .drawer-nav-section { margin-bottom: 2rem; }
-.drawer-section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--gray-400); margin-bottom: 1rem; font-weight: 800; }
+.drawer-section-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-secondary); margin-bottom: 1rem; font-weight: 800; }
 .drawer-nav-list { display: flex; flex-direction: column; gap: 0.25rem; }
 .drawer-nav-list a {
   display: block;
@@ -395,6 +400,11 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
 .cat-nav-btn { background: none; border: none; color: rgba(255,255,255,0.8); font-weight: 600; font-size: 0.9375rem; cursor: pointer; transition: color 0.2s; white-space: nowrap; }
 .cat-nav-btn:hover, .cat-nav-btn.active { color: #fff; }
 .offers-btn { color: #fbbf24 !important; opacity: 1 !important; font-weight: 700; }
+/* BUG_12: .active was referenced but never emitted; box-shadow also beats .offers-btn's !important colour */
+.cat-nav-btn.active { box-shadow: inset 0 -3px 0 currentColor; }
+/* BUG_29: mobile drawer emitted .offers-link, which had no rule anywhere (desktop uses .offers-btn).
+   Uses --warning, not the desktop amber, which fails contrast on the white drawer. */
+.offers-link { color: var(--warning); font-weight: 700; }
 
 /* ---- Hero Section ---- */
 .hero-section { background: var(--gray-50); padding: 1.5rem 0; }
@@ -1412,16 +1422,21 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
 .bulk-band-sub { font-size: 0.875rem; color: var(--gray-500); }
 .btn-outline {
   background: transparent;
-  color: var(--brand-primary);
-  border: 1.5px solid var(--brand-primary);
-  padding: 0.6rem 1.4rem;
+  color: var(--brand-secondary); /* BUG_06: match the .btn-primary it sits beside */
+  border: 1.5px solid var(--brand-secondary);
+  padding: 0.75rem 1.5rem; /* BUG_04: same box as .btn-primary => no flex stretch */
   border-radius: var(--radius);
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1rem; /* BUG_06: was 0.9rem next to a 1rem sibling */
+  line-height: 1.2;
+  display: inline-flex; /* BUG_04: blockified flex item centred the text unevenly */
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
   transition: background var(--transition), color var(--transition);
 }
-.btn-outline:hover { background: var(--brand-primary); color: #fff; }
+/* BUG_05: was a full solid inversion — the only button on the site that did that */
+.btn-outline:hover { background: rgba(38, 130, 144, 0.08); color: var(--brand-secondary); }
 
 /* ============================================================
    PRODUCTS LISTING PAGE (products.html)
@@ -1432,11 +1447,12 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
 
 .collection-layout {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr); /* BUG_30: allow grid items to shrink below min-content */
   gap: 1.5rem;
   align-items: start;
 }
-@media (min-width: 1024px) { .collection-layout { grid-template-columns: 260px 1fr; gap: 2rem; } }
+@media (min-width: 1024px) { .collection-layout { grid-template-columns: 260px minmax(0, 1fr); gap: 2rem; } }
+.collection-main, .filter-rail { min-width: 0; } /* BUG_30 */
 
 /* Filter rail */
 .filter-rail {
@@ -1596,12 +1612,13 @@ details.filter-group[open] > summary { margin-bottom: 0.75rem; }
   font-weight: 600;
   padding: 0.3rem 0.7rem;
   border-radius: 99px;
+  line-height: 1; /* BUG_08 */
 }
-.active-chip button { color: #fff; display: flex; }
-.active-chip .material-symbols-outlined { font-size: 0.95rem; }
+.active-chip a, .active-chip button { color: #fff; display: inline-flex; align-items: center; justify-content: center; line-height: 1; }
+.active-chip .material-symbols-outlined { font-size: 0.95rem; line-height: 1; display: block; }
 
 /* Pagination */
-.pagination { display: flex; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 2.5rem; }
+.pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 0.4rem; margin-top: 2.5rem; } /* BUG_30: wrap so min-content can't exceed the viewport */
 .page-btn {
   min-width: 2.5rem; height: 2.5rem;
   display: flex; align-items: center; justify-content: center;
@@ -2017,4 +2034,12 @@ body.has-sticky-atc { padding-bottom: 76px; }
 @media (max-width: 1023px) {
   .header-actions .ht-tms__duo-selector,
   .header-actions .ht-tms-selector { order: -1 !important; }
+}
+
+/* BUG_22: expert-band uses .pdp-section (full-width rules) but on page templates its
+   neighbours inset via .container, so the divider lines read as misaligned. PDP unchanged. */
+.template-page .pdp-section { border-top: 0; border-bottom: 0 !important; }
+/* BUG_32: Judge.me renders its own left-aligned heading while every other heading is centred. */
+@media (max-width: 767px) {
+  .jm-review-widget-minimal-header__title { text-align: center; }
 }

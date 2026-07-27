@@ -120,15 +120,15 @@
             <a class="header-theqa" href="{{ settings.theqa_link | default: '#' }}"{% if settings.theqa_link != blank %} target="_blank" rel="noopener"{% endif %} aria-label="{{ settings.theqa_alt | default: 'Theqa Certified Store' }}"><img src="{{ settings.theqa_image | image_url: width: 260 }}" alt="{{ settings.theqa_alt | default: 'Theqa Certified' }}" loading="lazy"></a>
           {%- endif -%}
           {%- if s.show_whatsapp -%}
-            <a class="icon-btn icon-whatsapp" href="{{ wa_href }}" target="_blank" rel="noopener" aria-label="{{ s.whatsapp_label | default: 'WhatsApp' }}">{{ wa_icon }}</a>
+            <a class="icon-btn icon-whatsapp" href="{{ wa_href }}" target="_blank" rel="noopener" aria-label="{{ s.whatsapp_label | default: 'WhatsApp' }}" title="{{ s.whatsapp_label | default: 'WhatsApp' }}">{{ wa_icon }}</a>
           {%- endif -%}
-          <a class="icon-btn" href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" aria-label="{{ s.account_label }}"><span class="material-symbols-outlined">person</span></a>
+          <a class="icon-btn" href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" aria-label="{{ s.account_label }}" title="{{ s.account_label }}"><span class="material-symbols-outlined">person</span></a>
           {%- if s.show_wishlist -%}
-            <a class="icon-btn" href="{{ s.wishlist_link | default: '/pages/wishlist' }}" aria-label="{{ s.wishlist_label }}"><span class="material-symbols-outlined">favorite</span><span class="cart-count" data-wishlist-count style="display:none;">0</span></a>
+            <a class="icon-btn" href="{{ s.wishlist_link | default: '/pages/wishlist' }}" aria-label="{{ s.wishlist_label }}" title="{{ s.wishlist_label }}"><span class="material-symbols-outlined">favorite</span><span class="cart-count" data-wishlist-count style="display:none;">0</span></a>
           {%- endif -%}
-          <a class="icon-btn cart-btn" href="{{ routes.cart_url }}" aria-label="{{ s.cart_label }}"><span class="material-symbols-outlined">shopping_cart</span><span class="cart-count" data-cart-count>{{ cart.item_count }}</span></a>
+          <a class="icon-btn cart-btn" href="{{ routes.cart_url }}" aria-label="{{ s.cart_label }}" title="{{ s.cart_label }}"><span class="material-symbols-outlined">shopping_cart</span><span class="cart-count" data-cart-count>{{ cart.item_count }}</span></a>
         </div>
-        <button class="menu-toggle-btn" type="button" data-menu-toggle aria-label="{{ s.menu_label | default: 'Open Menu' }}"><span class="material-symbols-outlined">menu</span></button>
+        <button class="menu-toggle-btn" type="button" data-menu-toggle aria-label="{{ s.menu_label | default: 'Open Menu' }}" title="{{ s.menu_label | default: 'Open Menu' }}"><span class="material-symbols-outlined">menu</span></button>
       </div>
     </div>
   </header>
@@ -140,12 +140,37 @@
         {%- for block in section.blocks -%}
           {%- case block.type -%}
             {%- when 'nav_link' -%}
+              {%- liquid
+                assign nav_url = block.settings.link | default: '/collections/all'
+                assign nav_active = false
+                if nav_url == '/'
+                  if request.page_type == 'index'
+                    assign nav_active = true
+                  endif
+                elsif nav_url != '/collections/all'
+                  if request.path contains nav_url
+                    assign nav_active = true
+                  endif
+                endif
+              -%}
               <div class="nav-item" {{ block.shopify_attributes }}>
-                <a href="{{ block.settings.link | default: '/collections/all' }}" class="cat-nav-btn{% if block.settings.highlight %} offers-btn{% endif %}">{{ block.settings.label }}</a>
+                <a href="{{ nav_url }}" class="cat-nav-btn{% if block.settings.highlight %} offers-btn{% endif %}{% if nav_active %} active{% endif %}"{% if nav_active %} aria-current="page"{% endif %}>{{ block.settings.label }}</a>
               </div>
             {%- when 'nav_mega' -%}
+              {%- liquid
+                assign mega_active = false
+                for i in (1..6)
+                  assign mega_key = 'c1_url_' | append: i
+                  assign mega_val = block.settings[mega_key]
+                  if mega_val != blank and mega_val != '/' and mega_val != '/collections/all'
+                    if request.path contains mega_val
+                      assign mega_active = true
+                    endif
+                  endif
+                endfor
+              -%}
               <div class="nav-item has-mega" {{ block.shopify_attributes }}>
-                <button class="cat-nav-btn" type="button" aria-expanded="false">
+                <button class="cat-nav-btn{% if mega_active %} active{% endif %}" type="button" aria-expanded="false">
                   {{ block.settings.label }}
                   <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
@@ -389,6 +414,21 @@
         wrap.appendChild(w);
       } else if (++tries > 20) { clearInterval(timer); }
     }, 400);
+  })();
+</script>
+
+<script>
+  /* BUG_02: the sticky wrapper uses top: calc(-1 * var(--lsq-announce-h)) so the
+     announcement bar scrolls away and only the logo row + category nav stay pinned.
+     Height is measured because the bar wraps to two rows below 768px. */
+  (function () {
+    var bar = document.querySelector('.announcement-bar');
+    function setAnnounceH() {
+      document.documentElement.style.setProperty('--lsq-announce-h', (bar ? bar.offsetHeight : 0) + 'px');
+    }
+    setAnnounceH();
+    window.addEventListener('load', setAnnounceH);
+    window.addEventListener('resize', setAnnounceH, { passive: true });
   })();
 </script>
 

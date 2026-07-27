@@ -225,7 +225,7 @@
         "heading": "Trusted by Buyers in Qatar",
         "initial_count": 4,
         "view_more_label": "View more reviews",
-        "view_more_link": "",
+        "view_more_link": "shopify://pages/reviews",
         "bg": "bg-white"
       }
     },

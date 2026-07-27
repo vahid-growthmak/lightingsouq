@@ -19,14 +19,6 @@
     },
     "testimonials": {
       "type": "testimonials",
-      "settings": {
-        "heading": "What our customers say",
-        "big_rating": "4.9★",
-        "rating_label": "Google Rating from 84 Reviews",
-        "initial_count": 9,
-        "view_more_label": "View more reviews",
-        "bg": "bg-white"
-      },
       "blocks": {
         "r1": {
           "type": "review",
@@ -110,7 +102,13 @@
         "r6",
         "r7",
         "r8"
-      ]
+      ],
+      "settings": {
+        "heading": "What our customers say",
+        "initial_count": 9,
+        "view_more_label": "View more reviews",
+        "bg": "bg-white"
+      }
     },
     "cta": {
       "type": "featured-banner",

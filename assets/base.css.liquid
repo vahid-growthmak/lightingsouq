@@ -210,7 +210,12 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
    only as tall as the header, so sticky could never travel. The negative top scrolls
    the announcement bar away and pins logo + nav (--lsq-announce-h set in header.liquid). */
 .shopify-section-group-header-group { position: sticky; top: calc(-1 * var(--lsq-announce-h, 0px)); z-index: 130; }
-.main-header { background: #fff; border-bottom: 1px solid var(--gray-200); }
+/* position:relative + z-index restores the stacking context the old `position:sticky;
+   z-index:130` used to provide. Without it .main-header is static/auto and the
+   header's own dropdowns (currency/language, search suggestions) lose to
+   .category-nav's z-index:120 and get painted over. Sticky itself now lives on
+   .shopify-section-group-header-group. */
+.main-header { background: #fff; border-bottom: 1px solid var(--gray-200); position: relative; z-index: 130; }
 .header-inner {
   display: flex;
   align-items: center;

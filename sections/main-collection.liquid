@@ -178,25 +178,26 @@
 
 <script>
   (function () {
-    var root = document.getElementById('Coll--{{ section.id }}');
+    var SECTION_ID = {{ section.id | json }};
+    var root = document.getElementById('Coll--' + SECTION_ID);
     if (!root) return;
-    var sort = root.querySelector('[data-sort]');
-    if (sort) sort.addEventListener('change', function () {
-      var u = new URL(location.href); u.searchParams.set('sort_by', sort.value); u.searchParams.delete('page'); location.href = u.toString();
-    });
-    var t = root.querySelector('[data-filter-toggle]');
-    var rail = document.getElementById('FilterRail--{{ section.id }}');
-    if (t && rail) t.addEventListener('click', function () { rail.classList.toggle('rail-collapsed'); });
 
-    /* ---- Price range slider (dual thumbs, drag to set) ---- */
-    var ps = rail ? rail.querySelector('[data-price-slider]') : null;
-    if (ps) {
+    function rail()   { return document.getElementById('FilterRail--' + SECTION_ID); }
+    function layout() { return root.querySelector('.collection-layout'); }
+    function main()   { return root.querySelector('.collection-main'); }
+
+    /* ---- Price range slider (dual thumbs) — re-bound after every swap ---- */
+    function initPriceSlider() {
+      var r = rail();
+      var ps = r ? r.querySelector('[data-price-slider]') : null;
+      if (!ps) return;
       var cap = parseInt(ps.getAttribute('data-ps-cap'), 10) || 0;
       var cur = ps.getAttribute('data-ps-currency') || '';
       var lo = ps.querySelector('[data-ps-lo]'), hi = ps.querySelector('[data-ps-hi]');
       var loF = ps.querySelector('[data-ps-lo-field]'), hiF = ps.querySelector('[data-ps-hi-field]');
       var loL = ps.querySelector('[data-ps-lo-label]'), hiL = ps.querySelector('[data-ps-hi-label]');
       var fill = ps.querySelector('[data-ps-fill]');
+      if (!lo || !hi) return;
       function fmt(v) { return cur + ' ' + Number(v).toLocaleString(); }
       function sync(moved) {
         var a = parseInt(lo.value, 10), b = parseInt(hi.value, 10);
@@ -208,12 +209,98 @@
       }
       lo.addEventListener('input', function () { sync(lo); });
       hi.addEventListener('input', function () { sync(hi); });
-      var form = ps.closest('form');
-      function submitNow() { if (form) { form.requestSubmit ? form.requestSubmit() : form.submit(); } }
-      lo.addEventListener('change', submitNow);
-      hi.addEventListener('change', submitNow);
+      lo.addEventListener('change', function () { submitFilterForm(ps.closest('form')); });
+      hi.addEventListener('change', function () { submitFilterForm(ps.closest('form')); });
       sync();
     }
+
+    function submitFilterForm(form) {
+      if (!form) return;
+      var params = new URLSearchParams(new FormData(form));
+      var u = new URL(location.pathname, location.origin);
+      params.forEach(function (v, k) { if (v !== '') u.searchParams.append(k, v); });
+      u.searchParams.delete('page');
+      go(u.toString(), true, true);
+    }
+
+    /* ---- BUG_07: filter/sort/paginate without a page reload, so the scroll position
+       and (crucially on mobile) the open filter panel both survive. Any failure falls
+       back to a normal navigation, so filtering still works if fetch is blocked. ---- */
+    var busy = false;
+    function go(url, keepScroll, push) {
+      if (busy) return;
+      busy = true;
+      var lay = layout(); if (lay) lay.classList.add('is-filtering');
+      var railOpen = !!(rail() && !rail().classList.contains('rail-collapsed'));
+      var target = new URL(url, location.origin);
+      var fetchUrl = new URL(target.toString());
+      fetchUrl.searchParams.set('section_id', SECTION_ID);
+      fetch(fetchUrl.toString(), { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+        .then(function (res) { if (!res.ok) throw new Error('status ' + res.status); return res.text(); })
+        .then(function (html) {
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var newRoot = doc.getElementById('Coll--' + SECTION_ID);
+          if (!newRoot) throw new Error('section not in response');
+          var newMain = newRoot.querySelector('.collection-main');
+          var newRail = newRoot.querySelector('#FilterRail--' + SECTION_ID);
+          var curMain = main(), curRail = rail();
+          if (newMain && curMain) curMain.innerHTML = newMain.innerHTML;
+          if (newRail && curRail) {
+            curRail.innerHTML = newRail.innerHTML;
+            curRail.classList.toggle('rail-collapsed', !railOpen);
+          }
+          if (push !== false) history.pushState({ lsqColl: true }, '', target.toString());
+          initPriceSlider();
+          if (!keepScroll) {
+            var top = root.getBoundingClientRect().top + window.pageYOffset - 90;
+            window.scrollTo(0, Math.max(0, top));
+          }
+        })
+        .catch(function () { window.location.href = target.toString(); })
+        .then(function () {
+          busy = false;
+          var l = layout(); if (l) l.classList.remove('is-filtering');
+        });
+    }
+
+    /* Delegated on root, which is never replaced, so handlers survive every swap. */
+    root.addEventListener('click', function (e) {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      var a = e.target.closest('a');
+      if (!a || !root.contains(a) || a.target === '_blank') return;
+      var isFilter = !!(a.matches('.filter-option, .filter-clear') || a.closest('.active-chip'));
+      var isPage   = !!a.closest('.pagination');
+      if (!isFilter && !isPage) return;
+      var href = a.getAttribute('href');
+      if (!href || href.charAt(0) === '#') return;
+      e.preventDefault();
+      go(href, isFilter, true);   /* filters keep your place; pagination scrolls to the top of results */
+    });
+
+    root.addEventListener('change', function (e) {
+      var sel = e.target.closest('[data-sort]');
+      if (!sel) return;
+      var u = new URL(location.href);
+      u.searchParams.set('sort_by', sel.value);
+      u.searchParams.delete('page');
+      go(u.toString(), true, true);
+    });
+
+    root.addEventListener('submit', function (e) {
+      var form = e.target.closest('.filter-rail form');
+      if (!form) return;
+      e.preventDefault();
+      submitFilterForm(form);
+    });
+
+    var toggle = root.querySelector('[data-filter-toggle]');
+    if (toggle) toggle.addEventListener('click', function () {
+      var r = rail(); if (r) r.classList.toggle('rail-collapsed');
+    });
+
+    window.addEventListener('popstate', function () { go(location.href, true, false); });
+
+    initPriceSlider();
   })();
 </script>
 

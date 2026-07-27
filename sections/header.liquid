@@ -170,7 +170,7 @@
                 endfor
               -%}
               <div class="nav-item has-mega" {{ block.shopify_attributes }}>
-                <button class="cat-nav-btn{% if mega_active %} active{% endif %}" type="button" aria-expanded="false">
+                <button class="cat-nav-btn{% if mega_active %} active{% endif %}" type="button" aria-expanded="false" data-mega-all="{{ block.settings.c1_url_6 | default: '/collections/all' }}">
                   {{ block.settings.label }}
                   <svg class="nav-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
                 </button>
@@ -319,6 +319,9 @@
     var box = form.querySelector('[data-search-results]');
     if (!input || !box) return;
     var endpoint = '{{ routes.predictive_search_url }}';
+    /* BUG_23: without an explicit fields list Shopify only matches title/type/vendor —
+       SKUs, tags and descriptions were never searched. */
+    var searchFields = 'title,product_type,variants.title,variants.sku,vendor,tag,body';
     var SS = {
       noResults: {{ settings.search_no_results | default: 'No products found for' | json }},
       seeAll: {{ settings.search_see_all | default: 'See all results for' | json }}
@@ -345,7 +348,7 @@
     function run(q) {
       if (controller) controller.abort();
       controller = new AbortController();
-      fetch(endpoint + '.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=6&resources[options][unavailable_products]=last', { signal: controller.signal, headers: { 'Accept': 'application/json' } })
+      fetch(endpoint + '.json?q=' + encodeURIComponent(q) + '&resources[type]=product&resources[limit]=10&resources[options][unavailable_products]=last&resources[options][fields]=' + encodeURIComponent(searchFields), { signal: controller.signal, headers: { 'Accept': 'application/json' } })
         .then(function (r) { return r.json(); })
         .then(function (d) { render((d.resources && d.resources.results && d.resources.results.products) || [], q); })
         .catch(function () {});
@@ -417,6 +420,19 @@
         wrap.appendChild(w);
       } else if (++tries > 20) { clearInterval(timer); }
     }, 400);
+  })();
+</script>
+
+<script>
+  /* BUG_25: below 1024px the desktop mega panel is hidden, so a chip tap would be a
+     dead end. Navigate to that menu's "View all" collection instead. */
+  (function () {
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.cat-nav-btn[data-mega-all]');
+      if (!btn || window.innerWidth >= 1024) return;
+      var url = btn.getAttribute('data-mega-all');
+      if (url) { e.preventDefault(); window.location.href = url; }
+    });
   })();
 </script>
 

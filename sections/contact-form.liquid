@@ -104,6 +104,29 @@
           {%- endif -%}
         {%- endform -%}
 
+        {%- comment -%}
+          BUG_10: validation was HTML5 `required` only, which a single space satisfies,
+          so a form of nothing but spaces submitted successfully. Runs regardless of the
+          WhatsApp popup setting.
+        {%- endcomment -%}
+        <script>
+          (function () {
+            var root = document.getElementById('Sec--{{ section.id }}');
+            if (!root) return;
+            var f = root.querySelector('form.cf-form');
+            if (!f) return;
+            f.addEventListener('submit', function (e) {
+              var invalid = false;
+              f.querySelectorAll('[required]').forEach(function (el) {
+                el.value = el.value.trim();
+                if (!el.value) { invalid = true; el.setCustomValidity('Please fill this in.'); }
+                else { el.setCustomValidity(''); }
+              });
+              if (invalid) { e.preventDefault(); e.stopImmediatePropagation(); f.reportValidity(); }
+            }, true);
+          })();
+        </script>
+
         {%- if section.settings.wa_enabled and wa_number != blank -%}
           {%- comment -%} Capture what the visitor typed so the WhatsApp draft is dynamic after the redirect {%- endcomment -%}
           <script>

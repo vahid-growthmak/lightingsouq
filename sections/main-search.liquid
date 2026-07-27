@@ -15,6 +15,9 @@
     </div>
 
     <form action="{{ routes.search_url }}" method="get" role="search" class="lsq-search-form">
+      {%- comment -%} BUG_23: without these the refine-search box drops prefix matching ("philip" -> "Philips") and mixes pages/articles into the product grid {%- endcomment -%}
+      <input type="hidden" name="type" value="product">
+      <input type="hidden" name="options[prefix]" value="last">
       <input type="search" name="q" value="{{ search.terms | escape }}" placeholder="{{ s.placeholder }}" aria-label="{{ s.placeholder }}" class="lsq-search-input">
       <button type="submit" class="btn-primary">{{ s.button_label }}</button>
     </form>

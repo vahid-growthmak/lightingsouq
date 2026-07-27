@@ -394,9 +394,15 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
   display: block;
   padding: 0.75rem 0;
 }
-.category-nav { display: none; background: var(--brand-primary); position: relative; z-index: 120; }
+/* BUG_25: was hidden below 1024px, so phones AND the entire 768-1023 tablet band lost
+   the category bar entirely. Now always shown; below 1024 it is a swipeable rail. */
+.category-nav { display: block; background: var(--brand-primary); position: relative; z-index: 120; }
 @media (min-width: 1024px) { .category-nav { display: block; } }
-.cat-nav-list { display: flex; align-items: center; justify-content: center; gap: 2rem; padding: 0.75rem 0; }
+.cat-nav-list { display: flex; align-items: center; justify-content: flex-start; gap: 1.25rem; padding: 0.6rem 0; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.cat-nav-list::-webkit-scrollbar { display: none; }
+@media (min-width: 1024px) { .cat-nav-list { justify-content: center; gap: 2rem; padding: 0.75rem 0; overflow: visible; } }
+/* Desktop mega panels can't fit a phone; below 1024 the chip navigates instead (see header.liquid) */
+@media (max-width: 1023px) { .mega-panel { display: none !important; } .nav-chevron { display: none; } }
 .cat-nav-btn { background: none; border: none; color: rgba(255,255,255,0.8); font-weight: 600; font-size: 0.9375rem; cursor: pointer; transition: color 0.2s; white-space: nowrap; }
 .cat-nav-btn:hover, .cat-nav-btn.active { color: #fff; }
 .offers-btn { color: #fbbf24 !important; opacity: 1 !important; font-weight: 700; }
@@ -2031,6 +2037,9 @@ body.has-sticky-atc { padding-bottom: 76px; }
   opacity: 0; pointer-events: none; transition: opacity 220ms ease, transform 220ms ease; z-index: 1300;
 }
 .lsq-toast.is-visible { opacity: 1; transform: translate(-50%, 0); }
+
+/* BUG_07: AJAX filtering — brief dim while the swap happens */
+.collection-layout.is-filtering { opacity: 0.55; pointer-events: none; transition: opacity 0.15s ease-out; }
 
 /* add-to-cart loading state */
 .btn-cart.is-loading, .btn-atc.is-loading { opacity: 0.7; cursor: wait; }

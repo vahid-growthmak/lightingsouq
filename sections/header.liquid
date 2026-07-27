@@ -411,6 +411,9 @@
         if (wrap.contains(w)) return;
         w.classList.remove('float');
         w.classList.add('in-searchbar');
+        /* BUG_20: the app ships this control with no label, so it reads as a mystery icon. */
+        if (!w.getAttribute('aria-label')) w.setAttribute('aria-label', 'Search by image');
+        if (!w.getAttribute('title')) w.setAttribute('title', 'Search by image');
         wrap.appendChild(w);
       } else if (++tries > 20) { clearInterval(timer); }
     }, 400);

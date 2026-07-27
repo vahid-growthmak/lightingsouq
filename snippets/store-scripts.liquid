@@ -84,14 +84,14 @@
     var d = document.getElementById('CartDrawer');
     if (!d) return;
     d.classList.add('is-open'); d.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    document.documentElement.style.overflow = 'hidden'; /* BUG_19: body is not the scroller, so locking it left the page scrollbar visible next to the drawer's */
     renderCart();
   }
   function closeDrawer() {
     var d = document.getElementById('CartDrawer');
     if (!d) return;
     d.classList.remove('is-open'); d.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
+    document.documentElement.style.overflow = ''; /* BUG_19 */
   }
   function setCounts(n) {
     document.querySelectorAll('[data-cart-count]').forEach(function (el) { el.textContent = n; });

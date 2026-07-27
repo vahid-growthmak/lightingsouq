@@ -1,7 +1,13 @@
 {%- style -%}
   /* Boxless, premium brand logos — no cards, grayscale that colours on hover */
-  #BM--{{ section.id }} .brand-card { background: transparent; border: none; box-shadow: none; min-width: auto; width: auto; height: 84px; padding: 0 2.75rem; display: flex; align-items: center; justify-content: center; }
-  #BM--{{ section.id }} .brand-img { max-height: 50px; width: auto; object-fit: contain; filter: grayscale(1); opacity: 0.65; transition: filter 0.2s ease-out, opacity 0.2s ease-out; }
+  /* BUG_01: min-width:auto made each card shrink-wrap its logo, so wide wordmarks
+     (LEDVANCE/OSRAM) sat ~3x wider than square marks (GE/KDK) and logo centres were
+     unevenly spaced. Fixed slots restore an even rhythm regardless of logo shape. */
+  #BM--{{ section.id }} .brand-card { background: transparent; border: none; box-shadow: none; width: 180px; min-width: 180px; height: 84px; padding: 0; display: flex; align-items: center; justify-content: center; }
+  @media (min-width: 768px) { #BM--{{ section.id }} .brand-card { width: 210px; min-width: 210px; } }
+  #BM--{{ section.id }} .brand-tile--marquee { width: 100%; display: flex; align-items: center; justify-content: center; }
+  /* explicit max-width also kills the inherited `max-width:80%` resolving against a shrink-wrapped parent */
+  #BM--{{ section.id }} .brand-img { max-height: 44px; max-width: 78%; width: auto; object-fit: contain; filter: grayscale(1); opacity: 0.65; transition: filter 0.2s ease-out, opacity 0.2s ease-out; }
   #BM--{{ section.id }} .brand-card:hover .brand-img { filter: grayscale(0); opacity: 1; }
 {%- endstyle -%}
 <section class="featured-brands" id="BM--{{ section.id }}">

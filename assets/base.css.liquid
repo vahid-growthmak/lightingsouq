@@ -931,19 +931,20 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
   left: 0;
   width: 100%;
   padding: 0.75rem;
-  background: linear-gradient(transparent, rgba(0,0,0,0.85));
+  background: linear-gradient(transparent, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.85));
   color: #fff;
-  transition: all 0.3s ease;
+  transition: background 0.3s ease; /* BUG_03: `all` animated the box size too */
 }
 @media (min-width: 768px) {
   .cat-body { padding: 1.25rem; }
 }
-.cat-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.15rem; color: #fff; }
+.cat-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.15rem; color: #fff; line-height: 1.25; } /* BUG_03: inherited 1.5 made wrapped titles overflow small cards */
 .cat-count { font-size: 0.7rem; opacity: 0.9; font-weight: 500; color: #fff; }
-.cat-link { display: none; margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600; color: #fff; }
-
-.category-card:hover .cat-body { padding-bottom: 1.5rem; }
-.category-card:hover .cat-link { display: block; }
+/* BUG_03: was display:none -> block on hover. That grew the bottom-anchored .cat-body,
+   pushing the title up ~39px into the transparent part of the gradient (and display
+   can't animate, so it jittered). Reserve the space and fade it in instead. */
+.cat-link { display: block; margin-top: 0.5rem; font-size: 0.8rem; font-weight: 600; color: #fff; opacity: 0; transform: translateY(4px); transition: opacity 0.3s ease, transform 0.3s ease; }
+.category-card:hover .cat-link, .category-card:focus-within .cat-link { opacity: 1; transform: none; }
 /* whole-card links: no underline, inherit colours (card content keeps its own colours) */
 a.category-card, a.side-banner, a.fc-card { text-decoration: none; cursor: pointer; }
 a.category-card, a.fc-card { color: inherit; }
@@ -1216,8 +1217,8 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
 .qty-control span { font-weight: 700; font-size: 1rem; }
 
 .product-actions { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0; }
-.btn-atc, .btn-buy-now { width: 100%; height: 52px; border-radius: var(--radius); font-weight: 700; font-size: 0.95rem; cursor: pointer; }
-.btn-atc { background: var(--brand-text); color: #fff; }
+.btn-atc, .btn-buy-now { width: 100%; height: 52px; border-radius: var(--radius); font-weight: 700; font-size: 0.95rem; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.btn-atc { background: var(--brand-primary); color: #fff; } /* BUG_21: was --brand-text (#333), the only dark-grey button in the theme */
 .btn-buy-now { background: var(--brand-primary); color: #fff; }
 
 .trust-badges-row { 
@@ -1710,6 +1711,10 @@ details.filter-group[open] > summary { margin-bottom: 0.75rem; }
 .pdp-qty-cta .btn-atc { flex: 1; margin: 0; }
 .btn-buy-now { width: 100%; height: 52px; border-radius: var(--radius); font-weight: 700; font-size: 0.95rem; background: var(--brand-primary); color: #fff; transition: opacity var(--transition); }
 .btn-buy-now:hover { opacity: 0.92; }
+/* BUG_21: Buy Now is a direct child of the column flex, so it rendered ~137px wider
+   than the Add-to-Cart directly above it. Match the ATC footprint. */
+.pdp-actions > .btn-buy-now { width: calc(100% - 130px - 0.7rem); margin-inline-start: auto; }
+@media (max-width: 560px) { .pdp-actions > .btn-buy-now { width: 100%; margin-inline-start: 0; } }
 .btn-atc { transition: opacity var(--transition); }
 .btn-atc:hover { opacity: 0.92; }
 .btn-quote-lg { width: 100%; height: 46px; border-radius: var(--radius); font-weight: 600; font-size: 0.875rem; background: transparent; color: var(--gray-600); border: 1.5px solid var(--gray-300); display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem; transition: border-color var(--transition), color var(--transition); }

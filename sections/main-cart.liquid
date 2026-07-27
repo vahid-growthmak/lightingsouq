@@ -29,11 +29,12 @@
                   <p class="lsq-cart-variant">{{ item.variant.title }}</p>
                 {%- endunless -%}
                 <p class="lsq-cart-price-mobile">{{ item.final_line_price | money }}</p>
-                <a href="{{ item.url_to_remove }}" class="lsq-cart-remove">{{ s.remove_label }}</a>
               </div>
               <div class="lsq-cart-qty">
                 <label class="lsq-sr-only" for="updates_{{ item.index | plus: 1 }}">{{ s.qty_label }}</label>
                 <input type="number" min="0" name="updates[]" id="updates_{{ item.index | plus: 1 }}" value="{{ item.quantity }}" inputmode="numeric" class="lsq-qty-input">
+                {%- comment -%} BUG_18: was a "Remove" text link in the info column; now an icon beside the qty {%- endcomment -%}
+                <a href="{{ item.url_to_remove }}" class="lsq-cart-remove" aria-label="{{ s.remove_label }}" title="{{ s.remove_label }}"><span class="material-symbols-outlined">delete</span></a>
               </div>
               <div class="lsq-cart-line-price">{{ item.final_line_price | money }}</div>
             </div>
@@ -71,7 +72,10 @@
   #Sec--{{ section.id }} .lsq-cart-title { font-weight:600; color:var(--brand-text); text-decoration:none; }
   #Sec--{{ section.id }} .lsq-cart-variant { color:var(--gray-500); font-size:0.875rem; margin-top:0.15rem; }
   #Sec--{{ section.id }} .lsq-cart-price-mobile { display:none; }
-  #Sec--{{ section.id }} .lsq-cart-remove { display:inline-block; margin-top:0.35rem; font-size:0.8125rem; color:var(--brand-link,#268290); }
+  #Sec--{{ section.id }} .lsq-cart-qty { display:flex; align-items:center; gap:0.5rem; }
+  #Sec--{{ section.id }} .lsq-cart-remove { display:inline-flex; align-items:center; margin-top:0; color:var(--gray-500,#6b7280); transition:color 0.15s ease-out; }
+  #Sec--{{ section.id }} .lsq-cart-remove:hover { color:#dc2626; }
+  #Sec--{{ section.id }} .lsq-cart-remove .material-symbols-outlined { font-size:1.25rem; }
   #Sec--{{ section.id }} .lsq-qty-input {
     width:64px; padding:0.5rem; text-align:center; border:1px solid var(--gray-200,#e5e7eb); border-radius:var(--radius,8px);
   }

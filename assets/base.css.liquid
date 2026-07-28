@@ -2121,3 +2121,17 @@ birse-sheet-mobile .item-img-wrap .hover-wishlist-btn { display: inline-flex !im
    content can be scrolled clear of them. Widget heights measured at 60px. */
 body { padding-bottom: 88px; }
 body.has-sticky-atc { padding-bottom: 164px; }
+
+/* The country/currency pill is app-rendered and sizes itself to the country NAME, so
+   the header layout changed with the selected market: measured at 430px wide, the pill
+   went 222px (India) -> 248px (Tanzania) -> 319px (United Arab Emirates), which pushed
+   the header from 119px to 171px tall and dropped the row below the logo. Bound the
+   pill so the header is pixel-identical for every market; long names ellipsise, and the
+   flag plus currency code stay readable. */
+.header-actions .ht-tms__duo-selector { max-width: 190px !important; min-width: 0 !important; flex: 0 1 auto !important; }
+.header-actions .ht-tms__duo-selector__active-item { max-width: 100% !important; overflow: hidden !important; }
+.header-actions .tms-element-container { min-width: 0 !important; overflow: hidden !important; }
+.header-actions .tms-element-text { overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+@media (min-width: 1024px) {
+  .header-actions .ht-tms__duo-selector { max-width: 230px !important; }
+}

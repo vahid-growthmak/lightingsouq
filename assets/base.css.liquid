@@ -2128,10 +2128,13 @@ body.has-sticky-atc { padding-bottom: 164px; }
    the header from 119px to 171px tall and dropped the row below the logo. Bound the
    pill so the header is pixel-identical for every market; long names ellipsise, and the
    flag plus currency code stay readable. */
-.header-actions .ht-tms__duo-selector { max-width: 190px !important; min-width: 0 !important; flex: 0 1 auto !important; }
+.header-actions .ht-tms__duo-selector { max-width: 220px !important; min-width: 0 !important; flex: 0 1 auto !important; }
 .header-actions .ht-tms__duo-selector__active-item { max-width: 100% !important; overflow: hidden !important; }
-.header-actions .tms-element-container { min-width: 0 !important; overflow: hidden !important; }
-.header-actions .tms-element-text { overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+/* The app splits the label into separate spans ("Qatar" "(" "QAR" ")" "English"), so
+   ellipsising each span shreds even short labels. Truncate the CONTAINER instead, which
+   yields a single trailing ellipsis and leaves normal-length labels intact. */
+.header-actions .tms-element-container { min-width: 0 !important; overflow: hidden !important; white-space: nowrap !important; text-overflow: ellipsis !important; }
+.header-actions .tms-element-text { overflow: visible !important; text-overflow: clip !important; white-space: nowrap !important; }
 @media (min-width: 1024px) {
-  .header-actions .ht-tms__duo-selector { max-width: 230px !important; }
+  .header-actions .ht-tms__duo-selector { max-width: 240px !important; }
 }

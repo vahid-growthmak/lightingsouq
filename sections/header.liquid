@@ -451,6 +451,32 @@
   })();
 </script>
 
+<script>
+  /* BUG_13: the image-search popover is app-positioned and overlapped the search bar.
+     Publish the search box's geometry as CSS vars so the override in base.css can pin
+     the popover directly beneath it, at the same width. */
+  (function () {
+    var wrap = document.querySelector('[data-search]') || document.querySelector('.search-wrap');
+    if (!wrap) return;
+    var queued = false;
+    function place() {
+      queued = false;
+      if (!document.querySelector('birse-image-search-popover')) return;
+      var r = wrap.getBoundingClientRect();
+      if (!r.width) return;
+      var st = document.documentElement.style;
+      st.setProperty('--lsq-imgsearch-top', Math.round(r.bottom + 8) + 'px');
+      st.setProperty('--lsq-imgsearch-left', Math.round(r.left) + 'px');
+      st.setProperty('--lsq-imgsearch-w', Math.round(r.width) + 'px');
+    }
+    function schedule() { if (queued) return; queued = true; requestAnimationFrame(place); }
+    new MutationObserver(schedule).observe(document.body, { childList: true, subtree: true });
+    window.addEventListener('resize', schedule, { passive: true });
+    window.addEventListener('scroll', schedule, { passive: true });
+    schedule();
+  })();
+</script>
+
 {% schema %}
 {
   "name": "Header",

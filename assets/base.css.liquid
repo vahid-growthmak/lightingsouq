@@ -2072,3 +2072,34 @@ body.has-sticky-atc { padding-bottom: 76px; }
 @media (max-width: 560px) {
   .storeify-light-modal { padding: 1.25rem 0.75rem !important; }
 }
+
+/* --- Birse image search (app-rendered; theme overrides) --- */
+/* BUG_13: the app anchored its popover at top:52px, overlapping the search bar it
+   belongs to. Pin it directly BELOW the search box and match that box's width
+   (one of the placements QA asked for). Offsets are measured in header.liquid. */
+birse-image-search-popover {
+  top: var(--lsq-imgsearch-top, 104px) !important;
+  left: var(--lsq-imgsearch-left, 1rem) !important;
+  right: auto !important;
+  width: var(--lsq-imgsearch-w, 500px) !important;
+  max-width: calc(100vw - 2rem) !important;
+}
+@media (max-width: 767px) {
+  birse-image-search-popover { left: 1rem !important; width: calc(100vw - 2rem) !important; }
+}
+/* BUG_14: .birse-modal-content is overflow-y:hidden and the left pane does not scroll,
+   so on shorter screens the Upload control at the bottom of that pane is unreachable. */
+birse-modal .birse-modal-content { overflow-y: auto !important; }
+birse-modal .upload-img-container { overflow-y: auto !important; max-height: 100% !important; }
+/* BUG_15.1: the app ships Add to Cart as #303030/4px/500 while the theme's own card
+   button is brand blue/10px/600. Match the theme. */
+birse-modal .add-to-cart-btn,
+birse-sheet-mobile .add-to-cart-btn {
+  background: var(--brand-primary) !important;
+  border-radius: var(--radius) !important;
+  font-weight: 600 !important;
+}
+/* BUG_15.2: the app reveals the wishlist heart only on hover (display:none otherwise);
+   the theme's product cards always show it. */
+birse-modal .item-img-wrap .hover-wishlist-btn,
+birse-sheet-mobile .item-img-wrap .hover-wishlist-btn { display: inline-flex !important; opacity: 1 !important; }

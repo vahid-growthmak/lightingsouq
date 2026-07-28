@@ -219,10 +219,37 @@
         if (!moneyFmt) return cur + ' ' + Number(v).toLocaleString();
         return moneyFmt.replace(/\{\{\s*(amount[a-z_]*)\s*\}\}/g, function (_, token) { return amountStr(v, token); });
       }
+
+      /* The currency app rewrites our price labels in place, but it skips an amount of
+         exactly zero - so after switching currency the maximum read e.g. "396,62 OMR"
+         while the minimum was still stuck on "QAR 0,00". When we can see the app has
+         rewritten the maximum but left our minimum untouched, mirror the maximum's
+         currency presentation onto the minimum with a zero amount. App-agnostic: in the
+         base currency nothing is rewritten, so both checks fail and this is a no-op. */
+      var ourLo = '', ourHi = '';
+      function zeroLike(sample) {
+        var m = sample.match(/([.,])(\d+)$/);
+        return m ? '0' + m[1] + new Array(m[2].length + 1).join('0') : '0';
+      }
+      function mirrorZeroCurrency() {
+        if (parseInt(lo.value, 10) !== 0) return;              /* only the exact-zero case */
+        var hiTxt = hiL.textContent.trim(), loTxt = loL.textContent.trim();
+        if (!ourHi || hiTxt === ourHi) return;                 /* app has not converted yet */
+        if (loTxt !== ourLo) return;                           /* minimum already converted */
+        var parts = hiTxt.match(/^(\D*)([\d][\d.,\s]*?)(\D*)$/);
+        if (!parts) return;
+        var target = loL.querySelector('.ht-money') || loL;
+        target.textContent = parts[1] + zeroLike(parts[2].trim()) + parts[3];
+      }
+      function scheduleZeroMirror() {
+        [300, 900, 2000].forEach(function (d) { setTimeout(mirrorZeroCurrency, d); });
+      }
       function sync(moved) {
         var a = parseInt(lo.value, 10), b = parseInt(hi.value, 10);
         if (a > b) { if (moved === lo) { hi.value = a; b = a; } else { lo.value = b; a = b; } }
         loL.innerHTML = fmt(a); hiL.innerHTML = fmt(b); /* format carries the price markup */
+        ourLo = loL.textContent.trim(); ourHi = hiL.textContent.trim();
+        scheduleZeroMirror();
         if (fill && cap > 0) { fill.style.left = (a / cap * 100) + '%'; fill.style.right = (100 - b / cap * 100) + '%'; }
         loF.value = a; hiF.value = b;
         loF.disabled = (a <= 0); hiF.disabled = (b >= cap);

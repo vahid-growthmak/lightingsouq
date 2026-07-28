@@ -317,7 +317,10 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
 /* Theqa certificate in the header actions (before WhatsApp) */
 .header-theqa { display: inline-flex; align-items: center; line-height: 0; margin-right: 0.25rem; }
 .header-theqa img { height: 32px; width: auto; display: block; border-radius: 6px; }
-@media (max-width: 1199px) { .header-theqa { display: none; } }
+/* BUG_25: the Theqa trust chip was hidden below 1199px, so on the 1024-1199 band the
+   other header icons still showed but the badge left an empty gap. Below 1024 the whole
+   desktop action row is hidden anyway, so 1023 is the correct cut-off. */
+@media (max-width: 1023px) { .header-theqa { display: none; } }
 /* keep the header logo sensible on small screens regardless of the desktop height setting */
 @media (max-width: 767px) { .logo-img { height: 40px !important; max-height: 40px !important; } }
 .cart-btn { position: relative; }

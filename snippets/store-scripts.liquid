@@ -1,3 +1,26 @@
+<script>
+  /* "Shop Now" after login pointed at /collections/frontpage - Shopify's default
+     "Home page" collection, which is empty (0 products). No theme file links there, so
+     it comes from the logged-in account area or an app block; rewrite it wherever it
+     appears so shoppers always land on the real catalogue. Capture phase runs before
+     navigation, so it also covers links rendered after page load. */
+  (function () {
+    var FROM = '/collections/frontpage', TO = '/collections/all';
+    function retarget(a) {
+      var h = a && a.getAttribute('href');
+      if (h && h.indexOf(FROM) !== -1) a.setAttribute('href', h.split(FROM).join(TO));
+    }
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest && e.target.closest('a[href*="' + FROM + '"]');
+      if (a) retarget(a);
+    }, true);
+    function sweep() { document.querySelectorAll('a[href*="' + FROM + '"]').forEach(retarget); }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', sweep);
+    else sweep();
+    window.addEventListener('load', sweep);
+  })();
+</script>
+
 {%- comment -%}
   Global storefront behaviour: wishlist (localStorage), AJAX add-to-cart,
   cart drawer render from /cart.js, and toasts. Progressive enhancement —

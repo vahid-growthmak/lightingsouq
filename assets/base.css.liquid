@@ -2114,3 +2114,10 @@ birse-sheet-mobile .item-img-wrap .hover-wishlist-btn { display: inline-flex !im
 .cd-item__remove .material-symbols-outlined { font-size: 1.15rem; }
 /* (9) Judge.me ships its Customer Reviews heading at a light weight */
 .jm-review-widget-minimal-header__title { font-weight: 700 !important; }
+
+/* (5)(10) The Rewards and Chat widgets are app-injected, position:fixed to the bottom
+   corners, and the page reserved no room for them - so they sat on top of the footer
+   text and, on product pages, the sticky add-to-cart bar. Reserve scroll space so all
+   content can be scrolled clear of them. Widget heights measured at 60px. */
+body { padding-bottom: 88px; }
+body.has-sticky-atc { padding-bottom: 164px; }

@@ -2058,3 +2058,14 @@ body.has-sticky-atc { padding-bottom: 76px; }
 @media (max-width: 767px) {
   .jm-review-widget-minimal-header__title { text-align: center; }
 }
+
+/* BUG_09: the Storeify Request-a-quote modal sat flush against the viewport top and
+   bottom (measured 0px / 0px at 1280x660), clipping the comments field. Its overlay
+   ships with padding:0 while the dialog is max-height:100%, so the dialog stretched to
+   the full viewport height. Padding the overlay makes 100% resolve against the padded
+   area instead, so the dialog always keeps a margin. */
+.storeify-light-modal { padding: 2.5rem 1rem !important; box-sizing: border-box; }
+.storeify-light-modal .storeify-light-modal-content { max-height: 100% !important; }
+@media (max-width: 560px) {
+  .storeify-light-modal { padding: 1.25rem 0.75rem !important; }
+}

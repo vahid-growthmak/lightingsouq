@@ -98,7 +98,7 @@
                         assign ps_max_val = filter.max_value.value | divided_by: 100.0 | ceil
                       endif
                     -%}
-                    <div class="price-slider" data-price-slider data-ps-cap="{{ ps_max }}" data-ps-currency="{{ cart.currency.iso_code }}">
+                    <div class="price-slider" data-price-slider data-ps-cap="{{ ps_max }}" data-ps-currency="{{ cart.currency.iso_code }}" data-ps-money-format="{{ shop.money_format | escape }}">
                       <div class="ps-track"><div class="ps-fill" data-ps-fill></div></div>
                       <input type="range" class="ps-range" data-ps-lo min="0" max="{{ ps_max }}" step="1" value="{{ ps_min_val }}" aria-label="Minimum price">
                       <input type="range" class="ps-range" data-ps-hi min="0" max="{{ ps_max }}" step="1" value="{{ ps_max_val }}" aria-label="Maximum price">
@@ -198,11 +198,31 @@
       var loL = ps.querySelector('[data-ps-lo-label]'), hiL = ps.querySelector('[data-ps-hi-label]');
       var fill = ps.querySelector('[data-ps-fill]');
       if (!lo || !hi) return;
-      function fmt(v) { return cur + ' ' + Number(v).toLocaleString(); }
+      /* The slider used to print a bare "QAR 1,234" string. Every other price on the
+         site is rendered through shop.money_format, which wraps it in the markup the
+         currency app looks for — so those converted and the slider labels did not,
+         leaving the filter showing QAR after the shopper changed currency. Build the
+         labels from the same format so they are treated identically. */
+      var moneyFmt = ps.getAttribute('data-ps-money-format') || '';
+      function amountStr(v, token) {
+        var dec = token.indexOf('no_decimals') > -1 ? 0 : 2;
+        var comma = token.indexOf('comma_separator') > -1;
+        var space = token.indexOf('space_separator') > -1;
+        var thou = comma ? '.' : (space ? ' ' : ',');
+        var dsep = comma ? ',' : '.';
+        var n = Number(v) || 0;
+        var parts = Math.abs(n).toFixed(dec).split('.');
+        var ip = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thou);
+        return (n < 0 ? '-' : '') + ip + (dec ? dsep + parts[1] : '');
+      }
+      function fmt(v) {
+        if (!moneyFmt) return cur + ' ' + Number(v).toLocaleString();
+        return moneyFmt.replace(/\{\{\s*(amount[a-z_]*)\s*\}\}/g, function (_, token) { return amountStr(v, token); });
+      }
       function sync(moved) {
         var a = parseInt(lo.value, 10), b = parseInt(hi.value, 10);
         if (a > b) { if (moved === lo) { hi.value = a; b = a; } else { lo.value = b; a = b; } }
-        loL.textContent = fmt(a); hiL.textContent = fmt(b);
+        loL.innerHTML = fmt(a); hiL.innerHTML = fmt(b); /* format carries the price markup */
         if (fill && cap > 0) { fill.style.left = (a / cap * 100) + '%'; fill.style.right = (100 - b / cap * 100) + '%'; }
         loF.value = a; hiF.value = b;
         loF.disabled = (a <= 0); hiF.disabled = (b >= cap);

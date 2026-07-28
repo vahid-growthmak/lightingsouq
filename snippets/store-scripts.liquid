@@ -124,7 +124,7 @@
                 '</div>' +
                 '<span class="cd-item__price">' + money(it.final_line_price, code) + '</span>' +
               '</div>' +
-              '<button type="button" class="cd-item__remove" data-remove>' + T.remove + '</button>' +
+              '<button type="button" class="cd-item__remove" data-remove aria-label="' + T.remove + '" title="' + T.remove + '"><span class="material-symbols-outlined">delete</span></button>' +
             '</div></div>';
         }).join('');
         if (foot) {

@@ -38,8 +38,8 @@
       <div class="container announcement-inner">
         <div class="announcement-left">
           {%- if s.announce_1 != blank -%}<span>{{ s.announce_1 }}</span>{%- endif -%}
-          {%- if s.announce_1 != blank and s.announce_2 != blank -%}<span class="announcement-sep hide-mobile" aria-hidden="true">•</span>{%- endif -%}
-          {%- if s.announce_2 != blank -%}<span class="hide-mobile">{{ s.announce_2 }}</span>{%- endif -%}
+          {%- if s.announce_1 != blank and s.announce_2 != blank -%}<span class="announcement-sep" aria-hidden="true">•</span>{%- endif -%}
+          {%- if s.announce_2 != blank -%}<span>{{ s.announce_2 }}</span>{%- endif -%}
         </div>
         <div class="announcement-right">
           {%- comment -%} 1) Language selector — native Shopify languages {%- endcomment -%}
@@ -147,10 +147,13 @@
                   if request.page_type == 'index'
                     assign nav_active = true
                   endif
-                elsif nav_url != '/collections/all'
-                  if request.path contains nav_url
+                elsif nav_url == '/collections/all'
+                  # exact match only, or every collection page would light it up
+                  if request.path == '/collections/all'
                     assign nav_active = true
                   endif
+                elsif request.path contains nav_url
+                  assign nav_active = true
                 endif
               -%}
               <div class="nav-item" {{ block.shopify_attributes }}>
@@ -222,7 +225,7 @@
     <div class="drawer-content">
       <div class="mobile-actions-grid">
         <a href="{% if shop.customer_accounts_enabled %}{{ routes.account_url }}{% else %}{{ routes.account_login_url }}{% endif %}" class="mobile-action-item"><span class="material-symbols-outlined">person</span><span>{{ s.account_label }}</span></a>
-        <a href="{{ s.wishlist_link | default: '/pages/wishlist' }}" class="mobile-action-item"><span class="material-symbols-outlined">favorite</span><span>{{ s.wishlist_label }}</span></a>
+        <a href="{{ s.wishlist_link | default: '/pages/wishlist' }}" class="mobile-action-item"><div class="relative"><span class="material-symbols-outlined">favorite</span><span class="cart-count" style="top:-8px;right:-8px;display:none;" data-wishlist-count>0</span></div><span>{{ s.wishlist_label }}</span></a>
         <a href="{{ routes.cart_url }}" class="mobile-action-item cart-btn"><div class="relative"><span class="material-symbols-outlined">shopping_cart</span><span class="cart-count" style="top:-8px;right:-8px;" data-cart-count>{{ cart.item_count }}</span></div><span>{{ s.cart_label }}</span></a>
         <a href="{{ wa_href }}" target="_blank" rel="noopener" class="mobile-action-item">{{ wa_icon }}<span>{{ s.whatsapp_label }}</span></a>
       </div>
@@ -231,7 +234,22 @@
         <ul class="drawer-nav-list">
           {%- for block in section.blocks -%}
             {%- if block.type == 'nav_link' -%}
-              <li><a href="{{ block.settings.link | default: '/collections/all' }}"{% if block.settings.highlight %} class="offers-link"{% endif %}>{{ block.settings.label }}</a></li>
+              {%- liquid
+                assign d_url = block.settings.link | default: '/collections/all'
+                assign d_active = false
+                if d_url == '/'
+                  if request.page_type == 'index'
+                    assign d_active = true
+                  endif
+                elsif d_url == '/collections/all'
+                  if request.path == '/collections/all'
+                    assign d_active = true
+                  endif
+                elsif request.path contains d_url
+                  assign d_active = true
+                endif
+              -%}
+              <li><a href="{{ d_url }}" class="{% if block.settings.highlight %}offers-link{% endif %}{% if d_active %} drawer-active{% endif %}"{% if d_active %} aria-current="page"{% endif %}>{{ block.settings.label }}</a></li>
             {%- endif -%}
           {%- endfor -%}
         </ul>
@@ -485,7 +503,7 @@
     { "type": "header", "content": "Announcement bar" },
     { "type": "checkbox", "id": "show_announcement", "label": "Show announcement bar", "default": true },
     { "type": "text", "id": "announce_1", "label": "Message 1", "default": "Free delivery across Qatar on orders above QAR 150" },
-    { "type": "text", "id": "announce_2", "label": "Message 2 (hidden on mobile)", "default": "WhatsApp Support Available" },
+    { "type": "text", "id": "announce_2", "label": "Message 2", "default": "WhatsApp Support Available" },
     { "type": "header", "content": "Localization (Markets & Languages)" },
     { "type": "paragraph", "content": "Selectors pull live from Settings > Markets and Settings > Languages. They only appear when more than one country/language is active." },
     { "type": "checkbox", "id": "show_country", "label": "Show country / currency selector", "default": true },

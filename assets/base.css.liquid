@@ -2133,8 +2133,20 @@ body.has-sticky-atc { padding-bottom: 164px; }
 /* The app splits the label into separate spans ("Qatar" "(" "QAR" ")" "English"), so
    ellipsising each span shreds even short labels. Truncate the CONTAINER instead, which
    yields a single trailing ellipsis and leaves normal-length labels intact. */
-.header-actions .tms-element-container { min-width: 0 !important; overflow: hidden !important; white-space: nowrap !important; text-overflow: ellipsis !important; }
-.header-actions .tms-element-text { overflow: visible !important; text-overflow: clip !important; white-space: nowrap !important; }
+/* The app builds the label from separate flex items (flag, country, "(", code, ")",
+   language), each flex: 0 1 auto - so capping the pill made them ALL shrink and clip
+   mid-word ("Tanzania (TZ  (QAF)  Englis"). text-overflow cannot apply on a flex box,
+   so it just chopped. Pin every piece at its natural size and let ONLY the country name
+   absorb the squeeze, with a real ellipsis, keeping flag and currency code readable. */
+.header-actions .tms-element-container { display: flex !important; flex-wrap: nowrap !important; min-width: 0 !important; overflow: hidden !important; }
+.header-actions .tms-element-container > .tms-element-item { flex: 0 0 auto !important; min-width: 0 !important; }
+.header-actions .tms-element-container > .tms-element-item:nth-child(2) { flex: 0 1 auto !important; overflow: hidden !important; }
+.header-actions .tms-element-container > .tms-element-item:nth-child(2) .tms-element-text { display: block !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
+.header-actions .tms-element-text { white-space: nowrap !important; }
+/* The language word is redundant on phones; the dropdown still switches it. */
+@media (max-width: 767px) {
+  .header-actions .tms-element-container > .tms-element-item:last-child { display: none !important; }
+}
 @media (min-width: 1024px) {
   .header-actions .ht-tms__duo-selector { max-width: 240px !important; }
 }

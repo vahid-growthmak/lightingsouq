@@ -675,7 +675,7 @@
         "text": "Start with a single smart bulb and grow into full app and voice control. We stock Wink, Xiaomi, Philips Hue, Yeelight, Sonoff, Amazon Alexa and Google Home devices that work together. Our Smart Home Hub explains what works with what, so you buy the right thing the first time.",
         "btn1_label": "Visit the Smart Home Hub",
         "btn1_link": "/pages/smart-home-hub",
-        "btn2_label": "Explore Smart Home Hub",
+        "btn2_label": "",
         "btn2_link": "shopify://pages/smart-home-hub"
       }
     },
@@ -858,7 +858,7 @@
         "benefit_VmBjq3": {
           "type": "benefit",
           "settings": {
-            "icon": "lightbulb",
+            "icon": "category",
             "title": "Wide Lighting Collection",
             "description": "From smart bulbs to solar lights, find everything you need"
           }
@@ -866,7 +866,7 @@
         "benefit_nQLRUD": {
           "type": "benefit",
           "settings": {
-            "icon": "lightbulb",
+            "icon": "local_shipping",
             "title": "Fast Delivery Across Qatar",
             "description": "Free delivery on orders above QAR 150"
           }
@@ -874,7 +874,7 @@
         "benefit_U37Kcg": {
           "type": "benefit",
           "settings": {
-            "icon": "lightbulb",
+            "icon": "chat",
             "title": "Easy WhatsApp Ordering",
             "description": "Chat with us anytime for quick support"
           }
@@ -882,7 +882,7 @@
         "benefit_D77Mya": {
           "type": "benefit",
           "settings": {
-            "icon": "lightbulb",
+            "icon": "verified_user",
             "title": "Trusted Local Store",
             "description": "Theqa certified with 4.9★ Google rating"
           }

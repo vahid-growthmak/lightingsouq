@@ -3,6 +3,15 @@
   assign initial_count = section.settings.initial_count
   assign more_link = section.settings.view_more_link
 -%}
+{%- style -%}
+  /* .grid-4 is two columns from 0px, which is right for product cards but not for paragraphs:
+     at 320px each review card got ~130px, so sentences broke to one or two words a line and the
+     two columns ended at wildly different heights. Full-width cards below 640px. Scoped to this
+     section by id — .grid-4 itself is shared with the product grids and must not change. */
+  @media (max-width: 639px) {
+    #Rev--{{ section.id }} .grid-4 { grid-template-columns: 1fr; }
+  }
+{%- endstyle -%}
 <section class="section {{ bg }}" id="Rev--{{ section.id }}">
   <div class="container">
     <div class="text-center mb-8">

@@ -18,6 +18,13 @@
   /* explicit max-width also kills the inherited `max-width:80%` resolving against a shrink-wrapped parent */
   #BM--{{ section.id }} .brand-img { max-height: 44px; max-width: 140px; width: auto; object-fit: contain; filter: grayscale(1); opacity: 0.65; transition: filter 0.2s ease-out, opacity 0.2s ease-out; }
   #BM--{{ section.id }} .brand-card:hover .brand-img { filter: grayscale(0); opacity: 1; }
+  /* base.css pauses the scroll on :hover, which never fires on a touch screen — so on mobile the
+     strip never stopped and a logo could not be read. Pause while a finger is down (:active), for
+     keyboard users tabbing through the logo links (:focus-within), and via .is-paused, which the
+     touch handler below holds for a moment after the finger lifts. */
+  #BM--{{ section.id }} .brand-marquee-inner:active,
+  #BM--{{ section.id }} .brand-marquee-inner:focus-within,
+  #BM--{{ section.id }} .brand-marquee-container.is-paused .brand-marquee-inner { animation-play-state: paused; }
 {%- endstyle -%}
 <section class="featured-brands" id="BM--{{ section.id }}">
   <div class="container text-center">
@@ -45,6 +52,28 @@
     </div>
   </div>
 </section>
+
+<script>
+  (function () {
+    var root = document.getElementById('BM--{{ section.id }}');
+    if (!root) return;
+    var strip = root.querySelector('.brand-marquee-container');
+    if (!strip) return;
+    /* Hold the pause briefly after the finger lifts so the logo stays readable long enough to
+       recognise. Listeners are passive — they never block the tap that opens a brand page. */
+    var resume;
+    strip.addEventListener('touchstart', function () {
+      clearTimeout(resume);
+      strip.classList.add('is-paused');
+    }, { passive: true });
+    ['touchend', 'touchcancel'].forEach(function (evt) {
+      strip.addEventListener(evt, function () {
+        clearTimeout(resume);
+        resume = setTimeout(function () { strip.classList.remove('is-paused'); }, 2000);
+      }, { passive: true });
+    });
+  })();
+</script>
 
 {% schema %}
 {

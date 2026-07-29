@@ -15,7 +15,15 @@
             {%- else -%}
               {%- assign slide_url = block.settings.fallback_asset | asset_url -%}
             {%- endif -%}
-            <div class="hero-slide" style="background-image: linear-gradient(rgba(0,0,0,.45), rgba(0,0,0,.5)), url('{{ slide_url }}');" {{ block.shopify_attributes }}>
+            {%- comment -%}
+              The scrim was a flat .45/.5 wash over the whole slide — the same coverage behind the
+              copy as over empty photo, so busy slides still washed out the subtitle while the
+              image got needlessly muddied. Two stacked gradients instead: a horizontal weight
+              toward the copy side, over a lighter vertical floor. Behind the text that composites
+              to ~71% (was ~48%); the far edge of the photo stays ~52%, so the image is no darker
+              than before.
+            {%- endcomment -%}
+            <div class="hero-slide" style="background-image: linear-gradient(100deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,.28) 55%, rgba(0,0,0,.12) 100%), linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.45)), url('{{ slide_url }}');" {{ block.shopify_attributes }}>
               {%- if block.settings.badge != blank -%}
                 <div class="hero-badge">{{ block.settings.badge }}</div>
               {%- endif -%}

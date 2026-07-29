@@ -15,9 +15,18 @@
             {%- endif -%}
           {%- endfor -%}
         </div>
+        {%- comment -%}
+          Both buttons rendered unconditionally, so clearing a label in the theme editor produced an
+          empty button rather than removing it — and there was no way to run this block with a single
+          CTA. Guarded like hero.liquid does, so a blank label simply drops its button.
+        {%- endcomment -%}
         <div class="hero-btns">
-          <a href="{{ section.settings.btn1_link }}" class="btn-primary">{{ section.settings.btn1_label }}</a>
-          <a href="{{ section.settings.btn2_link }}" class="btn-outline">{{ section.settings.btn2_label }}</a>
+          {%- if section.settings.btn1_label != blank -%}
+            <a href="{{ section.settings.btn1_link | default: '/collections/all' }}" class="btn-primary">{{ section.settings.btn1_label }}</a>
+          {%- endif -%}
+          {%- if section.settings.btn2_label != blank -%}
+            <a href="{{ section.settings.btn2_link | default: '/collections/all' }}" class="btn-outline">{{ section.settings.btn2_label }}</a>
+          {%- endif -%}
         </div>
       </div>
     </div>

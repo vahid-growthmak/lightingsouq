@@ -44,6 +44,18 @@
   #PC--{{ section.id }} .pc-scroll { display: flex; gap: 1.5rem; overflow-x: auto; scroll-snap-type: x proximity; scroll-behavior: smooth; padding: 6px 2px 1.25rem; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
   #PC--{{ section.id }} .pc-scroll::-webkit-scrollbar { display: none; }
   #PC--{{ section.id }} .pc-scroll > * { flex: 0 0 clamp(230px, 24%, 280px); scroll-snap-align: start; }
+  {%- comment -%}
+    On a 320px screen the clamp bottomed out at its 230px floor inside a 272px track, so the next
+    card showed as an 18px sliver and the row did not read as scrollable. A percentage width below
+    640px keeps roughly a fifth of the next card in view at every small size (at 320px: 212px card,
+    36px of the next one visible). Snap also firms up to mandatory here — with one card per view
+    that gives a clean stop per swipe; desktop stays on proximity, where several cards are visible
+    and mandatory would feel sticky.
+  {%- endcomment -%}
+  @media (max-width: 639px) {
+    #PC--{{ section.id }} .pc-scroll { scroll-snap-type: x mandatory; }
+    #PC--{{ section.id }} .pc-scroll > * { flex: 0 0 78%; }
+  }
   #PC--{{ section.id }} .pc-arrow { position: absolute; top: 42%; z-index: 6; width: 46px; height: 46px; border-radius: 50%; border: 1px solid #e5e7eb; background: #fff; box-shadow: 0 6px 20px rgba(0,0,0,.14); cursor: pointer; display: none; align-items: center; justify-content: center; color: var(--brand-primary); transition: all .15s ease-out; }
   #PC--{{ section.id }} .pc-arrow:hover { background: var(--brand-primary); color: #fff; border-color: var(--brand-primary); }
   #PC--{{ section.id }} .pc-arrow svg { width: 22px; height: 22px; }

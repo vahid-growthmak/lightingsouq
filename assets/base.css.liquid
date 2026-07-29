@@ -371,7 +371,8 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
   justify-content: space-between;
   border-bottom: 1px solid var(--gray-100);
 }
-.close-drawer-btn { background: none; border: none; color: var(--brand-text); cursor: pointer; }
+/* Was an unsized icon — roughly a 24px target in the corner of the drawer. */
+.close-drawer-btn { width: 44px; height: 44px; display: inline-flex; align-items: center; justify-content: center; margin-right: -0.5rem; background: none; border: none; color: var(--brand-text); cursor: pointer; }
 
 .drawer-content { flex: 1; overflow-y: auto; padding: 1.5rem; }
 
@@ -460,9 +461,20 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
 .hero-arrow svg { width: 20px; height: 20px; }
 .hero-prev { left: 0.75rem; }
 .hero-next { right: 0.75rem; }
-.hero-dots { position: absolute; bottom: 1rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0.5rem; z-index: 3; }
-.hero-dot { width: 0.6rem; height: 0.6rem; border-radius: 99px; background: rgba(255,255,255,0.5); transition: all var(--transition); }
-.hero-dot.active { width: 1.6rem; background: #fff; }
+/* The dot WAS the button: a 9.6px tap target, far under the 24px minimum, and on mobile it is
+   the only way to change slides once the arrows are hidden. The button is now a 24px transparent
+   hit area and the visible dot moved to ::before, so the dot looks identical but the target is
+   usable. Gap drops to 0 because the padded buttons now supply the visual spacing themselves. */
+.hero-dots { position: absolute; bottom: 0.55rem; left: 50%; transform: translateX(-50%); display: flex; gap: 0; z-index: 3; }
+.hero-dot { min-width: 24px; height: 24px; padding: 0 2px; display: inline-flex; align-items: center; justify-content: center; }
+.hero-dot::before {
+  content: ""; display: block;
+  width: 0.6rem; height: 0.6rem; border-radius: 99px;
+  background: rgba(255,255,255,0.5);
+  transition: width var(--transition), background var(--transition);
+}
+.hero-dot.active { min-width: 32px; }
+.hero-dot.active::before { width: 1.6rem; background: #fff; }
 /* Mobile: arrows overlap the slide copy on a narrow screen — dots and autoplay still navigate */
 @media (max-width: 767px) { .hero-arrow { display: none; } }
 
@@ -702,6 +714,13 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
   transition: background var(--transition);
 }
 .btn-wishlist:hover { background: var(--gray-100); }
+/* 2rem is a 32px target. Growing the circle would unbalance the card corner, so the hit area is
+   extended with a transparent overlay instead — the button looks identical, the tappable box is
+   44px. Same technique below for the PDP gallery tools and the quantity stepper. */
+.btn-wishlist::after {
+  content: ""; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%); width: 44px; height: 44px;
+}
 .product-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
 .product-type { font-size: 0.75rem; color: var(--gray-500); margin-bottom: 0.25rem; }
 .product-title { font-size: 0.9rem; font-weight: 500; margin-bottom: 0.5rem; flex: 1; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; min-height: 2.5em; }
@@ -941,15 +960,22 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
   left: 0;
   width: 100%;
   padding: 0.75rem;
-  background: linear-gradient(transparent, rgba(0,0,0,0.35) 35%, rgba(0,0,0,0.85));
+  /* The title sits near the TOP of this bottom-anchored box, where the old ramp was still
+     between transparent and 0.35 — fine over a calm photo, unreadable over the Smart Home tile,
+     whose image is promo artwork with its own bright text. The ramp now reaches a usable value
+     much sooner, so the contrast floor no longer depends on which image a collection happens to
+     have. Tile images stay untouched. */
+  background: linear-gradient(transparent 0%, rgba(0,0,0,0.45) 18%, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.92) 100%);
   color: #fff;
   transition: background 0.3s ease; /* BUG_03: `all` animated the box size too */
 }
 @media (min-width: 768px) {
   .cat-body { padding: 1.25rem; }
 }
-.cat-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.15rem; color: #fff; line-height: 1.25; } /* BUG_03: inherited 1.5 made wrapped titles overflow small cards */
-.cat-count { font-size: 0.7rem; opacity: 0.9; font-weight: 500; color: #fff; }
+/* Belt and braces with the gradient above: a shadow travels with the glyphs, so a light patch in
+   the middle of an image can't strand a word the way a fixed overlay can. */
+.cat-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.15rem; color: #fff; line-height: 1.25; text-shadow: 0 1px 3px rgba(0,0,0,0.55); } /* BUG_03: inherited 1.5 made wrapped titles overflow small cards */
+.cat-count { font-size: 0.7rem; opacity: 0.9; font-weight: 500; color: #fff; text-shadow: 0 1px 3px rgba(0,0,0,0.55); }
 /* BUG_03: was display:none -> block on hover. That grew the bottom-anchored .cat-body,
    pushing the title up ~39px into the transparent part of the gradient (and display
    can't animate, so it jittered). Reserve the space and fade it in instead. */
@@ -1040,7 +1066,7 @@ a.contact-item:hover { opacity: 1; text-decoration: underline; }
 .reviews-badge-center { display: flex; justify-content: center; margin-top: 1rem; }
 .pdp-google-reviews { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; margin: 0.25rem 0 1.5rem; }
 .social-btn {
-  width: 2.5rem; height: 2.5rem;
+  width: 44px; height: 44px; /* was 2.5rem/40px — under the 44px touch minimum */
   background: var(--brand-accent);
   border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
@@ -1223,7 +1249,10 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
   border-radius: var(--radius);
   margin-bottom: 1rem;
 }
-.qty-control button { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; }
+.qty-control button { position: relative; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border: none; background: transparent; cursor: pointer; }
+/* The control is already 44px tall and 120px wide with the number between the two buttons, so a
+   44px overlay on each fits without the two targets ever meeting. */
+.qty-control button::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; }
 .qty-control span { font-weight: 700; font-size: 1rem; }
 
 .product-actions { display: flex; flex-direction: column; gap: 0.75rem; margin: 1.5rem 0; }
@@ -1674,8 +1703,9 @@ details.filter-group[open] > summary { margin-bottom: 0.75rem; }
 .pdp-main-img img { width: 100%; height: 100%; object-fit: cover; }
 .pdp-gallery-badge { position: absolute; top: 1rem; left: 1rem; z-index: 2; background: #ef4444; color: #fff; font-size: 0.8rem; font-weight: 700; padding: 0.3rem 0.7rem; border-radius: 99px; }
 .pdp-gallery-tools { position: absolute; top: 1rem; right: 1rem; z-index: 2; display: flex; flex-direction: column; gap: 0.5rem; }
-.pdp-tool-btn { width: 2.4rem; height: 2.4rem; border-radius: 50%; background: #fff; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--gray-600); transition: color var(--transition), background var(--transition); }
+.pdp-tool-btn { position: relative; width: 2.4rem; height: 2.4rem; border-radius: 50%; background: #fff; box-shadow: var(--shadow-sm); display: flex; align-items: center; justify-content: center; color: var(--gray-600); transition: color var(--transition), background var(--transition); }
 .pdp-tool-btn:hover { color: var(--brand-primary); background: var(--gray-50); }
+.pdp-tool-btn::after { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; } /* 2.4rem/38.4px visual, 44px target */
 .pdp-thumbs { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.9rem; }
 .pdp-thumb { width: 68px; height: 68px; border-radius: var(--radius); overflow: hidden; border: 2px solid transparent; cursor: pointer; flex-shrink: 0; }
 .pdp-thumb.active { border-color: var(--brand-primary); }
@@ -2021,7 +2051,10 @@ body.has-sticky-atc { padding-bottom: 76px; }
 .cd-item__row { display: flex; align-items: center; justify-content: space-between; margin-top: 0.55rem; }
 .cd-item__price { font-weight: 800; font-size: 0.92rem; color: var(--brand-text); }
 .cd-qty { display: inline-flex; align-items: center; border: 1px solid var(--gray-200); border-radius: 999px; overflow: hidden; }
-.cd-qty__btn { width: 28px; height: 28px; border: none; background: transparent; cursor: pointer; font-size: 1rem; line-height: 1; color: var(--brand-text); }
+/* 28px, and the smallest control in the theme. An overlay is no use here because the .cd-qty
+   wrapper is overflow:hidden, which clips hit-testing too — so the button itself grows. The
+   drawer row gets a little taller; the stepper is a primary interaction and worth the space. */
+.cd-qty__btn { width: 44px; height: 44px; border: none; background: transparent; cursor: pointer; font-size: 1rem; line-height: 1; color: var(--brand-text); }
 .cd-qty__btn:hover { background: var(--gray-100); }
 .cd-qty__num { min-width: 26px; text-align: center; font-size: 0.85rem; font-weight: 700; }
 .cd-item__remove { margin-top: 0.5rem; border: none; background: transparent; padding: 0; color: var(--gray-500); font-size: 0.78rem; cursor: pointer; text-decoration: underline; }

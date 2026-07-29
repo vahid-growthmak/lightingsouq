@@ -3,6 +3,12 @@
 -%}
 {%- style -%}
   #WS--{{ section.id }} .why-icon-wrap .material-symbols-outlined { font-size: 1.9rem; color: var(--brand-primary); font-variation-settings: 'FILL' 1; }
+  /* Two columns from 0px wrapped headings like "Fast Delivery Across Qatar" onto three lines in a
+     ~130px column. Full width below 640px. Scoped by id — .grid-4 is shared with the product
+     grids, where two columns is correct. */
+  @media (max-width: 639px) {
+    #WS--{{ section.id }} .grid-4 { grid-template-columns: 1fr; }
+  }
 {%- endstyle -%}
 <section class="section {{ bg }}" id="WS--{{ section.id }}">
   <div class="container">

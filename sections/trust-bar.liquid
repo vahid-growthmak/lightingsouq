@@ -4,9 +4,19 @@
 {%- endcomment -%}
 {%- style -%}
   #TB--{{ section.id }}.lsq-trust { background: #fff; border-top: 1px solid #eef1f5; border-bottom: 1px solid #eef1f5; padding: 1.5rem 0; }
-  #TB--{{ section.id }} .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem 0; }
+  {%- comment -%}
+    Two columns started at 0px, which overflowed the viewport on a small phone: at 320px the
+    container leaves 272px, so each column was 136px, the item's 1.25rem side padding took 40px
+    and the 46px medallion plus its 0.85rem gap took another 59.6px — leaving 36px for labels
+    like "Delivery in as fast as 3 hours", which clipped mid-word at the screen edge.
+    One column below 640px gives the label the full 212px. Two columns resume at 640px.
+  {%- endcomment -%}
+  #TB--{{ section.id }} .trust-grid { display: grid; grid-template-columns: 1fr; gap: 1.1rem 0; }
+  @media (min-width: 640px) { #TB--{{ section.id }} .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem 0; } }
   @media (min-width: 900px) { #TB--{{ section.id }} .trust-grid { grid-template-columns: repeat(4, 1fr); } }
-  #TB--{{ section.id }} .trust-item { display: flex; align-items: center; justify-content: center; gap: 0.85rem; position: relative; padding: 0.25rem 1.25rem; text-align: left; }
+  {%- comment -%} Stacked items align left so the medallions form a column; centring resumes with the grid. {%- endcomment -%}
+  #TB--{{ section.id }} .trust-item { display: flex; align-items: center; justify-content: flex-start; gap: 0.85rem; position: relative; padding: 0.25rem 0; text-align: left; }
+  @media (min-width: 640px) { #TB--{{ section.id }} .trust-item { justify-content: center; padding: 0.25rem 1.25rem; } }
   @media (min-width: 900px) { #TB--{{ section.id }} .trust-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 36px; background: linear-gradient(180deg, transparent, #e2e7ee, transparent); } }
   #TB--{{ section.id }} .lsq-trust-ic { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(43,96,173,0.12), rgba(38,130,144,0.12)); color: var(--brand-primary); box-shadow: inset 0 0 0 1px rgba(43,96,173,0.08); }
   #TB--{{ section.id }} .lsq-trust-ic svg { width: 22px; height: 22px; }

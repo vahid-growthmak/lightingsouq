@@ -185,6 +185,15 @@
 
   /* ---------- delegated events ---------- */
   document.addEventListener('click', function (e) {
+    /* Mobile "View more": reveal the .m-hide items in the nearest [data-m-collapse]. One handler
+       serves every section that opts in, so no section ships its own copy of this. */
+    var mMore = e.target.closest('[data-m-more]');
+    if (mMore) {
+      var mWrap = mMore.closest('[data-m-collapse]');
+      if (mWrap) { mWrap.classList.add('is-expanded'); mMore.setAttribute('aria-expanded', 'true'); }
+      return;
+    }
+
     var wl = e.target.closest('[data-wishlist-toggle]');
     if (wl) { e.preventDefault(); wlToggle(wl); return; }
 

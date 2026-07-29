@@ -1,14 +1,27 @@
+{%- comment -%}
+  Two logo tiles per row on a phone, so 12 brands ran to six rows. Only the first `mobile_limit`
+  render below 768px; "View more" reveals the rest, and the existing View-all-brands link still
+  goes to the brands page. Desktop (six across) is unchanged.
+{%- endcomment -%}
+{%- liquid
+  assign m_limit = section.settings.mobile_limit | default: 6
+  assign br_i = 0
+-%}
 <section class="section {{ section.settings.bg }}">
   <div class="container">
     <h2 class="section-title text-center">{{ section.settings.heading }}</h2>
     <p class="section-sub text-center mb-8">{{ section.settings.subtitle }}</p>
+    <div data-m-collapse>
     <div class="brand-strip-grid">
       {%- assign brand_blocks = 0 -%}
       {%- for block in section.blocks -%}{%- if block.type == 'brand' -%}{%- assign brand_blocks = brand_blocks | plus: 1 -%}{%- endif -%}{%- endfor -%}
       {%- if brand_blocks > 0 -%}
         {%- for block in section.blocks -%}
           {%- if block.type == 'brand' -%}
-            <span {{ block.shopify_attributes }}>{%- render 'brand-logo', name: block.settings.name, image: block.settings.image, link: block.settings.link -%}</span>
+            {%- assign br_i = br_i | plus: 1 -%}
+            {%- assign m_cls = '' -%}
+            {%- if br_i > m_limit -%}{%- assign m_cls = 'm-hide' -%}{%- endif -%}
+            <span class="{{ m_cls }}" {{ block.shopify_attributes }}>{%- render 'brand-logo', name: block.settings.name, image: block.settings.image, link: block.settings.link -%}</span>
           {%- endif -%}
         {%- endfor -%}
       {%- else -%}
@@ -19,6 +32,12 @@
           {%- render 'brand-logo', name: name, link: d_links[forloop.index0] -%}
         {%- endfor -%}
       {%- endif -%}
+    </div>
+    {%- if brand_blocks > m_limit -%}
+      <div class="m-more-wrap">
+        <button class="m-more" type="button" data-m-more aria-expanded="false">{{ section.settings.more_label | default: 'View more brands' | escape }} <span class="material-symbols-outlined">expand_more</span></button>
+      </div>
+    {%- endif -%}
     </div>
     {%- if section.settings.view_all_label != blank -%}
       <div style="text-align:center;margin-top:1.75rem;">
@@ -37,6 +56,10 @@
     { "type": "text", "id": "subtitle", "label": "Subtitle", "default": "From value picks to premium ecosystems — go straight to your brand." },
     { "type": "text", "id": "view_all_label", "label": "View all label", "default": "View All Brands" },
     { "type": "url", "id": "view_all_link", "label": "View all link" },
+    { "type": "header", "content": "Mobile" },
+    { "type": "paragraph", "content": "How many logos show on a phone before the View more button. Two per row, so 6 gives three rows. Desktop always shows every logo." },
+    { "type": "range", "id": "mobile_limit", "label": "Logos shown on mobile", "min": 2, "max": 24, "step": 2, "default": 6 },
+    { "type": "text", "id": "more_label", "label": "View more button", "default": "View more brands" },
     {
       "type": "select",
       "id": "bg",

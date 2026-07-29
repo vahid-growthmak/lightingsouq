@@ -20,10 +20,33 @@
         {%- render 'google-reviews', rating: settings.google_rating, count: settings.google_count, link: settings.google_reviews_url -%}
       </div>
     </div>
+    {%- comment -%}
+      initial_count governs every breakpoint. Full-width cards on a phone made even four a long
+      scroll, so mobile_count trims further below 768px and "View more" reveals the rest up to
+      initial_count. Desktop still shows initial_count on load — m-hide does nothing at 768px+.
+    {%- endcomment -%}
+    {%- liquid
+      assign m_count = section.settings.mobile_count | default: 2
+      assign rev_total = 0
+      for b in section.blocks
+        if b.type == 'review'
+          assign rev_total = rev_total | plus: 1
+        endif
+      endfor
+      assign rev_shown = initial_count
+      if rev_total < rev_shown
+        assign rev_shown = rev_total
+      endif
+      assign rev_i = 0
+    -%}
+    <div data-m-collapse>
     <div class="grid-4">
       {%- for block in section.blocks -%}
         {%- if block.type == 'review' -%}
-          <div class="review-card{% if forloop.index > initial_count %} review-hidden{% endif %}" {{ block.shopify_attributes }}>
+          {%- assign rev_i = rev_i | plus: 1 -%}
+          {%- assign m_cls = '' -%}
+          {%- if rev_i > m_count -%}{%- assign m_cls = ' m-hide' -%}{%- endif -%}
+          <div class="review-card{% if rev_i > initial_count %} review-hidden{% endif %}{{ m_cls }}" {{ block.shopify_attributes }}>
             <div class="review-stars">{% render 'rating-stars', rating: block.settings.rating %}</div>
             <p class="review-text">{{ block.settings.text }}</p>
             <p class="reviewer-name">{{ block.settings.name }}</p>
@@ -31,6 +54,12 @@
           </div>
         {%- endif -%}
       {%- endfor -%}
+    </div>
+    {%- if rev_shown > m_count -%}
+      <div class="m-more-wrap">
+        <button class="m-more" type="button" data-m-more aria-expanded="false">{{ section.settings.more_label | default: 'Show more reviews' | escape }} <span class="material-symbols-outlined">expand_more</span></button>
+      </div>
+    {%- endif -%}
     </div>
     <div class="reviews-actions" style="justify-content:center;">
       {%- if more_link != blank -%}
@@ -84,6 +113,10 @@
       "step": 1,
       "default": 4
     },
+    { "type": "header", "content": "Mobile" },
+    { "type": "paragraph", "content": "Cards go full width on a phone, so fewer fit comfortably. This trims the count below 768px only; the View more button reveals the rest. Desktop uses the count above." },
+    { "type": "range", "id": "mobile_count", "label": "Reviews shown on mobile", "min": 1, "max": 8, "step": 1, "default": 2 },
+    { "type": "text", "id": "more_label", "label": "Mobile View more button", "default": "Show more reviews" },
     {
       "type": "text",
       "id": "view_more_label",

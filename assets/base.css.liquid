@@ -986,6 +986,30 @@ a.category-card, a.side-banner, a.fc-card { text-decoration: none; cursor: point
 a.category-card, a.fc-card { color: inherit; }
 a.fc-card:hover { border-color: var(--brand-accent); }
 
+/* ---- Mobile "View more" collapse (shared by category / brands / spaces / reviews) ----
+   A grid that reads well on a desktop becomes an endless scroll on a phone. A section wraps its
+   grid in [data-m-collapse], tags the overflow items .m-hide, and adds a .m-more-wrap button after
+   it. Below 768px the tagged items stay hidden until the button is tapped. At 768px and up none of
+   this applies: .m-hide items render normally and the button is display:none, so desktop is byte
+   for byte what it was. One mechanism, four sections — the alternative was four copies of the same
+   show/hide script. */
+.m-more-wrap { display: none; }
+@media (max-width: 767px) {
+  [data-m-collapse]:not(.is-expanded) .m-hide { display: none !important; }
+  [data-m-collapse] .m-more-wrap { display: flex; justify-content: center; margin-top: 1.25rem; }
+  [data-m-collapse].is-expanded .m-more-wrap { display: none; }
+  .m-more {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.35rem;
+    min-height: 44px; padding: 0.7rem 1.35rem;
+    border: 1px solid var(--gray-300); border-radius: var(--radius);
+    background: #fff; color: var(--brand-primary);
+    font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+    transition: border-color var(--transition), color var(--transition);
+  }
+  .m-more:hover { border-color: var(--brand-primary); }
+  .m-more .material-symbols-outlined { font-size: 1.15rem; }
+}
+
 /* ---- Grid Layouts & Gaps ---- */
 .grid-2, .grid-3, .grid-4, .grid-5 {
   display: grid;
@@ -2176,9 +2200,20 @@ body.has-sticky-atc { padding-bottom: 164px; }
 .header-actions .tms-element-container > .tms-element-item:nth-child(2) { flex: 0 1 auto !important; overflow: hidden !important; }
 .header-actions .tms-element-container > .tms-element-item:nth-child(2) .tms-element-text { display: block !important; overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important; }
 .header-actions .tms-element-text { white-space: nowrap !important; }
-/* The language word is redundant on phones; the dropdown still switches it. */
+/* Dropping the language word from the phone pill was intentional — but this selector matched
+   EVERY .tms-element-container inside .header-actions, and the open dropdown lives there too. So
+   it also blanked the language row inside the panel: the label rendered empty and the row showed
+   as a bare box with a caret, which read as a broken control rather than a language picker. The
+   list itself was never missing; only its label was hidden.
+   Restricted to the collapsed pill (.ht-tms__duo-selector__active-item), so the pill stays short
+   and the panel keeps its labels. */
 @media (max-width: 767px) {
-  .header-actions .tms-element-container > .tms-element-item:last-child { display: none !important; }
+  .header-actions .ht-tms__duo-selector__active-item .tms-element-container > .tms-element-item:last-child { display: none !important; }
+  /* The panel is its own popover — it must not inherit the pill's width cap, or "Qatar (QAR)"
+     truncates to "Qatar (QAR" inside the dropdown as well. */
+  .header-actions .ht-tms__duo-selector__dropdown-wrapper { min-width: 250px !important; }
+  .header-actions .ht-tms__duo-selector__dropdown-wrapper .tms-element-container { overflow: visible !important; }
+  .header-actions .ht-tms__duo-selector__dropdown-wrapper .tms-element-text { text-overflow: clip !important; }
 }
 @media (min-width: 1024px) {
   .header-actions .ht-tms__duo-selector { max-width: 240px !important; }

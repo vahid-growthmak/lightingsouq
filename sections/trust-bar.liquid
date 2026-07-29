@@ -5,22 +5,28 @@
 {%- style -%}
   #TB--{{ section.id }}.lsq-trust { background: #fff; border-top: 1px solid #eef1f5; border-bottom: 1px solid #eef1f5; padding: 1.5rem 0; }
   {%- comment -%}
-    Two columns started at 0px, which overflowed the viewport on a small phone: at 320px the
-    container leaves 272px, so each column was 136px, the item's 1.25rem side padding took 40px
-    and the 46px medallion plus its 0.85rem gap took another 59.6px — leaving 36px for labels
-    like "Delivery in as fast as 3 hours", which clipped mid-word at the screen edge.
-    One column below 640px gives the label the full 212px. Two columns resume at 640px.
+    Mobile is a 2x2 grid of icon-above-label. The original side-by-side layout could not work at
+    this width: at 375px each of two columns is ~168px, the item's 1.25rem side padding takes 40px
+    and the 46px medallion plus its 0.85rem gap takes another 59.6px, leaving ~69px of text column
+    — which wrapped "Delivery in as fast as 3 hours" over seven lines. Stacking hands the label the
+    full cell width instead. The grey sublabel is dropped below 640px: it is supplementary, and the
+    bold claim is what has to survive. Both are still in the markup for desktop and for assistive
+    tech, so nothing is lost from the page — only from the phone's visual field.
   {%- endcomment -%}
-  #TB--{{ section.id }} .trust-grid { display: grid; grid-template-columns: 1fr; gap: 1.1rem 0; }
-  @media (min-width: 640px) { #TB--{{ section.id }} .trust-grid { grid-template-columns: repeat(2, 1fr); gap: 1.25rem 0; } }
-  @media (min-width: 900px) { #TB--{{ section.id }} .trust-grid { grid-template-columns: repeat(4, 1fr); } }
-  {%- comment -%} Stacked items align left so the medallions form a column; centring resumes with the grid. {%- endcomment -%}
-  #TB--{{ section.id }} .trust-item { display: flex; align-items: center; justify-content: flex-start; gap: 0.85rem; position: relative; padding: 0.25rem 0; text-align: left; }
-  @media (min-width: 640px) { #TB--{{ section.id }} .trust-item { justify-content: center; padding: 0.25rem 1.25rem; } }
+  #TB--{{ section.id }} .trust-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem 0.5rem; }
+  @media (min-width: 900px) { #TB--{{ section.id }} .trust-grid { grid-template-columns: repeat(4, 1fr); gap: 1.25rem 0; } }
+  #TB--{{ section.id }} .trust-item { display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 0.55rem; position: relative; padding: 0.25rem 0.4rem; text-align: center; }
+  #TB--{{ section.id }} .lsq-trust-sub { display: none; }
+  {%- comment -%} From 640px there is room for the original side-by-side row with the sub-line back. {%- endcomment -%}
+  @media (min-width: 640px) {
+    #TB--{{ section.id }} .trust-item { flex-direction: row; align-items: center; justify-content: center; gap: 0.85rem; padding: 0.25rem 1.25rem; text-align: left; }
+    #TB--{{ section.id }} .lsq-trust-sub { display: block; }
+  }
   @media (min-width: 900px) { #TB--{{ section.id }} .trust-item:not(:last-child)::after { content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 1px; height: 36px; background: linear-gradient(180deg, transparent, #e2e7ee, transparent); } }
   #TB--{{ section.id }} .lsq-trust-ic { flex-shrink: 0; width: 46px; height: 46px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, rgba(43,96,173,0.12), rgba(38,130,144,0.12)); color: var(--brand-primary); box-shadow: inset 0 0 0 1px rgba(43,96,173,0.08); }
   #TB--{{ section.id }} .lsq-trust-ic svg { width: 22px; height: 22px; }
-  #TB--{{ section.id }} .lsq-trust-lbl { font-weight: 700; font-size: 0.95rem; color: #1f2937; letter-spacing: -0.01em; line-height: 1.25; }
+  #TB--{{ section.id }} .lsq-trust-lbl { font-weight: 700; font-size: 0.85rem; color: #1f2937; letter-spacing: -0.01em; line-height: 1.3; }
+  @media (min-width: 640px) { #TB--{{ section.id }} .lsq-trust-lbl { font-size: 0.95rem; line-height: 1.25; } }
   #TB--{{ section.id }} .lsq-trust-sub { display: block; font-weight: 400; font-size: 0.78rem; color: #6b7280; margin-top: 2px; }
   #TB--{{ section.id }} a.trust-item { color: inherit; text-decoration: none; }
 {%- endstyle -%}

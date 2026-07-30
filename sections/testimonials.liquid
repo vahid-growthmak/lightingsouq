@@ -55,9 +55,13 @@
         {%- endif -%}
       {%- endfor -%}
     </div>
-    {%- if rev_shown > m_count -%}
+    {%- comment -%}
+      Blank label = no expander. Deliberately blank here: the "View more reviews" link below
+      already goes to the reviews page, so an expander sat directly above a near-identical control.
+    {%- endcomment -%}
+    {%- if rev_shown > m_count and section.settings.more_label != blank -%}
       <div class="m-more-wrap">
-        <button class="m-more" type="button" data-m-more aria-expanded="false">{{ section.settings.more_label | default: 'Show more reviews' | escape }} <span class="material-symbols-outlined">expand_more</span></button>
+        <button class="m-more" type="button" data-m-more aria-expanded="false">{{ section.settings.more_label | escape }} <span class="material-symbols-outlined">expand_more</span></button>
       </div>
     {%- endif -%}
     </div>
@@ -116,7 +120,7 @@
     { "type": "header", "content": "Mobile" },
     { "type": "paragraph", "content": "Cards go full width on a phone, so fewer fit comfortably. This trims the count below 768px only; the View more button reveals the rest. Desktop uses the count above." },
     { "type": "range", "id": "mobile_count", "label": "Reviews shown on mobile", "min": 1, "max": 8, "step": 1, "default": 2 },
-    { "type": "text", "id": "more_label", "label": "Mobile View more button", "default": "Show more reviews" },
+    { "type": "text", "id": "more_label", "label": "Mobile View more button", "info": "Leave blank for no expander — the View more button below already links to the reviews page. Type a label here to add an expand button on mobile." },
     {
       "type": "text",
       "id": "view_more_label",

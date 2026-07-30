@@ -33,9 +33,14 @@
         {%- endfor -%}
       {%- endif -%}
     </div>
-    {%- if brand_blocks > m_limit -%}
+    {%- comment -%}
+      Blank label = no expander, same convention as view_all_label below. Here it is deliberately
+      blank: the View-all-brands link underneath already goes to the full brands page, so an
+      expander would be a second control doing nearly the same job on a small screen.
+    {%- endcomment -%}
+    {%- if brand_blocks > m_limit and section.settings.more_label != blank -%}
       <div class="m-more-wrap">
-        <button class="m-more" type="button" data-m-more aria-expanded="false">{{ section.settings.more_label | default: 'View more brands' | escape }} <span class="material-symbols-outlined">expand_more</span></button>
+        <button class="m-more" type="button" data-m-more aria-expanded="false">{{ section.settings.more_label | escape }} <span class="material-symbols-outlined">expand_more</span></button>
       </div>
     {%- endif -%}
     </div>
@@ -59,7 +64,7 @@
     { "type": "header", "content": "Mobile" },
     { "type": "paragraph", "content": "How many logos show on a phone before the View more button. Two per row, so 6 gives three rows. Desktop always shows every logo." },
     { "type": "range", "id": "mobile_limit", "label": "Logos shown on mobile", "min": 2, "max": 24, "step": 2, "default": 6 },
-    { "type": "text", "id": "more_label", "label": "View more button", "default": "View more brands" },
+    { "type": "text", "id": "more_label", "label": "View more button", "info": "Leave blank for no expander — the View all label below already links to the full brands page. Type a label here to add an expand button on mobile." },
     {
       "type": "select",
       "id": "bg",

@@ -35,9 +35,10 @@
         {%- endif -%}
       {%- endfor -%}
     </div>
-    {%- if sp_total > m_limit -%}
+    {%- comment -%} Blank label = no expander (same convention as brands and reviews, where it is blank on purpose). {%- endcomment -%}
+    {%- if sp_total > m_limit and section.settings.more_label != blank -%}
       <div class="m-more-wrap">
-        <button class="m-more" type="button" data-m-more aria-expanded="false">{{ section.settings.more_label | default: 'View more spaces' | escape }} <span class="material-symbols-outlined">expand_more</span></button>
+        <button class="m-more" type="button" data-m-more aria-expanded="false">{{ section.settings.more_label | escape }} <span class="material-symbols-outlined">expand_more</span></button>
       </div>
     {%- endif -%}
     </div>

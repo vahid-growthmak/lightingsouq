@@ -53,7 +53,13 @@
       if (!isFinite(capH) || !capH) return;
       img.dataset.capH = capH;                      /* survives us clearing max-height below */
 
-      var box = parseFloat(cs.getPropertyValue('--logo-box')) || 3.2;   /* width budget / height cap */
+      /* Opt-in: a context must declare --logo-box to be normalised. Only the marquee does. The
+         brand-strip tiles are deliberately left on plain CSS - the image there is a flex item
+         that keeps being stretched to a uniform width no matter what size it is given, and
+         align-self/flex did not stop it. Rather than ship a half-fix that made the tiles worse
+         than the CSS baseline, they stay as they were until that is understood. */
+      var box = parseFloat(cs.getPropertyValue('--logo-box'));
+      if (!isFinite(box) || !box) return;
       var grow = parseFloat(cs.getPropertyValue('--logo-grow')) || 1;   /* how far a square mark may exceed capH */
       var fill = parseFloat(cs.getPropertyValue('--logo-fill')) || 0.52;/* share of that box to cover */
 

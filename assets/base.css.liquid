@@ -1417,7 +1417,13 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
 /* 88px tile less 1rem padding leaves 54px of inner height around the 44px cap, so a square mark
    can only grow to ~1.22x. The fill is dialled back to match: at 0.52 the target area was out of
    reach for GE and KDK and they clamped, which is exactly the mismatch being fixed. */
-.brand-tile img { --logo-grow: 1.22; --logo-fill: 0.41; --logo-box: 3.64; max-height: 44px; max-width: 80%; object-fit: contain; }
+/* 88px tile less 1rem padding leaves 54px of inner height around the 44px cap, so a square mark
+   can grow ~1.22x. The width budget must fit the NARROWEST tile, not the widest: max-width: 80%
+   is ~125px at six columns but only ~100px on a two-column phone, and a budget above that just
+   gets clamped by the guard - which is what pinned six logos to an identical 125px and left the
+   spread at 3.11x. 2.2 x 44 = 97px fits every breakpoint, and the fill is set so the squarest
+   mark (KDK) reaches the target area rather than clamping short of it. */
+.brand-tile img { --logo-grow: 1.22; --logo-fill: 0.51; --logo-box: 2.2; max-height: 44px; max-width: 80%; object-fit: contain; }
 /* wordmark fallback shown when a logo image is missing/broken */
 .brand-wordmark { align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.01em; color: var(--brand-primary); text-align: center; line-height: 1.15; }
 /* marquee variant: boxless, so the tile itself carries no card chrome */

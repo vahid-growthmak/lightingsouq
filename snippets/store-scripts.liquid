@@ -21,6 +21,67 @@
   })();
 </script>
 
+<script>
+  /* Brand logos all look like different sizes because they are sized on different axes.
+     Every logo context caps BOTH axes (marquee 44x140, tiles 44px x 80%, brand pages 100%) and
+     uses object-fit: contain, so each logo is limited by whichever axis binds first: a wordmark
+     hits the width cap and comes out short, a square mark hits the height cap and comes out
+     narrow. Measured on the marquee, Osram covered 3.5x the area of KDK.
+
+     Equal HEIGHT does not fix it either - at the same height a 6.5:1 wordmark reads as far bigger
+     than a 1:1 mark. What the eye actually reads as "same size" is equal AREA, so each logo is
+     scaled to a constant area derived from its own context's cap box. Height is clamped so a
+     square mark cannot tower over a wordmark, and never past the space its container actually has.
+
+     Runs off natural dimensions, so merchant-uploaded logos are handled too, and the CSS caps stay
+     as the no-JS fallback. */
+  (function () {
+    var FILL = 0.52;      /* share of the cap box each logo should cover */
+    var SHORTEST = 0.45;  /* a very wide wordmark may go this far under the height cap */
+
+    function px(v) { var n = parseFloat(v); return isFinite(n) ? n : 0; }
+
+    function size(img) {
+      if (!img.naturalWidth || !img.naturalHeight) return;
+      var cs = getComputedStyle(img);
+      var capH = px(img.dataset.capH || cs.maxHeight);
+      var capW = px(img.dataset.capW || cs.maxWidth);
+      if (!capH || !capW) return;                 /* no cap box to work from - leave it alone */
+      img.dataset.capH = capH; img.dataset.capW = capW;   /* remember, we are about to clear them */
+
+      /* How far a square mark may exceed the height cap, per context. Declared in CSS as
+         --logo-grow because only the stylesheet knows the container has spare room: the marquee
+         card is 84px around a 44px cap, the strip tile 56px. Measuring the parent here instead
+         would be circular - it auto-sizes to this very image. Default 1 means never exceed, which
+         is correct where the cap is already 100% of the box (brand pages, index cards). */
+      var grow = parseFloat(cs.getPropertyValue('--logo-grow')) || 1;
+
+      var ratio = img.naturalWidth / img.naturalHeight;
+      var h = Math.sqrt(capH * capW * FILL / ratio);
+      h = Math.max(capH * SHORTEST, Math.min(capH * grow, h));
+
+      var w = h * ratio;
+      if (w > capW) { w = capW; h = w / ratio; }  /* width still wins for the widest wordmarks */
+
+      img.style.maxHeight = 'none';
+      img.style.maxWidth = 'none';
+      img.style.height = h.toFixed(1) + 'px';
+      img.style.width = w.toFixed(1) + 'px';
+    }
+
+    function run() {
+      document.querySelectorAll('.brand-img').forEach(function (img) {
+        if (img.complete) size(img);
+        else img.addEventListener('load', function () { size(img); }, { once: true });
+      });
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);
+    else run();
+    window.addEventListener('load', run);
+    var t; window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(run, 150); }, { passive: true });
+  })();
+</script>
+
 {%- comment -%}
   Global storefront behaviour: wishlist (localStorage), AJAX add-to-cart,
   cart drawer render from /cart.js, and toasts. Progressive enhancement —

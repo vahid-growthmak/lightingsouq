@@ -848,7 +848,7 @@ img, video, canvas, svg { max-width: 100%; height: auto; display: block; }
 .reviewer-name { font-weight: 500; font-size: 0.875rem; }
 .review-date { font-size: 0.75rem; color: var(--gray-500); }
 
-//* ---- Product Card ---- */
+/* ---- Product Card ---- */
 .product-card {
   background: #fff;
   border-radius: var(--radius);
@@ -2015,12 +2015,17 @@ img.pay-chip--card { object-fit: cover; }
    curve and duration as the bar's own slide so the two read as one movement.
    Height comes from --lsq-atc-h, published by main-product-v2.liquid from the bar's measured
    height; the 66px fallback only applies if that script has not run yet. Both launchers get the
-   same offset, which also lines them up with each other (they shipped 4px apart). */
+   same offset, which also lines them up with each other (they shipped 4px apart).
+   Rewards is positioned here; the chat launcher is positioned from main-product-v2.liquid
+   instead. It cannot be done in CSS: the app REPLACES the launcher element the first time the
+   chat is opened (#chizy-v2-split-shell is destroyed, #chizy-chat-root takes over) and rewrites
+   `inset` inline on every open and close, so a rule bound to the original id silently stops
+   matching and the icon drops back onto the buttons. #chizy-chat-root is also the id of the
+   opened full-screen panel, so it cannot simply be added to the selector either. */
 @media (max-width: 899px) {
   #smile-ui-lite-launcher-frame-container,
   #chizy-v2-split-shell { transition: bottom 0.35s cubic-bezier(.4,0,.2,1); }
-  body.atc-showing #smile-ui-lite-launcher-frame-container,
-  body.atc-showing #chizy-v2-split-shell { bottom: calc(var(--lsq-atc-h, 66px) + 12px) !important; }
+  body.atc-showing #smile-ui-lite-launcher-frame-container { bottom: calc(var(--lsq-atc-h, 66px) + 12px) !important; }
 }
 @media (prefers-reduced-motion: reduce) {
   #smile-ui-lite-launcher-frame-container,

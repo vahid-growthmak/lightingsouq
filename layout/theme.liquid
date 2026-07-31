@@ -4,6 +4,22 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    {%- comment -%}
+      Shopify's hosted customer-account pages point "Shop now" at /collections/frontpage - the
+      default "Home page" collection, which holds 0 products, so shoppers landed on an empty
+      page. Two fixes that look obvious do not work here:
+        - store-scripts.liquid rewrites such links, but those account pages are served from
+          shopify.com, not the theme, so no theme script ever runs on them.
+        - a Shopify URL redirect does not fire either: redirects only apply to paths that would
+          otherwise 404, and this collection still exists. Verified - with the redirect created,
+          /collections/frontpage still returned 200.
+      So the catch happens on arrival instead. This sits above every stylesheet and script so it
+      runs before anything paints, and location.replace keeps the empty page out of the back
+      button. The query string carries over so the ?country= market context survives the hop.
+    {%- endcomment -%}
+    {%- if template.name == 'collection' and collection.handle == 'frontpage' and request.design_mode != true -%}
+      <script>location.replace('/collections/all' + window.location.search + window.location.hash);</script>
+    {%- endif -%}
     <link rel="canonical" href="{{ canonical_url }}">
     {%- if request.page_type == 'page' and page.handle == 'wishlist' -%}
       <meta name="robots" content="noindex, follow">

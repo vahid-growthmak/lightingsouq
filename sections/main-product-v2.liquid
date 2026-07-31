@@ -401,10 +401,45 @@
       setAtcHeight();
       if (window.ResizeObserver) new ResizeObserver(setAtcHeight).observe(sticky);
       else window.addEventListener('resize', setAtcHeight);
+      // The Rewards launcher is a stable element, so base.css positions it. The chat launcher is
+      // not: the app destroys #chizy-v2-split-shell the first time the chat is opened and hands
+      // over to #chizy-chat-root, rewriting `inset` inline on every open and close. A CSS rule
+      // bound to the original id therefore stops matching, and the icon fell back onto the
+      // buttons as soon as a shopper had opened the chat once. Drive it from here instead,
+      // against whichever element is currently present.
+      // #chizy-chat-root doubles as the opened full-screen panel, so never move that: the
+      // launcher is ~60px tall and the open panel fills the screen, which tells them apart
+      // without depending on a class name the app might change.
+      var mqSmall = window.matchMedia('(max-width: 899px)');
+      var CHAT_IDS = ['chizy-v2-split-shell', 'chizy-chat-root'];
+      function placeChatLauncher() {
+        var lift = (mqSmall.matches && document.body.classList.contains('atc-showing'))
+          ? sticky.offsetHeight + 12 : 0;
+        CHAT_IDS.forEach(function (id) {
+          var el = document.getElementById(id);
+          if (!el) return;
+          var want = (lift && el.getBoundingClientRect().height <= 200) ? lift + 'px' : '';
+          // Only write on a real change, otherwise our own edit re-triggers the observer below.
+          if (el.style.bottom === want) return;
+          if (want) el.style.setProperty('bottom', want, 'important');
+          else el.style.removeProperty('bottom');
+        });
+      }
+      var chatTimer;
+      function placeChatLauncherSoon() {
+        clearTimeout(chatTimer);
+        chatTimer = setTimeout(placeChatLauncher, 60);
+      }
+      placeChatLauncher();
+      new MutationObserver(placeChatLauncherSoon).observe(document.body, {
+        childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class']
+      });
+      if (mqSmall.addEventListener) mqSmall.addEventListener('change', placeChatLauncher);
       new IntersectionObserver(function (e) {
         var shown = !e[0].isIntersecting;
         sticky.classList.toggle('show', shown);
         document.body.classList.toggle('atc-showing', shown);
+        placeChatLauncher();
       }, { threshold: 0 }).observe(actions);
       var stickyBtn = sticky.querySelector('[data-sticky-atc]');
       if (stickyBtn && form) stickyBtn.addEventListener('click', function () { form.requestSubmit ? form.requestSubmit() : form.submit(); });

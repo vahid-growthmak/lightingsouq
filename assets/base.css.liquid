@@ -2189,8 +2189,17 @@ birse-sheet-mobile .item-img-wrap .hover-wishlist-btn { display: inline-flex !im
 .cd-item__remove:hover { color: #dc2626; }
 .cd-item__remove .material-symbols-outlined { font-size: 1.15rem; }
 /* (9) Judge.me ships its Customer Reviews heading at a light weight, and left aligned. The app
-   sets both inline, hence !important on each - centring alone was being overridden on desktop. */
+   sets both inline, hence !important on each. */
 .jm-review-widget-minimal-header__title { font-weight: 700 !important; text-align: center !important; }
+/* text-align alone centres nothing here: Judge.me lays the header out as a flex row
+   [ title | filter-container ] with justify-content:space-between, so the title is a
+   shrink-to-fit item (measured 175px of a 1200px row) pinned to the left edge - centring text
+   inside a 175px box is a no-op. The row already has flex-wrap:wrap, so giving the title a
+   100% flex-basis hands it its own full-width line and the centring finally lands; the filter
+   controls wrap to the line below and are centred with it. Verified: title centre 640px of a
+   1200px row starting at 40px, i.e. 0px off centre. */
+.jm-review-widget__header > .jm-cluster { justify-content: center; }
+.jm-review-widget__header > .jm-cluster > .jm-stack:first-child { flex: 1 1 100%; }
 
 /* (5)(10) The Rewards and Chat widgets are app-injected and position:fixed to the bottom
    corners, so the page has to reserve room or they sit on top of the footer text and, on a

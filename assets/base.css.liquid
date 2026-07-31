@@ -2006,7 +2006,9 @@ img.pay-chip--card { object-fit: cover; }
 }
 @media (max-width: 479px) { .sticky-atc-title { display: none; } }
 /* keep content clear of the fixed bar */
-body.has-sticky-atc { padding-bottom: 76px; }
+/* superseded by the footer-side reserve further down - left at 0 so it cannot reintroduce the
+   white band under the footer */
+body.has-sticky-atc { padding-bottom: 0; }
 
 /* ---- Breadcrumb (reused across all pages) ---- */
 .breadcrumb { font-size: 0.85rem; color: var(--gray-500); margin-bottom: 1.25rem; line-height: 1.6; }
@@ -2131,10 +2133,10 @@ body.has-sticky-atc { padding-bottom: 76px; }
 /* BUG_22: expert-band uses .pdp-section (full-width rules) but on page templates its
    neighbours inset via .container, so the divider lines read as misaligned. PDP unchanged. */
 .template-page .pdp-section { border-top: 0; border-bottom: 0 !important; }
-/* BUG_32: Judge.me renders its own left-aligned heading while every other heading is centred. */
-@media (max-width: 767px) {
-  .jm-review-widget-minimal-header__title { text-align: center; }
-}
+/* BUG_32: Judge.me renders its own left-aligned heading while every other heading is centred.
+   The centring was scoped to mobile, so on desktop "Customer Reviews" still sat hard left above
+   its own centred body text. It applies at every width now - see the weight rule further down. */
+.jm-review-widget-minimal-header__title { text-align: center; }
 
 /* BUG_09: the Storeify Request-a-quote modal sat flush against the viewport top and
    bottom (measured 0px / 0px at 1280x660), clipping the comments field. Its overlay
@@ -2186,15 +2188,19 @@ birse-sheet-mobile .item-img-wrap .hover-wishlist-btn { display: inline-flex !im
 .cd-item__remove { display: inline-flex; align-items: center; text-decoration: none !important; color: var(--gray-500); padding: 0; }
 .cd-item__remove:hover { color: #dc2626; }
 .cd-item__remove .material-symbols-outlined { font-size: 1.15rem; }
-/* (9) Judge.me ships its Customer Reviews heading at a light weight */
-.jm-review-widget-minimal-header__title { font-weight: 700 !important; }
+/* (9) Judge.me ships its Customer Reviews heading at a light weight, and left aligned. The app
+   sets both inline, hence !important on each - centring alone was being overridden on desktop. */
+.jm-review-widget-minimal-header__title { font-weight: 700 !important; text-align: center !important; }
 
-/* (5)(10) The Rewards and Chat widgets are app-injected, position:fixed to the bottom
-   corners, and the page reserved no room for them - so they sat on top of the footer
-   text and, on product pages, the sticky add-to-cart bar. Reserve scroll space so all
-   content can be scrolled clear of them. Widget heights measured at 60px. */
-body { padding-bottom: 88px; }
-body.has-sticky-atc { padding-bottom: 164px; }
+/* (5)(10) The Rewards and Chat widgets are app-injected and position:fixed to the bottom
+   corners, so the page has to reserve room or they sit on top of the footer text and, on a
+   product page, the sticky add-to-cart bar.
+   That reserve used to live on <body>, which put it BELOW the footer - and body is white while
+   the footer is brand blue, so it read as a 164px white band hanging off the bottom of every
+   product page. The space is now reserved INSIDE the footer instead: same clearance, but the
+   footer's own background fills it, so there is nothing to see. Measured widget height 60px. */
+.footer { padding-bottom: 88px; }
+body.has-sticky-atc .footer { padding-bottom: 164px; }
 
 /* The country/currency pill is app-rendered and sizes itself to the country NAME, so
    the header layout changed with the selected market: measured at 430px wide, the pill

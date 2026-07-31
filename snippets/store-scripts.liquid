@@ -109,10 +109,31 @@
       img.style.width = w.toFixed(1) + 'px';
     }
 
+    /* The first pass often lands before the grid has resolved - measured a tile at 46px that
+       settles to 200 - and load/resize alone never revisited it, so a logo could keep a size
+       computed from a box that no longer existed. Watch the container instead and recompute when
+       its width actually changes. Guarded against feedback: in shrink-to-fit contexts like the
+       marquee the parent follows the image, so a pass only runs when the measured basis really
+       moved, never merely because we just resized the image. */
+    var ro = window.ResizeObserver ? new ResizeObserver(function (entries) {
+      entries.forEach(function (entry) {
+        var img = entry.target.querySelector('.brand-img');
+        if (!img) return;
+        var basis = Math.round(innerBox(entry.target).w);
+        if (String(basis) === img.dataset.basis) return;
+        img.dataset.basis = basis;
+        size(img);
+      });
+    }) : null;
+
     function run() {
       document.querySelectorAll('.brand-img').forEach(function (img) {
         if (img.complete) size(img);
         else img.addEventListener('load', function () { size(img); }, { once: true });
+        if (ro && img.parentElement && !img.dataset.observed) {
+          img.dataset.observed = '1';
+          ro.observe(img.parentElement);
+        }
       });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);

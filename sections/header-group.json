@@ -239,7 +239,7 @@
         "b8"
       ],
       "settings": {
-        "show_announcement": true,
+        "show_announcement": false,
         "announce_1": "Free delivery across Qatar on orders above QAR 150",
         "announce_2": "WhatsApp Support Available",
         "show_country": false,

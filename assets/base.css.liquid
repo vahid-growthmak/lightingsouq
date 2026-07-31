@@ -1414,7 +1414,10 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
 .brand-tile:hover { border-color: var(--brand-accent); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
 /* 88px tile less 1rem padding each side leaves 56px of room around the 44px cap, so --logo-grow
    lets a square mark reach the same optical area as a wordmark without escaping the tile. */
-.brand-tile img { --logo-grow: 1.22; max-height: 44px; max-width: 80%; object-fit: contain; }
+/* 88px tile less 1rem padding leaves 54px of inner height around the 44px cap, so a square mark
+   can only grow to ~1.22x. The fill is dialled back to match: at 0.52 the target area was out of
+   reach for GE and KDK and they clamped, which is exactly the mismatch being fixed. */
+.brand-tile img { --logo-grow: 1.22; --logo-fill: 0.41; max-height: 44px; max-width: 80%; object-fit: contain; }
 /* wordmark fallback shown when a logo image is missing/broken */
 .brand-wordmark { align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.01em; color: var(--brand-primary); text-align: center; line-height: 1.15; }
 /* marquee variant: boxless, so the tile itself carries no card chrome */

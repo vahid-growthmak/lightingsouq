@@ -36,16 +36,37 @@
      Runs off natural dimensions, so merchant-uploaded logos are handled too, and the CSS caps stay
      as the no-JS fallback. */
   (function () {
-    var FILL = 0.52;      /* share of the cap box each logo should cover */
     var SHORTEST = 0.45;  /* a very wide wordmark may go this far under the height cap */
 
-    function px(v) { var n = parseFloat(v); return isFinite(n) ? n : 0; }
+    /* A cap can be a percentage (.brand-tile img is max-width: 80%). getComputedStyle does not
+       always resolve those to px - it handed back the string "80%", and a naive parseFloat read
+       that as 80px, which is why the tiles came out far too small. Resolve against the container's
+       content box instead. */
+    function cap(value, basis) {
+      if (!value || value === 'none') return 0;
+      var n = parseFloat(value);
+      if (!isFinite(n)) return 0;
+      return value.indexOf('%') > -1 ? basis * n / 100 : n;
+    }
+    function innerBox(el) {
+      if (!el) return { w: 0, h: 0 };
+      var s = getComputedStyle(el);
+      return {
+        w: el.clientWidth - parseFloat(s.paddingLeft || 0) - parseFloat(s.paddingRight || 0),
+        h: el.clientHeight - parseFloat(s.paddingTop || 0) - parseFloat(s.paddingBottom || 0)
+      };
+    }
 
     function size(img) {
       if (!img.naturalWidth || !img.naturalHeight) return;
       var cs = getComputedStyle(img);
-      var capH = px(img.dataset.capH || cs.maxHeight);
-      var capW = px(img.dataset.capW || cs.maxWidth);
+      var capH, capW;
+      if (img.dataset.capH) { capH = parseFloat(img.dataset.capH); capW = parseFloat(img.dataset.capW); }
+      else {
+        var box = innerBox(img.parentElement);
+        capH = cap(cs.maxHeight, box.h);
+        capW = cap(cs.maxWidth, box.w);
+      }
       if (!capH || !capW) return;                 /* no cap box to work from - leave it alone */
       img.dataset.capH = capH; img.dataset.capW = capW;   /* remember, we are about to clear them */
 
@@ -55,14 +76,24 @@
          would be circular - it auto-sizes to this very image. Default 1 means never exceed, which
          is correct where the cap is already 100% of the box (brand pages, index cards). */
       var grow = parseFloat(cs.getPropertyValue('--logo-grow')) || 1;
+      /* Share of the cap box each logo should cover. Lower it where the container is tight, so the
+         target area stays reachable by a square mark instead of clamping it and reintroducing the
+         very mismatch this is meant to remove. */
+      var fill = parseFloat(cs.getPropertyValue('--logo-fill')) || 0.52;
 
       var ratio = img.naturalWidth / img.naturalHeight;
-      var h = Math.sqrt(capH * capW * FILL / ratio);
+      var h = Math.sqrt(capH * capW * fill / ratio);
       h = Math.max(capH * SHORTEST, Math.min(capH * grow, h));
 
       var w = h * ratio;
       if (w > capW) { w = capW; h = w / ratio; }  /* width still wins for the widest wordmarks */
 
+      /* The markup carries width="200" height="100" for CLS. Those attributes beat the CSS width
+         here - even with !important - so the tiles ignored the computed width entirely and stayed
+         at 200px. Rewrite the attributes to the values we just worked out: layout then agrees with
+         the styles, and the reserved space stays correct so nothing is given up on CLS. */
+      img.setAttribute('width', Math.round(w));
+      img.setAttribute('height', Math.round(h));
       img.style.maxHeight = 'none';
       img.style.maxWidth = 'none';
       img.style.height = h.toFixed(1) + 'px';

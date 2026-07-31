@@ -314,14 +314,31 @@
     var moneyFormat = {{ shop.money_format | json }};
     var L_ATC = {{ s.label_add_cart | default: 'ADD TO CART' | json }};
     var L_SOLD = {{ s.label_sold_out_pdp | default: 'SOLD OUT' | json }};
-    /* toLocaleString(undefined, ...) formats to the VISITOR'S browser locale, so the same product
-       showed "750.00" in Qatar and "750,00" in Germany, France, Spain, the Netherlands, Italy,
-       Brazil or Chile - the price changed punctuation depending on who was looking at it, and it
-       disagreed with the server-rendered price on the same page. Pinned to en-US so the separator
-       is the store's, not the browser's. */
+    /* Two bugs lived here.
+       toLocaleString(undefined, ...) formatted to the VISITOR'S browser locale, so the same product
+       read "750.00" in Qatar and "750,00" in Germany, France, Spain, the Netherlands, Italy,
+       Brazil or Chile - exactly the locales that use a comma decimal - and disagreed with the
+       server-rendered price sitting on the same page.
+       And the replace only matched the literal token {{amount}}. This shop's money format is
+       {{amount_with_comma_separator}}, which never matched, so changing variant substituted nothing
+       and the price element was left showing the raw template text.
+       The store's own format now decides both separator and decimals, the way main-collection
+       already does it, so the JS price always agrees with the Liquid one - whatever the setting. */
+    function amountStr(cents, token) {
+      var dec = token.indexOf('no_decimals') > -1 ? 0 : 2;
+      var comma = token.indexOf('comma_separator') > -1;
+      var space = token.indexOf('space_separator') > -1;
+      var thou = comma ? '.' : (space ? ' ' : ',');
+      var dsep = comma ? ',' : '.';
+      var n = (cents / 100) || 0;
+      var parts = Math.abs(n).toFixed(dec).split('.');
+      var ip = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thou);
+      return (n < 0 ? '-' : '') + ip + (dec ? dsep + parts[1] : '');
+    }
     function money(cents) {
-      var v = (cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      return moneyFormat.replace(/\{\{\s*amount\s*\}\}/, v);
+      return moneyFormat.replace(/\{\{\s*(amount[a-z_]*)\s*\}\}/g, function (_, token) {
+        return amountStr(cents, token);
+      });
     }
     function selectedOptions() {
       var opts = [];

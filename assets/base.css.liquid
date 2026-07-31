@@ -2080,7 +2080,21 @@ body.has-sticky-atc { padding-bottom: 76px; }
    drawer row gets a little taller; the stepper is a primary interaction and worth the space. */
 .cd-qty__btn { width: 44px; height: 44px; border: none; background: transparent; cursor: pointer; font-size: 1rem; line-height: 1; color: var(--brand-text); }
 .cd-qty__btn:hover { background: var(--gray-100); }
-.cd-qty__num { min-width: 26px; text-align: center; font-size: 0.85rem; font-weight: 700; }
+/* Tap feedback has to be instant and local — on a phone there is no hover, so without this the
+   button gave no sign it had registered and the tap read as ignored while the request was out. */
+.cd-qty__btn:active { background: var(--gray-200); transform: scale(0.92); }
+.cd-qty__btn { transition: background var(--transition), transform 90ms ease-out; }
+.cd-qty__btn[disabled] { opacity: 0.45; cursor: default; }
+/* tabular figures + a floor wide enough for two digits: 9 -> 10 used to nudge the row's price
+   sideways, which reads as jank even when the update itself is instant */
+.cd-qty__num { min-width: 2.2ch; text-align: center; font-size: 0.85rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+/* The quantity is painted optimistically, so the only thing still catching up is the line price.
+   Fade just that, not the row — dimming the whole row would make a fast interaction look slow. */
+.cd-item.is-busy .cd-item__price { opacity: 0.45; transition: opacity 120ms ease-out; }
+.cd-item.is-removing { opacity: 0.4; transition: opacity 160ms ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .cd-qty__btn:active { transform: none; }
+}
 .cd-item__remove { margin-top: 0.5rem; border: none; background: transparent; padding: 0; color: var(--gray-500); font-size: 0.78rem; cursor: pointer; text-decoration: underline; }
 .cd-item__remove:hover { color: #e11d48; }
 .cd-subtotal { display: flex; align-items: center; justify-content: space-between; font-size: 1.05rem; }

@@ -119,54 +119,136 @@
   function setCounts(n) {
     document.querySelectorAll('[data-cart-count]').forEach(function (el) { el.textContent = n; });
   }
-  function renderCart() {
+  function itemMarkup(it, code) {
+    return '<div class="cd-item" data-key="' + it.key + '">' +
+      '<a class="cd-item__img" href="' + it.url + '"><img src="' + (it.image ? it.image.replace(/(\.[a-z]+)(\?|$)/i, '_120x$1$2') : '') + '" alt="" width="60" height="60" loading="lazy"></a>' +
+      '<div class="cd-item__info">' +
+        '<a class="cd-item__title" href="' + it.url + '">' + it.product_title + '</a>' +
+        (it.variant_title ? '<p class="cd-item__variant">' + it.variant_title + '</p>' : '') +
+        '<div class="cd-item__row">' +
+          '<div class="cd-qty">' +
+            '<button type="button" class="cd-qty__btn" data-qty-dec aria-label="Decrease">&minus;</button>' +
+            '<span class="cd-qty__num">' + it.quantity + '</span>' +
+            '<button type="button" class="cd-qty__btn" data-qty-inc aria-label="Increase">+</button>' +
+          '</div>' +
+          '<span class="cd-item__price">' + money(it.final_line_price, code) + '</span>' +
+        '</div>' +
+        '<button type="button" class="cd-item__remove" data-remove aria-label="' + T.remove + '" title="' + T.remove + '"><span class="material-symbols-outlined">delete</span></button>' +
+      '</div></div>';
+  }
+
+  /* Repaint from a cart object. When the line-item set is unchanged (the usual case after a
+     quantity step) only the numbers are patched: a full innerHTML rebuild would destroy the very
+     button the shopper is tapping, which is why repeated taps used to lose their target, and it
+     re-requests every thumbnail. Structural changes still rebuild. */
+  function paintCart(cart) {
     var body = document.querySelector('[data-cart-body]');
     var foot = document.querySelector('[data-cart-foot]');
     if (!body) return;
+    setCounts(cart.item_count);
+    if (!cart.items.length) {
+      body.innerHTML = '<div class="cart-drawer__empty"><span class="material-symbols-outlined">shopping_cart</span><p>' + T.cartEmpty + '</p><a class="btn-primary" href="' + T.shopAllLink + '">' + T.shopAll + '</a></div>';
+      if (foot) foot.hidden = true;
+      return;
+    }
+    var code = cart.currency;
+    var rows = body.querySelectorAll('.cd-item');
+    var sameShape = rows.length === cart.items.length;
+    if (sameShape) {
+      for (var i = 0; i < rows.length; i++) {
+        if (rows[i].getAttribute('data-key') !== cart.items[i].key) { sameShape = false; break; }
+      }
+    }
+    if (sameShape) {
+      cart.items.forEach(function (it, i) {
+        var row = rows[i];
+        var n = row.querySelector('.cd-qty__num');
+        var p = row.querySelector('.cd-item__price');
+        if (n && n.textContent != it.quantity) n.textContent = it.quantity;
+        if (p) p.textContent = money(it.final_line_price, code);
+        row.classList.remove('is-busy');
+      });
+    } else {
+      body.innerHTML = cart.items.map(function (it) { return itemMarkup(it, code); }).join('');
+    }
+    if (foot) {
+      foot.hidden = false;
+      foot.innerHTML = '<div class="cd-subtotal"><span>' + T.subtotal + '</span><strong>' + money(cart.total_price, code) + '</strong></div>' +
+        '<p class="cd-note">' + T.taxNote + '</p>' +
+        '<a class="btn-primary cd-checkout" href="/checkout">' + T.checkout + '</a>' +
+        '<a class="cd-viewcart" href="{{ routes.cart_url }}">' + T.viewCart + '</a>';
+    }
+  }
+
+  function renderCart() {
+    var body = document.querySelector('[data-cart-body]');
+    if (!body) return;
     fetch(CART_URL, { headers: { 'Accept': 'application/json' } })
       .then(function (r) { return r.json(); })
-      .then(function (cart) {
-        setCounts(cart.item_count);
-        if (!cart.items.length) {
-          body.innerHTML = '<div class="cart-drawer__empty"><span class="material-symbols-outlined">shopping_cart</span><p>' + T.cartEmpty + '</p><a class="btn-primary" href="' + T.shopAllLink + '">' + T.shopAll + '</a></div>';
-          if (foot) foot.hidden = true;
-          return;
-        }
-        var code = cart.currency;
-        body.innerHTML = cart.items.map(function (it) {
-          return '<div class="cd-item" data-key="' + it.key + '">' +
-            '<a class="cd-item__img" href="' + it.url + '"><img src="' + (it.image ? it.image.replace(/(\.[a-z]+)(\?|$)/i, '_120x$1$2') : '') + '" alt="" width="60" height="60" loading="lazy"></a>' +
-            '<div class="cd-item__info">' +
-              '<a class="cd-item__title" href="' + it.url + '">' + it.product_title + '</a>' +
-              (it.variant_title ? '<p class="cd-item__variant">' + it.variant_title + '</p>' : '') +
-              '<div class="cd-item__row">' +
-                '<div class="cd-qty">' +
-                  '<button type="button" class="cd-qty__btn" data-qty-dec aria-label="Decrease">&minus;</button>' +
-                  '<span class="cd-qty__num">' + it.quantity + '</span>' +
-                  '<button type="button" class="cd-qty__btn" data-qty-inc aria-label="Increase">+</button>' +
-                '</div>' +
-                '<span class="cd-item__price">' + money(it.final_line_price, code) + '</span>' +
-              '</div>' +
-              '<button type="button" class="cd-item__remove" data-remove aria-label="' + T.remove + '" title="' + T.remove + '"><span class="material-symbols-outlined">delete</span></button>' +
-            '</div></div>';
-        }).join('');
-        if (foot) {
-          foot.hidden = false;
-          foot.innerHTML = '<div class="cd-subtotal"><span>' + T.subtotal + '</span><strong>' + money(cart.total_price, code) + '</strong></div>' +
-            '<p class="cd-note">' + T.taxNote + '</p>' +
-            '<a class="btn-primary cd-checkout" href="/checkout">' + T.checkout + '</a>' +
-            '<a class="cd-viewcart" href="{{ routes.cart_url }}">' + T.viewCart + '</a>';
-        }
-      })
+      .then(paintCart)
       .catch(function () { body.innerHTML = '<p style="padding:1.5rem;">' + T.cartError + '</p>'; });
   }
-  function changeQty(key, qty) {
+
+  /* Quantity stepping.
+
+     It used to fire /cart/change.js, wait, then fire a whole second /cart.js, wait again, and only
+     then repaint — so the number sat still for two round trips before it moved. Worse, every click
+     read the CURRENT DOM number, which had not updated yet: three fast taps on + all computed
+     "2" and sent it three times instead of reaching 4.
+
+     Now the number moves on the tap and the network follows. `desired` holds the target quantity
+     per line, so repeated taps accumulate against the intent rather than the stale DOM. Sends are
+     debounced, so a burst of taps is one request. /cart/change.js already returns the whole cart,
+     so its response repaints directly and the second fetch is gone. On failure we fall back to the
+     server's truth rather than leaving the optimistic number lying. */
+  var desired = {};
+  var flushTimer = null;
+  var inFlight = false;
+
+  function scheduleFlush() {
+    clearTimeout(flushTimer);
+    flushTimer = setTimeout(flushQty, 220);
+  }
+  function flushQty() {
+    if (inFlight) { scheduleFlush(); return; }
+    var keys = Object.keys(desired);
+    if (!keys.length) return;
+    var key = keys[0];
+    var qty = desired[key];
+    delete desired[key];
+    inFlight = true;
     fetch(CHANGE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
       body: JSON.stringify({ id: key, quantity: qty })
-    }).then(function (r) { return r.json(); }).then(function () { renderCart(); });
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (cart) {
+        inFlight = false;
+        paintCart(cart);
+        if (Object.keys(desired).length) scheduleFlush();
+      })
+      .catch(function () { inFlight = false; desired = {}; renderCart(); });
   }
+  function changeQty(key, qty) {
+    var row = document.querySelector('.cd-item[data-key="' + key.replace(/"/g, '\\"') + '"]');
+    desired[key] = qty;
+    if (row) {
+      var n = row.querySelector('.cd-qty__num');
+      if (qty <= 0) row.classList.add('is-removing');
+      else if (n) n.textContent = qty;
+      row.classList.add('is-busy');
+    }
+    scheduleFlush();
+  }
+  /* Steps against the pending intent, not the painted number, so bursts land on the right total. */
+  function stepQty(key, delta) {
+    var row = document.querySelector('.cd-item[data-key="' + key.replace(/"/g, '\\"') + '"]');
+    if (!row) return;
+    var base = (key in desired) ? desired[key] : (parseInt(row.querySelector('.cd-qty__num').textContent, 10) || 1);
+    changeQty(key, Math.max(0, base + delta));
+  }
+
   function addToCart(form) {
     var btn = form.querySelector('[type=submit]');
     if (btn) { btn.disabled = true; btn.classList.add('is-loading'); }
@@ -206,9 +288,10 @@
     var row = e.target.closest('.cd-item');
     if (row && (dec || inc || rem)) {
       var key = row.getAttribute('data-key');
-      var cur = parseInt(row.querySelector('.cd-qty__num').textContent, 10) || 1;
-      if (dec) changeQty(key, Math.max(0, cur - 1));
-      else if (inc) changeQty(key, cur + 1);
+      /* stepQty resolves against the pending intent; reading the painted number here was what
+         made a burst of taps collapse onto the same value. */
+      if (dec) stepQty(key, -1);
+      else if (inc) stepQty(key, 1);
       else if (rem) changeQty(key, 0);
     }
   });

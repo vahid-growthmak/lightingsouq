@@ -189,6 +189,12 @@
           "settings": {
             "name": "Vettam"
           }
+        },
+        "logo_giax01": {
+          "type": "logo",
+          "settings": {
+            "name": "GIAX"
+          }
         }
       },
       "block_order": [
@@ -200,7 +206,8 @@
         "logo_QgbVhg",
         "logo_VVMUMQ",
         "logo_fAi3Ft",
-        "logo_6DjDmc"
+        "logo_6DjDmc",
+        "logo_giax01"
       ],
       "name": "Brand Marquee",
       "settings": {

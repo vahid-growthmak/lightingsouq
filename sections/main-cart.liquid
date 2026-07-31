@@ -32,7 +32,18 @@
               </div>
               <div class="lsq-cart-qty">
                 <label class="lsq-sr-only" for="updates_{{ item.index | plus: 1 }}">{{ s.qty_label }}</label>
-                <input type="number" min="0" name="updates[]" id="updates_{{ item.index | plus: 1 }}" value="{{ item.quantity }}" inputmode="numeric" class="lsq-qty-input">
+                {%- comment -%}
+                  The bare number input relied on the browser's own spinners, which phones do not
+                  show - so on mobile there was no way to change quantity except typing. Same
+                  minus / input / plus stepper as the product page and cart drawer. Buttons are
+                  type="button" so they never submit the form themselves; stepping is debounced
+                  into one cart update (see script below).
+                {%- endcomment -%}
+                <div class="lsq-qty-stepper">
+                  <button type="button" class="lsq-qty-btn" data-step="-1" aria-label="{{ s.qty_minus_label }}">&minus;</button>
+                  <input type="number" min="0" name="updates[]" id="updates_{{ item.index | plus: 1 }}" value="{{ item.quantity }}" inputmode="numeric" class="lsq-qty-input">
+                  <button type="button" class="lsq-qty-btn" data-step="1" aria-label="{{ s.qty_plus_label }}">+</button>
+                </div>
                 {%- comment -%} BUG_18: was a "Remove" text link in the info column; now an icon beside the qty {%- endcomment -%}
                 <a href="{{ item.url_to_remove }}" class="lsq-cart-remove" aria-label="{{ s.remove_label }}" title="{{ s.remove_label }}"><span class="material-symbols-outlined">delete</span></a>
               </div>
@@ -76,9 +87,24 @@
   #Sec--{{ section.id }} .lsq-cart-remove { display:inline-flex; align-items:center; margin-top:0; color:var(--gray-500,#6b7280); transition:color 0.15s ease-out; }
   #Sec--{{ section.id }} .lsq-cart-remove:hover { color:#dc2626; }
   #Sec--{{ section.id }} .lsq-cart-remove .material-symbols-outlined { font-size:1.25rem; }
-  #Sec--{{ section.id }} .lsq-qty-input {
-    width:64px; padding:0.5rem; text-align:center; border:1px solid var(--gray-200,#e5e7eb); border-radius:var(--radius,8px);
+  #Sec--{{ section.id }} .lsq-qty-stepper {
+    display:inline-flex; align-items:center; border:1px solid var(--gray-200,#e5e7eb);
+    border-radius:var(--radius,8px); background:#fff; overflow:hidden;
   }
+  #Sec--{{ section.id }} .lsq-qty-btn {
+    width:44px; height:44px; display:inline-flex; align-items:center; justify-content:center;
+    border:0; background:transparent; font-size:1.15rem; font-weight:600; line-height:1;
+    color:var(--brand-text,#111827); cursor:pointer; transition:background 0.15s ease-out;
+  }
+  #Sec--{{ section.id }} .lsq-qty-btn:hover { background:var(--gray-50,#f9fafb); }
+  #Sec--{{ section.id }} .lsq-qty-btn:active { background:var(--gray-100,#f3f4f6); }
+  #Sec--{{ section.id }} .lsq-qty-input {
+    width:44px; height:44px; padding:0; text-align:center; border:0; background:transparent;
+    font-weight:600; appearance:textfield; -moz-appearance:textfield;
+  }
+  #Sec--{{ section.id }} .lsq-qty-input::-webkit-outer-spin-button,
+  #Sec--{{ section.id }} .lsq-qty-input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+  #Sec--{{ section.id }} .lsq-cart.is-updating .lsq-qty-btn { opacity:0.5; pointer-events:none; }
   #Sec--{{ section.id }} .lsq-cart-line-price { font-weight:700; text-align:right; }
   #Sec--{{ section.id }} .lsq-cart-summary {
     background:var(--gray-50,#f9fafb); border:1px solid var(--gray-200,#e5e7eb);
@@ -101,9 +127,28 @@
   (function () {
     var form = document.getElementById('lsq-cart-form');
     if (!form) return;
+    var timer;
+    function submitSoon(delay) {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+        form.classList.add('is-updating');
+        var btn = form.querySelector('.lsq-update-btn');
+        if (btn) btn.click(); else form.submit();
+      }, delay);
+    }
     form.querySelectorAll('.lsq-qty-input').forEach(function (input) {
-      input.addEventListener('change', function () {
-        form.querySelector('.lsq-update-btn').click();
+      input.addEventListener('change', function () { submitSoon(150); });
+    });
+    // Stepper: change the number instantly, then push one cart update after the taps stop -
+    // a burst of taps becomes a single reload instead of one per tap.
+    form.querySelectorAll('.lsq-qty-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var input = btn.parentElement.querySelector('.lsq-qty-input');
+        if (!input) return;
+        var v = (parseInt(input.value, 10) || 0) + (parseInt(btn.getAttribute('data-step'), 10) || 0);
+        if (v < 1) v = 1; // the trash icon is the remove path, minus never deletes the line
+        input.value = v;
+        submitSoon(600);
       });
     });
   })();
@@ -118,6 +163,8 @@
     { "type": "text", "id": "subtotal_label", "label": "Subtotal label", "default": "Subtotal" },
     { "type": "text", "id": "tax_note", "label": "Tax note", "default": "Taxes and shipping calculated at checkout." },
     { "type": "text", "id": "qty_label", "label": "Quantity label", "default": "Quantity" },
+    { "type": "text", "id": "qty_minus_label", "label": "Decrease quantity label", "default": "Decrease quantity" },
+    { "type": "text", "id": "qty_plus_label", "label": "Increase quantity label", "default": "Increase quantity" },
     { "type": "text", "id": "remove_label", "label": "Remove label", "default": "Remove" },
     { "type": "text", "id": "checkout_label", "label": "Checkout button", "default": "Checkout" },
     { "type": "text", "id": "update_label", "label": "Update button", "default": "Update cart" },

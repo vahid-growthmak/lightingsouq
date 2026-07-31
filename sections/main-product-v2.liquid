@@ -391,7 +391,21 @@
     var sticky = document.querySelector('[data-sticky]');
     var actions = root.querySelector('.pdp-actions');
     if (sticky && actions) {
-      new IntersectionObserver(function (e) { sticky.classList.toggle('show', !e[0].isIntersecting); }, { threshold: 0 }).observe(actions);
+      // Publish the bar's real height so the app-injected Rewards and Chat launchers can sit
+      // above it instead of on top of it (see .atc-showing in base.css). Measured rather than
+      // hardcoded because .sticky-atc-inner adds env(safe-area-inset-bottom), so the bar is
+      // taller on a notched phone than the 66px it measures in a plain 375px viewport.
+      var setAtcHeight = function () {
+        document.documentElement.style.setProperty('--lsq-atc-h', sticky.offsetHeight + 'px');
+      };
+      setAtcHeight();
+      if (window.ResizeObserver) new ResizeObserver(setAtcHeight).observe(sticky);
+      else window.addEventListener('resize', setAtcHeight);
+      new IntersectionObserver(function (e) {
+        var shown = !e[0].isIntersecting;
+        sticky.classList.toggle('show', shown);
+        document.body.classList.toggle('atc-showing', shown);
+      }, { threshold: 0 }).observe(actions);
       var stickyBtn = sticky.querySelector('[data-sticky-atc]');
       if (stickyBtn && form) stickyBtn.addEventListener('click', function () { form.requestSubmit ? form.requestSubmit() : form.submit(); });
       var stickyBuy = sticky.querySelector('[data-sticky-buy]');

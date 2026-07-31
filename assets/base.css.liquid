@@ -2005,6 +2005,27 @@ img.pay-chip--card { object-fit: cover; }
   .sticky-atc .btn-atc, .sticky-atc .btn-buy-now { flex: 1 1 0; padding: 0 0.6rem; font-size: 0.85rem; min-width: 0; }
 }
 @media (max-width: 479px) { .sticky-atc-title { display: none; } }
+/* The Rewards and Chat launchers are app-injected, position:fixed to the bottom corners, and
+   one of them carries z-index 2147483000 - so on a product page they painted straight over the
+   sticky Add-to-Cart bar. Measured at 375x812: the bar occupies y746-812, Chat y736-796 and
+   Rewards y732-792, i.e. both sat on top of the buttons.
+   The bar itself does not move - the bottom of the screen is the correct, thumb-reachable home
+   for the primary CTA on a phone, and it is the pattern shoppers expect. Instead the launchers
+   lift above the bar while it is showing and settle back when it hides, gliding on the same
+   curve and duration as the bar's own slide so the two read as one movement.
+   Height comes from --lsq-atc-h, published by main-product-v2.liquid from the bar's measured
+   height; the 66px fallback only applies if that script has not run yet. Both launchers get the
+   same offset, which also lines them up with each other (they shipped 4px apart). */
+@media (max-width: 899px) {
+  #smile-ui-lite-launcher-frame-container,
+  #chizy-v2-split-shell { transition: bottom 0.35s cubic-bezier(.4,0,.2,1); }
+  body.atc-showing #smile-ui-lite-launcher-frame-container,
+  body.atc-showing #chizy-v2-split-shell { bottom: calc(var(--lsq-atc-h, 66px) + 12px) !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #smile-ui-lite-launcher-frame-container,
+  #chizy-v2-split-shell { transition: none; }
+}
 /* keep content clear of the fixed bar */
 /* superseded by the footer-side reserve further down - left at 0 so it cannot reintroduce the
    white band under the footer */

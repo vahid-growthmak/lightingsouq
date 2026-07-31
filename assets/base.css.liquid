@@ -2029,6 +2029,12 @@ img.pay-chip--card { object-fit: cover; }
    told apart by size) and publishes --lsq-float-shift next to --lsq-atc-h. Applies at every
    width - the same overlap existed on desktop (Chat over 87x41px of Buy it Now at 1280). */
 .lsq-float-lift { transform: translateY(var(--lsq-float-shift, -62px)) !important; transition: transform 0.35s cubic-bezier(.4,0,.2,1); }
+/* While an open chat panel covers its spot, the Rewards pill hides (its app wrapper carries
+   z-index 2147483647 - the maximum - so it would otherwise paint on top of the open panel's
+   message input; no z-index can outrank it). Toggled from main-product-v2.liquid, overlap-
+   gated so it only fires when the two actually intersect. visibility, not display: the app
+   must keep its layout so the pill returns exactly where it was on close. */
+.lsq-float-hide { visibility: hidden !important; }
 @media (prefers-reduced-motion: reduce) {
   .lsq-float-lift { transition: none; }
 }

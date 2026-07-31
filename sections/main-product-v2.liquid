@@ -428,13 +428,31 @@
         var scan = document.querySelectorAll(
           '[id^="chizy"], #smile-ui-lite-launcher-frame-container, .smile-launcher-frame-container'
         );
+        var els = [], panelRect = null;
         for (var i = 0; i < scan.length; i++) {
           var el = scan[i];
           if (getComputedStyle(el).position !== 'fixed') continue;
           var r = el.getBoundingClientRect();
-          var isLauncher = r.height > 0 && r.height <= 200 && r.width > 0 && r.width <= 300;
-          el.classList.toggle('lsq-float-lift', !!(lifting && isLauncher));
+          var isChizy = !!(el.id && el.id.indexOf('chizy') === 0);
+          els.push({ el: el, r: r, isChizy: isChizy });
+          // an open chat panel: chizy element far bigger than any launcher pill
+          if (isChizy && r.height > 400 && r.width > 250) panelRect = r;
         }
+        els.forEach(function (x) {
+          var isLauncher = x.r.height > 0 && x.r.height <= 200 && x.r.width > 0 && x.r.width <= 300;
+          x.el.classList.toggle('lsq-float-lift', !!(lifting && isLauncher));
+          // The Rewards pill sits inside a wrapper the app gives z-index 2147483647 - the
+          // maximum - so it paints on top of the OPEN chat panel (z 9999) and landed on the
+          // chat's message input. No z-index of ours can beat the maximum, so while an open
+          // chat panel covers the pill's spot the pill hides, and returns on close. Overlap-
+          // gated: on desktop the chat window and the pill are in opposite corners and the
+          // pill stays put.
+          if (!x.isChizy) {
+            var covered = !!panelRect && x.r.left < panelRect.right && x.r.right > panelRect.left
+              && x.r.top < panelRect.bottom && x.r.bottom > panelRect.top;
+            x.el.classList.toggle('lsq-float-hide', covered);
+          }
+        });
       }
       var chatTimer;
       function placeChatLauncherSoon() {

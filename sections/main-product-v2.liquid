@@ -398,36 +398,42 @@
       var setAtcHeight = function () {
         var h = sticky.offsetHeight;
         document.documentElement.style.setProperty('--lsq-atc-h', h + 'px');
-        // The chat launcher rests at the app's own 16px; its lift is a transform, so the
-        // shift is the target clearance minus that resting offset (see .lsq-chat-lift).
-        document.documentElement.style.setProperty('--lsq-chat-shift', (16 - (h + 12)) + 'px');
+        // The launchers rest at their apps' own offsets (chat 16px, rewards 20px); the lift is
+        // a transform, so the shift is the target clearance minus the smaller resting offset
+        // (see .lsq-float-lift). Chat lands at bar+12, Rewards 4px higher - they shipped 4px
+        // apart to begin with.
+        document.documentElement.style.setProperty('--lsq-float-shift', (16 - (h + 12)) + 'px');
         placeChatLauncher();
       };
       setAtcHeight();
       if (window.ResizeObserver) new ResizeObserver(setAtcHeight).observe(sticky);
       else window.addEventListener('resize', setAtcHeight);
-      // The chat launcher cannot be positioned through `bottom` at all - not from CSS and not
-      // inline. The app replaces its element on first open (#chizy-v2-split-shell dies,
-      // #chizy-chat-root takes over), rewrites `inset` inline on every open and close, and
-      // keeps re-asserting it - so an inline bottom, even !important, loses between rewrites.
-      // Reproduced live: after open -> close -> bar-hide -> bar-show, the icon rendered back on
-      // top of the buttons (y736-796) while its own inline still read bottom:78px !important.
-      // So the lift rides on `transform`, which the app never touches on these elements: this
+      // Neither launcher can be positioned through `bottom` - not from CSS, not inline. BOTH
+      // apps replace their element the first time their panel opens: #chizy-v2-split-shell dies
+      // and #chizy-chat-root takes over; #smile-ui-lite-launcher-frame-container dies and an
+      // ID-LESS div.smile-launcher-frame-container takes over. An id-bound rule silently stops
+      // matching after one open and the pill drops back onto the buttons - caught live by
+      // clicking each pill open and closed. The chat app additionally keeps re-asserting its
+      // inline inset, so even inline bottom:78px !important lost between rewrites (icon
+      // measured back at y736-796 with 78px still in its style attribute).
+      // So the lift rides on `transform`, which neither app touches on these elements: this
       // code only toggles a marker class (a style-attribute rewrite cannot strip a class), and
-      // base.css does the actual lifting via translateY (.lsq-chat-lift). The scan is
-      // id-agnostic so an app-side rename does not bring the bug back, and the opened panel -
-      // same element id - is told apart from the ~60px launcher pill by size; the panel never
-      // gets the class. Applies at every width: the same overlap existed on desktop (Chat
-      // covering 87x41px of Buy it Now at 1280x800).
+      // base.css does the lifting via translateY (.lsq-float-lift). The scan matches by app
+      // prefix and launcher class, not one exact id, so an app-side rename does not bring the
+      // bug back. The opened panels are told apart from the ~60px launcher pills by size and
+      // never get the class. Applies at every width: the same overlap existed on desktop
+      // (Chat covering 87x41px of Buy it Now at 1280x800).
       function placeChatLauncher() {
         var lifting = document.body.classList.contains('atc-showing');
-        var scan = document.querySelectorAll('[id^="chizy"]');
+        var scan = document.querySelectorAll(
+          '[id^="chizy"], #smile-ui-lite-launcher-frame-container, .smile-launcher-frame-container'
+        );
         for (var i = 0; i < scan.length; i++) {
           var el = scan[i];
           if (getComputedStyle(el).position !== 'fixed') continue;
           var r = el.getBoundingClientRect();
           var isLauncher = r.height > 0 && r.height <= 200 && r.width > 0 && r.width <= 300;
-          el.classList.toggle('lsq-chat-lift', !!(lifting && isLauncher));
+          el.classList.toggle('lsq-float-lift', !!(lifting && isLauncher));
         }
       }
       var chatTimer;

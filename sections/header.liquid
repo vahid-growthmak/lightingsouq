@@ -23,10 +23,11 @@
   endcapture
 -%}
 {%- style -%}
-  /* Invisible bridge so moving the cursor from the tab to the panel never crosses a dead gap */
-  #Header--{{ uid }} .nav-item.has-mega > .mega-panel::before {
-    content: ""; position: absolute; top: -16px; left: 0; right: 0; height: 18px;
-  }
+  {%- comment -%}
+    The invisible bridge above the panel existed only to keep a hover alive across the gap between
+    the tab and the panel. Opening is click-driven now, so it has no job left - and it was an
+    18px-tall transparent block sitting over whatever is beneath the nav, swallowing clicks there.
+  {%- endcomment -%}
   #Header--{{ uid }} .nav-item.has-mega > .cat-nav-btn { cursor: pointer; }
 {%- endstyle -%}
 
@@ -277,9 +278,13 @@
     var root = document.getElementById('Header--{{ uid }}');
     if (!root) return;
 
-    /* Mega menu — hover-intent with a close delay (reliable), plus tap toggle for touch */
+    /* Mega menu — opens on CLICK only.
+       It used to open on mouseenter, so simply moving the cursor across the nav on the way to
+       something else threw a full-width panel over the page. Merely passing through a menu is not
+       an intent to open it. The click toggle below was already the path touch and keyboard users
+       took, so this makes every input behave the same way, and the panel now only ever appears
+       because someone asked for it. */
     var megas = root.querySelectorAll('.nav-item.has-mega');
-    var hasHover = window.matchMedia('(hover: hover)').matches;
     function closeAll(except) {
       megas.forEach(function (i) {
         if (i === except) return;
@@ -290,15 +295,7 @@
     megas.forEach(function (item) {
       var btn = item.querySelector('.cat-nav-btn');
       if (!btn) return;
-      var closeTimer;
-      function open() { clearTimeout(closeTimer); closeAll(item); item.classList.add('mega-open'); btn.setAttribute('aria-expanded', 'true'); }
-      function scheduleClose() { clearTimeout(closeTimer); closeTimer = setTimeout(function () { item.classList.remove('mega-open'); btn.setAttribute('aria-expanded', 'false'); }, 220); }
-
-      if (hasHover) {
-        item.addEventListener('mouseenter', open);
-        item.addEventListener('mouseleave', scheduleClose);
-      }
-      /* Tap / click toggle (touch + keyboard) */
+      /* Click / tap toggle — the only way in, for pointer, touch and keyboard alike */
       btn.addEventListener('click', function (e) {
         e.preventDefault();
         var isOpen = item.classList.contains('mega-open');

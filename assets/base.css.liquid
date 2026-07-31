@@ -1315,10 +1315,9 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
   width: 15px; height: 15px;
   transition: transform var(--transition);
 }
-.nav-item.has-mega:hover > .cat-nav-btn,
-.nav-item.has-mega:focus-within > .cat-nav-btn { color: #fff; }
-.nav-item.has-mega:hover > .cat-nav-btn .nav-chevron,
-.nav-item.has-mega:focus-within > .cat-nav-btn .nav-chevron { transform: rotate(180deg); }
+/* The chevron and highlight now follow the panel's real state (.mega-open) instead of hover, so
+   they no longer promise a menu that is not opening. */
+.nav-item.has-mega:hover > .cat-nav-btn { color: #fff; }
 
 .mega-panel {
   position: absolute;
@@ -1337,8 +1336,12 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
   pointer-events: none;
   transition: opacity var(--transition), transform var(--transition);
 }
-.nav-item.has-mega:hover > .mega-panel,
-.nav-item.has-mega:focus-within > .mega-panel,
+/* Opening is driven ONLY by .mega-open, which the click handler sets.
+   :hover was the real reason a panel appeared just from moving the cursor across the nav - the JS
+   hover listeners were only half of it, and removing those alone would have changed nothing.
+   :focus-within is gone too, and not merely for consistency: clicking the button leaves focus on
+   it, so focus-within would have held the panel open and broken the second click that closes it.
+   Keyboard users are unaffected - Enter and Space on the button fire the same click handler. */
 .nav-item.has-mega.mega-open > .mega-panel {
   opacity: 1;
   visibility: visible;

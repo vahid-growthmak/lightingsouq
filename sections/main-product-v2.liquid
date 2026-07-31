@@ -314,8 +314,13 @@
     var moneyFormat = {{ shop.money_format | json }};
     var L_ATC = {{ s.label_add_cart | default: 'ADD TO CART' | json }};
     var L_SOLD = {{ s.label_sold_out_pdp | default: 'SOLD OUT' | json }};
+    /* toLocaleString(undefined, ...) formats to the VISITOR'S browser locale, so the same product
+       showed "750.00" in Qatar and "750,00" in Germany, France, Spain, the Netherlands, Italy,
+       Brazil or Chile - the price changed punctuation depending on who was looking at it, and it
+       disagreed with the server-rendered price on the same page. Pinned to en-US so the separator
+       is the store's, not the browser's. */
     function money(cents) {
-      var v = (cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      var v = (cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
       return moneyFormat.replace(/\{\{\s*amount\s*\}\}/, v);
     }
     function selectedOptions() {

@@ -216,7 +216,7 @@
         return (n < 0 ? '-' : '') + ip + (dec ? dsep + parts[1] : '');
       }
       function fmt(v) {
-        if (!moneyFmt) return cur + ' ' + Number(v).toLocaleString();
+        if (!moneyFmt) return cur + ' ' + Number(v).toLocaleString('en-US'); /* not the visitor's locale */
         return moneyFmt.replace(/\{\{\s*(amount[a-z_]*)\s*\}\}/g, function (_, token) { return amountStr(v, token); });
       }
 

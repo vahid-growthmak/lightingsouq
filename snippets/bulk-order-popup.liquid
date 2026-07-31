@@ -180,7 +180,9 @@
 
   function money(cents) {
     if (cents == null || isNaN(cents)) return '';
-    return CURRENCY + ' ' + (cents / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    /* en-US, not the visitor's locale - see main-product-v2: otherwise the quote lines punctuate
+       differently depending on where the shopper happens to be. */
+    return CURRENCY + ' ' + (cents / 100).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); }
 

@@ -17,7 +17,7 @@
   #BM--{{ section.id }} .brand-tile--marquee { width: auto; display: flex; align-items: center; justify-content: center; }
   /* explicit max-width also kills the inherited `max-width:80%` resolving against a shrink-wrapped parent */
   {%- comment -%} The card is 84px tall around a 44px cap, so a square mark has room to grow to equal area. {%- endcomment -%}
-  #BM--{{ section.id }} .brand-img { --logo-grow: 1.35; max-height: 44px; max-width: 140px; width: auto; object-fit: contain; filter: grayscale(1); opacity: 0.65; transition: filter 0.2s ease-out, opacity 0.2s ease-out; }
+  #BM--{{ section.id }} .brand-img { --logo-grow: 1.35; --logo-box: 3.18; max-height: 44px; max-width: 140px; width: auto; object-fit: contain; filter: grayscale(1); opacity: 0.65; transition: filter 0.2s ease-out, opacity 0.2s ease-out; }
   #BM--{{ section.id }} .brand-card:hover .brand-img { filter: grayscale(0); opacity: 1; }
   /* base.css pauses the scroll on :hover, which never fires on a touch screen — so on mobile the
      strip never stopped and a logo could not be read. Pause while a finger is down (:active), for

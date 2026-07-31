@@ -38,102 +38,48 @@
   (function () {
     var SHORTEST = 0.45;  /* a very wide wordmark may go this far under the height cap */
 
-    /* A cap can be a percentage (.brand-tile img is max-width: 80%). getComputedStyle does not
-       always resolve those to px - it handed back the string "80%", and a naive parseFloat read
-       that as 80px, which is why the tiles came out far too small. Resolve against the container's
-       content box instead. */
-    function cap(value, basis) {
-      if (!value || value === 'none') return 0;
-      var n = parseFloat(value);
-      if (!isFinite(n)) return 0;
-      return value.indexOf('%') > -1 ? basis * n / 100 : n;
-    }
-    function innerBox(el) {
-      if (!el) return { w: 0, h: 0 };
-      var s = getComputedStyle(el);
-      return {
-        w: el.clientWidth - parseFloat(s.paddingLeft || 0) - parseFloat(s.paddingRight || 0),
-        h: el.clientHeight - parseFloat(s.paddingTop || 0) - parseFloat(s.paddingBottom || 0)
-      };
-    }
-
     function size(img) {
       if (!img.naturalWidth || !img.naturalHeight) return;
       var cs = getComputedStyle(img);
-      /* Remember the CSS cap as WRITTEN, not as resolved. Caching the resolved pixels was a bug:
-         the first pass can run before the grid has settled, and a percentage cap measured then
-         (tile inner width 46px instead of 200) got frozen in and every later pass reused it. The
-         raw value is stable, so it is re-resolved against the current box each time - and it also
-         survives us clearing max-width/max-height on the element. */
-      var rawH = img.dataset.capRawH || cs.maxHeight;
-      var rawW = img.dataset.capRawW || cs.maxWidth;
-      img.dataset.capRawH = rawH; img.dataset.capRawW = rawW;
 
-      var pct = (rawH.indexOf('%') > -1) || (rawW.indexOf('%') > -1);
-      var box = pct ? innerBox(img.parentElement) : { w: 0, h: 0 };
-      /* Only percentage caps need the container measured, and only then does an unsettled layout
-         matter. Bail out rather than bake in a bad number - load and resize both re-run this. */
-      if (pct && box.w < 40) return;
+      /* The height cap is an absolute px value in every logo context, so it is read directly and
+         never needs the container measured. The WIDTH budget is expressed as a multiple of it
+         (--logo-box) rather than read from max-width, because max-width is a percentage on the
+         tiles and resolving it meant measuring the parent - which proved unreliable: the grid
+         reports 0 width at some points in layout and a tile that ends up 200px wide can measure 46
+         mid-pass. Anything derived from that was wrong, and cached wrongness was worse. Deriving
+         the whole box from the height cap removes the measurement, and with it the timing bug. */
+      var capH = parseFloat(img.dataset.capH || cs.maxHeight);
+      if (!isFinite(capH) || !capH) return;
+      img.dataset.capH = capH;                      /* survives us clearing max-height below */
 
-      var capH = cap(rawH, box.h);
-      var capW = cap(rawW, box.w);
-      if (!capH || !capW) return;                 /* no cap box to work from - leave it alone */
+      var box = parseFloat(cs.getPropertyValue('--logo-box')) || 3.2;   /* width budget / height cap */
+      var grow = parseFloat(cs.getPropertyValue('--logo-grow')) || 1;   /* how far a square mark may exceed capH */
+      var fill = parseFloat(cs.getPropertyValue('--logo-fill')) || 0.52;/* share of that box to cover */
 
-      /* How far a square mark may exceed the height cap, per context. Declared in CSS as
-         --logo-grow because only the stylesheet knows the container has spare room: the marquee
-         card is 84px around a 44px cap, the strip tile 56px. Measuring the parent here instead
-         would be circular - it auto-sizes to this very image. Default 1 means never exceed, which
-         is correct where the cap is already 100% of the box (brand pages, index cards). */
-      var grow = parseFloat(cs.getPropertyValue('--logo-grow')) || 1;
-      /* Share of the cap box each logo should cover. Lower it where the container is tight, so the
-         target area stays reachable by a square mark instead of clamping it and reintroducing the
-         very mismatch this is meant to remove. */
-      var fill = parseFloat(cs.getPropertyValue('--logo-fill')) || 0.52;
-
+      var capW = capH * box;
       var ratio = img.naturalWidth / img.naturalHeight;
       var h = Math.sqrt(capH * capW * fill / ratio);
       h = Math.max(capH * SHORTEST, Math.min(capH * grow, h));
-
       var w = h * ratio;
-      if (w > capW) { w = capW; h = w / ratio; }  /* width still wins for the widest wordmarks */
+      if (w > capW) { w = capW; h = w / ratio; }    /* width still wins for the widest wordmarks */
 
-      /* The markup carries width="200" height="100" for CLS. Those attributes beat the CSS width
-         here - even with !important - so the tiles ignored the computed width entirely and stayed
-         at 200px. Rewrite the attributes to the values we just worked out: layout then agrees with
-         the styles, and the reserved space stays correct so nothing is given up on CLS. */
+      /* The markup carries width/height attributes for CLS, and they beat the CSS width here -
+         verified: even !important lost to them. Rewrite them to what we computed so layout agrees
+         with the styles and the reserved space stays honest. max-height is cleared so a square mark
+         can use --logo-grow; max-width is deliberately LEFT IN PLACE as the outer guard, so on a
+         narrow tile the stylesheet still stops a logo escaping its box. */
       img.setAttribute('width', Math.round(w));
       img.setAttribute('height', Math.round(h));
       img.style.maxHeight = 'none';
-      img.style.maxWidth = 'none';
       img.style.height = h.toFixed(1) + 'px';
       img.style.width = w.toFixed(1) + 'px';
     }
-
-    /* The first pass often lands before the grid has resolved - measured a tile at 46px that
-       settles to 200 - and load/resize alone never revisited it, so a logo could keep a size
-       computed from a box that no longer existed. Watch the container instead and recompute when
-       its width actually changes. Guarded against feedback: in shrink-to-fit contexts like the
-       marquee the parent follows the image, so a pass only runs when the measured basis really
-       moved, never merely because we just resized the image. */
-    var ro = window.ResizeObserver ? new ResizeObserver(function (entries) {
-      entries.forEach(function (entry) {
-        var img = entry.target.querySelector('.brand-img');
-        if (!img) return;
-        var basis = Math.round(innerBox(entry.target).w);
-        if (String(basis) === img.dataset.basis) return;
-        img.dataset.basis = basis;
-        size(img);
-      });
-    }) : null;
 
     function run() {
       document.querySelectorAll('.brand-img').forEach(function (img) {
         if (img.complete) size(img);
         else img.addEventListener('load', function () { size(img); }, { once: true });
-        if (ro && img.parentElement && !img.dataset.observed) {
-          img.dataset.observed = '1';
-          ro.observe(img.parentElement);
-        }
       });
     }
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', run);

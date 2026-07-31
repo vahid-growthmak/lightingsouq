@@ -21,12 +21,41 @@
         "btn2_link": "https://wa.me/97455529088"
       },
       "blocks": {
-        "f1": { "type": "feature", "settings": { "icon": "bolt", "label": "No rewiring needed" } },
-        "f2": { "type": "feature", "settings": { "icon": "mic", "label": "Alexa · Google · Siri" } },
-        "f3": { "type": "feature", "settings": { "icon": "smartphone", "label": "Tuya · Mi · Hue apps" } },
-        "f4": { "type": "feature", "settings": { "icon": "palette", "label": "16M colours and scenes" } }
+        "f1": {
+          "type": "feature",
+          "settings": {
+            "icon": "bolt",
+            "label": "No rewiring needed"
+          }
+        },
+        "f2": {
+          "type": "feature",
+          "settings": {
+            "icon": "mic",
+            "label": "Alexa · Google · Siri"
+          }
+        },
+        "f3": {
+          "type": "feature",
+          "settings": {
+            "icon": "smartphone",
+            "label": "Tuya · Mi · Hue apps"
+          }
+        },
+        "f4": {
+          "type": "feature",
+          "settings": {
+            "icon": "palette",
+            "label": "16M colours and scenes"
+          }
+        }
       },
-      "block_order": ["f1", "f2", "f3", "f4"]
+      "block_order": [
+        "f1",
+        "f2",
+        "f3",
+        "f4"
+      ]
     },
     "smart_home_guide": {
       "type": "smart-home-guide",
@@ -51,16 +80,6 @@
             "link_label": "Shop Wink"
           }
         },
-        "e2": {
-          "type": "item",
-          "settings": {
-            "icon": "apps",
-            "title": "Mi Home",
-            "text": "Xiaomi and many Yeelight products.",
-            "link": "/pages/xiaomi",
-            "link_label": "Shop Xiaomi"
-          }
-        },
         "e3": {
           "type": "item",
           "settings": {
@@ -82,7 +101,11 @@
           }
         }
       },
-      "block_order": ["e1", "e2", "e3", "e4"]
+      "block_order": [
+        "e1",
+        "e3",
+        "e4"
+      ]
     },
     "starter_kits": {
       "type": "product-collection",
@@ -102,12 +125,53 @@
         "bg": "bg-gray"
       },
       "blocks": {
-        "r1": { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Living Room", "description": "Ambience, scenes and voice control for the majlis.", "link": "/collections/smart-lights", "button_label": "Browse →" } },
-        "r2": { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Outdoor and Security", "description": "Motion, solar and smart floodlights for peace of mind.", "link": "/collections/solar-outdoor", "button_label": "Browse →" } },
-        "r3": { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Bedroom", "description": "Warm dimming and wake-up schedules for better rest.", "link": "/collections/smart-lights", "button_label": "Browse →" } },
-        "r4": { "type": "space", "settings": { "fallback": "space-smart.png", "title": "Gaming and Creator", "description": "RGB strips and reactive scenes for your setup.", "link": "/collections/smart-lights", "button_label": "Browse →" } }
+        "r1": {
+          "type": "space",
+          "settings": {
+            "fallback": "space-smart.png",
+            "title": "Living Room",
+            "description": "Ambience, scenes and voice control for the majlis.",
+            "link": "/collections/smart-lights",
+            "button_label": "Browse →"
+          }
+        },
+        "r2": {
+          "type": "space",
+          "settings": {
+            "fallback": "space-smart.png",
+            "title": "Outdoor and Security",
+            "description": "Motion, solar and smart floodlights for peace of mind.",
+            "link": "/collections/solar-outdoor",
+            "button_label": "Browse →"
+          }
+        },
+        "r3": {
+          "type": "space",
+          "settings": {
+            "fallback": "space-smart.png",
+            "title": "Bedroom",
+            "description": "Warm dimming and wake-up schedules for better rest.",
+            "link": "/collections/smart-lights",
+            "button_label": "Browse →"
+          }
+        },
+        "r4": {
+          "type": "space",
+          "settings": {
+            "fallback": "space-smart.png",
+            "title": "Gaming and Creator",
+            "description": "RGB strips and reactive scenes for your setup.",
+            "link": "/collections/smart-lights",
+            "button_label": "Browse →"
+          }
+        }
       },
-      "block_order": ["r1", "r2", "r3", "r4"]
+      "block_order": [
+        "r1",
+        "r2",
+        "r3",
+        "r4"
+      ]
     },
     "testimonials": {
       "type": "testimonials",
@@ -116,11 +180,39 @@
         "bg": "bg-white"
       },
       "blocks": {
-        "t1": { "type": "review", "settings": { "name": "Khalid Al-Marri", "rating": 5, "text": "Bought smart bulbs for the whole majlis. Setup was quick and they look great.", "date": "March 2026" } },
-        "t2": { "type": "review", "settings": { "name": "Noora Ibrahim", "rating": 5, "text": "The team helped me pick a kit that works with Alexa. Everything paired first try.", "date": "February 2026" } },
-        "t3": { "type": "review", "settings": { "name": "Fatima Hassan", "rating": 5, "text": "Best lighting store in Qatar. WhatsApp support was very helpful.", "date": "April 2026" } }
+        "t1": {
+          "type": "review",
+          "settings": {
+            "name": "Khalid Al-Marri",
+            "rating": 5,
+            "text": "Bought smart bulbs for the whole majlis. Setup was quick and they look great.",
+            "date": "March 2026"
+          }
+        },
+        "t2": {
+          "type": "review",
+          "settings": {
+            "name": "Noora Ibrahim",
+            "rating": 5,
+            "text": "The team helped me pick a kit that works with Alexa. Everything paired first try.",
+            "date": "February 2026"
+          }
+        },
+        "t3": {
+          "type": "review",
+          "settings": {
+            "name": "Fatima Hassan",
+            "rating": 5,
+            "text": "Best lighting store in Qatar. WhatsApp support was very helpful.",
+            "date": "April 2026"
+          }
+        }
       },
-      "block_order": ["t1", "t2", "t3"]
+      "block_order": [
+        "t1",
+        "t2",
+        "t3"
+      ]
     },
     "bulk": {
       "type": "bulk-band",

@@ -160,12 +160,6 @@
             "name": "Wink"
           }
         },
-        "logo_XftR4K": {
-          "type": "logo",
-          "settings": {
-            "name": "Xiaomi"
-          }
-        },
         "logo_QgbVhg": {
           "type": "logo",
           "settings": {
@@ -202,7 +196,6 @@
         "logo_y4KDmr",
         "logo_6PA3wX",
         "logo_LQdMry",
-        "logo_XftR4K",
         "logo_QgbVhg",
         "logo_VVMUMQ",
         "logo_fAi3Ft",
@@ -463,13 +456,6 @@
             "link": "/pages/wink"
           }
         },
-        "brand_xR7xgi": {
-          "type": "brand",
-          "settings": {
-            "name": "Xiaomi",
-            "link": "/pages/xiaomi"
-          }
-        },
         "brand_Vqty6e": {
           "type": "brand",
           "settings": {
@@ -505,13 +491,6 @@
             "link": "/pages/panasonic"
           }
         },
-        "brand_add_3": {
-          "type": "brand",
-          "settings": {
-            "name": "Huawei",
-            "link": "/pages/huawei"
-          }
-        },
         "brand_add_4": {
           "type": "brand",
           "settings": {
@@ -525,13 +504,11 @@
         "brand_dkrwDq",
         "brand_HREDD9",
         "brand_Jig7YG",
-        "brand_xR7xgi",
         "brand_Vqty6e",
         "brand_TDiM78",
         "brand_4G4rNg",
         "brand_add_1",
         "brand_add_2",
-        "brand_add_3",
         "brand_add_4"
       ],
       "name": "Brand Strip",
@@ -679,7 +656,7 @@
         "title_tag": "h2",
         "eyebrow": "Smart Lighting Specialists",
         "title": "Build your smart home, one light at a time",
-        "text": "Start with a single smart bulb and grow into full app and voice control. We stock Wink, Xiaomi, Philips Hue, Yeelight, Sonoff, Amazon Alexa and Google Home devices that work together. Our Smart Home Hub explains what works with what, so you buy the right thing the first time.",
+        "text": "Start with a single smart bulb and grow into full app and voice control. We stock Wink, Philips Hue, Yeelight, Sonoff, Amazon Alexa and Google Home devices that work together. Our Smart Home Hub explains what works with what, so you buy the right thing the first time.",
         "btn1_label": "Visit the Smart Home Hub",
         "btn1_link": "/pages/smart-home-hub",
         "btn2_label": "",
@@ -935,7 +912,7 @@
           "type": "faq",
           "settings": {
             "question": "Which lighting brands do you stock?",
-            "answer": "<p>We stock over 50 brands. That includes Osram, Philips, LEDVANCE, GE, Sylvania, Tungsram, Kosnic and Bell Lighting in lighting; Xiaomi, Philips Hue, Yeelight, Sonoff, Amazon and Google in smart home; KDK and Panasonic in fans; and Vettam, Wink and Glint, which are manufactured to our specifications and sold exclusively through Lighting Souq.</p>"
+            "answer": "<p>We stock over 50 brands. That includes Osram, Philips, LEDVANCE, GE, Sylvania, Tungsram, Kosnic and Bell Lighting in lighting; Philips Hue, Yeelight, Sonoff, Amazon and Google in smart home; KDK and Panasonic in fans; and Vettam, Wink and Glint, which are manufactured to our specifications and sold exclusively through Lighting Souq.</p>"
           }
         },
         "faq_5": {

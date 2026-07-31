@@ -1,6 +1,8 @@
 {%- comment -%}
   Full shopping cart — OS 2.0. Line items with qty + remove, order summary,
-  checkout button. Empty-cart state. Qty change auto-submits the form.
+  checkout button. Empty-cart state. Qty changes go through /cart/change.js and the
+  prices repaint in place — no page reload (same behaviour as the cart drawer).
+  The form + Update button remain as the no-JS / error fallback.
 {%- endcomment -%}
 {%- liquid
   assign s = section.settings
@@ -17,7 +19,7 @@
       <form action="{{ routes.cart_url }}" method="post" id="lsq-cart-form" class="lsq-cart">
         <div class="lsq-cart-items">
           {%- for item in cart.items -%}
-            <div class="lsq-cart-item">
+            <div class="lsq-cart-item" data-line="{{ forloop.index }}">
               <a href="{{ item.url }}" class="lsq-cart-thumb">
                 {%- if item.image != blank -%}
                   <img src="{{ item.image | image_url: width: 200 }}" alt="{{ item.title | escape }}" width="100" height="100" loading="lazy">
@@ -104,7 +106,9 @@
   }
   #Sec--{{ section.id }} .lsq-qty-input::-webkit-outer-spin-button,
   #Sec--{{ section.id }} .lsq-qty-input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
-  #Sec--{{ section.id }} .lsq-cart.is-updating .lsq-qty-btn { opacity:0.5; pointer-events:none; }
+  #Sec--{{ section.id }} .lsq-cart-item.is-busy .lsq-cart-line-price,
+  #Sec--{{ section.id }} .lsq-cart-item.is-busy .lsq-cart-price-mobile { opacity:0.45; }
+  #Sec--{{ section.id }} .lsq-cart.is-busy .lsq-cart-summary-row strong { opacity:0.45; }
   #Sec--{{ section.id }} .lsq-cart-line-price { font-weight:700; text-align:right; }
   #Sec--{{ section.id }} .lsq-cart-summary {
     background:var(--gray-50,#f9fafb); border:1px solid var(--gray-200,#e5e7eb);
@@ -127,28 +131,91 @@
   (function () {
     var form = document.getElementById('lsq-cart-form');
     if (!form) return;
-    var timer;
-    function submitSoon(delay) {
+    // Same money format as the cart drawer in store-scripts.liquid, and the currency code
+    // comes from the /cart/change.js response, so market currencies stay correct.
+    function money(cents, code) {
+      var v = (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+      return (code || {{ cart.currency.iso_code | json }}) + ' ' + v;
+    }
+    function fallbackSubmit() {
+      var btn = form.querySelector('.lsq-update-btn');
+      if (btn) btn.click(); else form.submit();
+    }
+    var desired = {}, timer = null, inflight = false;
+    function paint(cart) {
+      form.querySelectorAll('.lsq-cart-item[data-line]').forEach(function (row) {
+        var it = cart.items[parseInt(row.getAttribute('data-line'), 10) - 1];
+        if (!it) return;
+        var input = row.querySelector('.lsq-qty-input');
+        // server truth (e.g. stock caps the quantity) - but never fight the user mid-typing
+        if (input && document.activeElement !== input) input.value = it.quantity;
+        var lp = row.querySelector('.lsq-cart-line-price');
+        if (lp) lp.textContent = money(it.final_line_price, cart.currency);
+        var mp = row.querySelector('.lsq-cart-price-mobile');
+        if (mp) mp.textContent = money(it.final_line_price, cart.currency);
+        row.classList.remove('is-busy');
+      });
+      var sub = form.querySelector('.lsq-cart-summary-row strong');
+      if (sub) sub.textContent = money(cart.total_price, cart.currency);
+      form.classList.remove('is-busy');
+      document.querySelectorAll('[data-cart-count]').forEach(function (el) { el.textContent = cart.item_count; });
+    }
+    // One line per request (that is all /cart/change.js accepts); the desired map coalesces a
+    // burst of taps into the final value, so N taps cost one request per touched line.
+    function flush() {
+      if (inflight) return;
+      var lines = Object.keys(desired);
+      if (!lines.length) return;
+      var line = lines[0], qty = desired[line];
+      delete desired[line];
+      inflight = true;
+      fetch('/cart/change.js', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ line: parseInt(line, 10), quantity: qty })
+      }).then(function (r) {
+        if (!r.ok) throw new Error(r.status);
+        return r.json();
+      }).then(function (cart) {
+        inflight = false;
+        if (Object.keys(desired).length) flush();
+        else paint(cart);
+      }).catch(function () {
+        inflight = false;
+        fallbackSubmit(); // one classic round-trip beats showing a cart the server rejected
+      });
+    }
+    function schedule(row, qty, delay) {
+      desired[row.getAttribute('data-line')] = qty;
+      row.classList.add('is-busy');
+      form.classList.add('is-busy');
       clearTimeout(timer);
-      timer = setTimeout(function () {
-        form.classList.add('is-updating');
-        var btn = form.querySelector('.lsq-update-btn');
-        if (btn) btn.click(); else form.submit();
-      }, delay);
+      timer = setTimeout(flush, delay);
     }
     form.querySelectorAll('.lsq-qty-input').forEach(function (input) {
-      input.addEventListener('change', function () { submitSoon(150); });
+      input.addEventListener('change', function () {
+        var row = input.closest('.lsq-cart-item');
+        if (!row) return;
+        var v = parseInt(input.value, 10);
+        if (!(v >= 1)) {
+          // typed 0 (or junk): removing a line renumbers the others, so let the classic
+          // form round-trip rebuild the page
+          fallbackSubmit();
+          return;
+        }
+        schedule(row, v, 250);
+      });
     });
-    // Stepper: change the number instantly, then push one cart update after the taps stop -
-    // a burst of taps becomes a single reload instead of one per tap.
     form.querySelectorAll('.lsq-qty-btn').forEach(function (btn) {
       btn.addEventListener('click', function () {
         var input = btn.parentElement.querySelector('.lsq-qty-input');
-        if (!input) return;
+        var row = btn.closest('.lsq-cart-item');
+        if (!input || !row) return;
         var v = (parseInt(input.value, 10) || 0) + (parseInt(btn.getAttribute('data-step'), 10) || 0);
         if (v < 1) v = 1; // the trash icon is the remove path, minus never deletes the line
+        if (String(v) === input.value) return; // minus at 1: nothing to change, no request
         input.value = v;
-        submitSoon(600);
+        schedule(row, v, 450);
       });
     });
   })();

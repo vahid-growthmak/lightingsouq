@@ -2022,14 +2022,18 @@ img.pay-chip--card { object-fit: cover; }
    `inset` inline on every open and close, so a rule bound to the original id silently stops
    matching and the icon drops back onto the buttons. #chizy-chat-root is also the id of the
    opened full-screen panel, so it cannot simply be added to the selector either. */
-@media (max-width: 899px) {
-  #smile-ui-lite-launcher-frame-container,
-  #chizy-v2-split-shell { transition: bottom 0.35s cubic-bezier(.4,0,.2,1); }
-  body.atc-showing #smile-ui-lite-launcher-frame-container { bottom: calc(var(--lsq-atc-h, 66px) + 12px) !important; }
-}
+#smile-ui-lite-launcher-frame-container { transition: bottom 0.35s cubic-bezier(.4,0,.2,1); }
+body.atc-showing #smile-ui-lite-launcher-frame-container { bottom: calc(var(--lsq-atc-h, 66px) + 12px) !important; }
+/* The chat launcher lifts via transform, never bottom: the chat app owns its element's inline
+   inset and keeps re-asserting it, so bottom is unwinnable there - even inline !important lost
+   (icon measured back on the buttons at y736-796 while its inline read bottom:78px !important).
+   The app never touches transform on these elements, and its style-attribute rewrites cannot
+   strip a class. The class is toggled from main-product-v2.liquid (launcher only, never the
+   opened panel); --lsq-chat-shift is published there next to --lsq-atc-h. Both lifts apply at
+   every width - the same overlap existed on desktop (Chat over 87x41px of Buy it Now at 1280). */
+.lsq-chat-lift { transform: translateY(var(--lsq-chat-shift, -62px)) !important; transition: transform 0.35s cubic-bezier(.4,0,.2,1); }
 @media (prefers-reduced-motion: reduce) {
-  #smile-ui-lite-launcher-frame-container,
-  #chizy-v2-split-shell { transition: none; }
+  #smile-ui-lite-launcher-frame-container, .lsq-chat-lift { transition: none; }
 }
 /* keep content clear of the fixed bar */
 /* superseded by the footer-side reserve further down - left at 0 so it cannot reintroduce the

@@ -396,34 +396,39 @@
       // hardcoded because .sticky-atc-inner adds env(safe-area-inset-bottom), so the bar is
       // taller on a notched phone than the 66px it measures in a plain 375px viewport.
       var setAtcHeight = function () {
-        document.documentElement.style.setProperty('--lsq-atc-h', sticky.offsetHeight + 'px');
+        var h = sticky.offsetHeight;
+        document.documentElement.style.setProperty('--lsq-atc-h', h + 'px');
+        // The chat launcher rests at the app's own 16px; its lift is a transform, so the
+        // shift is the target clearance minus that resting offset (see .lsq-chat-lift).
+        document.documentElement.style.setProperty('--lsq-chat-shift', (16 - (h + 12)) + 'px');
+        placeChatLauncher();
       };
       setAtcHeight();
       if (window.ResizeObserver) new ResizeObserver(setAtcHeight).observe(sticky);
       else window.addEventListener('resize', setAtcHeight);
-      // The Rewards launcher is a stable element, so base.css positions it. The chat launcher is
-      // not: the app destroys #chizy-v2-split-shell the first time the chat is opened and hands
-      // over to #chizy-chat-root, rewriting `inset` inline on every open and close. A CSS rule
-      // bound to the original id therefore stops matching, and the icon fell back onto the
-      // buttons as soon as a shopper had opened the chat once. Drive it from here instead,
-      // against whichever element is currently present.
-      // #chizy-chat-root doubles as the opened full-screen panel, so never move that: the
-      // launcher is ~60px tall and the open panel fills the screen, which tells them apart
-      // without depending on a class name the app might change.
-      var mqSmall = window.matchMedia('(max-width: 899px)');
-      var CHAT_IDS = ['chizy-v2-split-shell', 'chizy-chat-root'];
+      // The chat launcher cannot be positioned through `bottom` at all - not from CSS and not
+      // inline. The app replaces its element on first open (#chizy-v2-split-shell dies,
+      // #chizy-chat-root takes over), rewrites `inset` inline on every open and close, and
+      // keeps re-asserting it - so an inline bottom, even !important, loses between rewrites.
+      // Reproduced live: after open -> close -> bar-hide -> bar-show, the icon rendered back on
+      // top of the buttons (y736-796) while its own inline still read bottom:78px !important.
+      // So the lift rides on `transform`, which the app never touches on these elements: this
+      // code only toggles a marker class (a style-attribute rewrite cannot strip a class), and
+      // base.css does the actual lifting via translateY (.lsq-chat-lift). The scan is
+      // id-agnostic so an app-side rename does not bring the bug back, and the opened panel -
+      // same element id - is told apart from the ~60px launcher pill by size; the panel never
+      // gets the class. Applies at every width: the same overlap existed on desktop (Chat
+      // covering 87x41px of Buy it Now at 1280x800).
       function placeChatLauncher() {
-        var lift = (mqSmall.matches && document.body.classList.contains('atc-showing'))
-          ? sticky.offsetHeight + 12 : 0;
-        CHAT_IDS.forEach(function (id) {
-          var el = document.getElementById(id);
-          if (!el) return;
-          var want = (lift && el.getBoundingClientRect().height <= 200) ? lift + 'px' : '';
-          // Only write on a real change, otherwise our own edit re-triggers the observer below.
-          if (el.style.bottom === want) return;
-          if (want) el.style.setProperty('bottom', want, 'important');
-          else el.style.removeProperty('bottom');
-        });
+        var lifting = document.body.classList.contains('atc-showing');
+        var scan = document.querySelectorAll('[id^="chizy"]');
+        for (var i = 0; i < scan.length; i++) {
+          var el = scan[i];
+          if (getComputedStyle(el).position !== 'fixed') continue;
+          var r = el.getBoundingClientRect();
+          var isLauncher = r.height > 0 && r.height <= 200 && r.width > 0 && r.width <= 300;
+          el.classList.toggle('lsq-chat-lift', !!(lifting && isLauncher));
+        }
       }
       var chatTimer;
       function placeChatLauncherSoon() {
@@ -434,7 +439,6 @@
       new MutationObserver(placeChatLauncherSoon).observe(document.body, {
         childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class']
       });
-      if (mqSmall.addEventListener) mqSmall.addEventListener('change', placeChatLauncher);
       new IntersectionObserver(function (e) {
         var shown = !e[0].isIntersecting;
         sticky.classList.toggle('show', shown);

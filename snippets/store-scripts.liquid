@@ -60,15 +60,24 @@
     function size(img) {
       if (!img.naturalWidth || !img.naturalHeight) return;
       var cs = getComputedStyle(img);
-      var capH, capW;
-      if (img.dataset.capH) { capH = parseFloat(img.dataset.capH); capW = parseFloat(img.dataset.capW); }
-      else {
-        var box = innerBox(img.parentElement);
-        capH = cap(cs.maxHeight, box.h);
-        capW = cap(cs.maxWidth, box.w);
-      }
+      /* Remember the CSS cap as WRITTEN, not as resolved. Caching the resolved pixels was a bug:
+         the first pass can run before the grid has settled, and a percentage cap measured then
+         (tile inner width 46px instead of 200) got frozen in and every later pass reused it. The
+         raw value is stable, so it is re-resolved against the current box each time - and it also
+         survives us clearing max-width/max-height on the element. */
+      var rawH = img.dataset.capRawH || cs.maxHeight;
+      var rawW = img.dataset.capRawW || cs.maxWidth;
+      img.dataset.capRawH = rawH; img.dataset.capRawW = rawW;
+
+      var pct = (rawH.indexOf('%') > -1) || (rawW.indexOf('%') > -1);
+      var box = pct ? innerBox(img.parentElement) : { w: 0, h: 0 };
+      /* Only percentage caps need the container measured, and only then does an unsettled layout
+         matter. Bail out rather than bake in a bad number - load and resize both re-run this. */
+      if (pct && box.w < 40) return;
+
+      var capH = cap(rawH, box.h);
+      var capW = cap(rawW, box.w);
       if (!capH || !capW) return;                 /* no cap box to work from - leave it alone */
-      img.dataset.capH = capH; img.dataset.capW = capW;   /* remember, we are about to clear them */
 
       /* How far a square mark may exceed the height cap, per context. Declared in CSS as
          --logo-grow because only the stylesheet knows the container has spare room: the marquee

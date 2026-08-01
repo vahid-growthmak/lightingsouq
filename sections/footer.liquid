@@ -86,10 +86,19 @@
 
     <div class="footer-legal">
       <div class="footer-legal-links">
+        {%- comment -%}
+          Each legal link prefers the Shopify policy (Settings > Policies) because that is what
+          checkout and Google Merchant Center read, and falls back to the standalone page when
+          the policy has not been filled in. Terms of Service had no policy set, so the link
+          simply did not render and the site shipped with no visible terms at all; Shipping and
+          Refund had the same gap. The fallbacks keep every policy reachable, and each link
+          switches to the policy automatically once it is filled in - no theme edit needed.
+        {%- endcomment -%}
         {%- if shop.privacy_policy != blank -%}<a href="{{ shop.privacy_policy.url }}">Privacy Policy</a>{%- endif -%}
-        {%- if shop.terms_of_service != blank -%}<a href="{{ shop.terms_of_service.url }}">Terms of Service</a>{%- endif -%}
-        {%- if shop.refund_policy != blank -%}<a href="{{ shop.refund_policy.url }}">Refund Policy</a>{%- endif -%}
-        {%- if shop.shipping_policy != blank -%}<a href="{{ shop.shipping_policy.url }}">Shipping Policy</a>{%- endif -%}
+        {%- if shop.terms_of_service != blank -%}<a href="{{ shop.terms_of_service.url }}">Terms of Service</a>{%- else -%}<a href="/pages/terms">Terms &amp; Conditions</a>{%- endif -%}
+        {%- if shop.refund_policy != blank -%}<a href="{{ shop.refund_policy.url }}">Refund Policy</a>{%- else -%}<a href="/pages/returns-refunds">Returns &amp; Refunds</a>{%- endif -%}
+        {%- if shop.shipping_policy != blank -%}<a href="{{ shop.shipping_policy.url }}">Shipping Policy</a>{%- else -%}<a href="/pages/shipping-delivery">Shipping &amp; Delivery</a>{%- endif -%}
+        <a href="/pages/accessibility">Accessibility</a>
         {%- if section.settings.warranty_label != blank -%}<a href="{{ section.settings.warranty_link | default: '/pages/warranty' }}">{{ section.settings.warranty_label }}</a>{%- endif -%}
         {%- if section.settings.reviews_label != blank -%}<a href="{{ section.settings.reviews_page_link | default: '/pages/reviews' }}">{{ section.settings.reviews_label }}</a>{%- endif -%}
         {%- if section.settings.allcollections_label != blank -%}<a href="{{ section.settings.allcollections_link | default: '/collections' }}">{{ section.settings.allcollections_label }}</a>{%- endif -%}

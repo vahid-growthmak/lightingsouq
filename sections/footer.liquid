@@ -109,18 +109,10 @@
         {%- if section.settings.reviews_label != blank -%}<a href="{{ section.settings.reviews_page_link | default: '/pages/reviews' }}">{{ section.settings.reviews_label }}</a>{%- endif -%}
         {%- if section.settings.allcollections_label != blank -%}<a href="{{ section.settings.allcollections_link | default: '/collections' }}">{{ section.settings.allcollections_label }}</a>{%- endif -%}
         {%- comment -%}
-          The blog URL was hardcoded to /blogs/news as a fallback, so renaming or removing that
-          blog would have left a dead link in the footer of every page. Resolve it from the store
-          instead: use the configured link if set, otherwise the first blog that actually has
-          articles, and render nothing at all when the store has no blog.
+          Blog link removed - it was hardcoded to /blogs/news. Nothing in the legal row points
+          at a blog now; the blog_label / blog_link settings are gone from the schema too so it
+          cannot be reintroduced by accident from the theme editor.
         {%- endcomment -%}
-        {%- assign blog_url = section.settings.blog_link -%}
-        {%- if blog_url == blank -%}
-          {%- for store_blog in blogs -%}
-            {%- if store_blog.articles_count > 0 -%}{%- assign blog_url = store_blog.url -%}{%- break -%}{%- endif -%}
-          {%- endfor -%}
-        {%- endif -%}
-        {%- if section.settings.blog_label != blank and blog_url != blank -%}<a href="{{ blog_url }}">{{ section.settings.blog_label }}</a>{%- endif -%}
       </div>
       {%- if settings.theqa_image != blank -%}
         <div class="footer-theqa">
@@ -198,9 +190,7 @@
     { "type": "text", "id": "reviews_label", "label": "Reviews label", "default": "Reviews" },
     { "type": "url", "id": "reviews_page_link", "label": "Reviews link" },
     { "type": "text", "id": "allcollections_label", "label": "All Collections label", "default": "All Collections" },
-    { "type": "url", "id": "allcollections_link", "label": "All Collections link" },
-    { "type": "text", "id": "blog_label", "label": "Blog label", "default": "Blog" },
-    { "type": "url", "id": "blog_link", "label": "Blog link" }
+    { "type": "url", "id": "allcollections_link", "label": "All Collections link" }
   ],
   "blocks": [
     {

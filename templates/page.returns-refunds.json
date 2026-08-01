@@ -39,7 +39,8 @@
       "settings": {
         "heading": "Returns, Refunds & Cancellations",
         "content": "<p>Report a damaged, defective or incorrect item within 24 hours of delivery for a free replacement, repair or refund. Items still sealed in their original packaging may be returned within 48 hours of delivery, assessed case by case. Once a smart-lighting or electronic product has been opened or used we cannot accept a change-of-mind return.</p>",
-        "bg": "bg-white"
+        "bg": "bg-white",
+        "policy_source": "refund"
       }
     },
     "howto": {

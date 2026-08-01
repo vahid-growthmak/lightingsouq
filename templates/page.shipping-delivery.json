@@ -81,7 +81,8 @@
       "settings": {
         "heading": "Shipping & Delivery Policy",
         "content": "<p>All orders are dispatched from our warehouse in Qatar. Shipping costs are calculated at checkout based on destination, weight and size, and the exact cost is always shown before you complete payment. Once your order ships you will receive a tracking number by email.</p>",
-        "bg": "bg-gray"
+        "bg": "bg-gray",
+        "policy_source": "shipping"
       }
     }
   },

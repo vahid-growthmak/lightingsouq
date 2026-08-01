@@ -39,7 +39,8 @@
       "settings": {
         "heading": "Terms & Conditions",
         "content": "<p>These Terms &amp; Conditions govern your use of the Lighting Souq website, operated by Go Green International Trading W.L.L., and any purchase you make through it.</p>",
-        "bg": "bg-white"
+        "bg": "bg-white",
+        "policy_source": "terms"
       }
     }
   },

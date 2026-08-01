@@ -12,9 +12,15 @@
 <section class="section bg-white">
   <div class="container">
     <div class="grid-4">
+      {%- comment -%}
+        Empty collections are skipped. 22 of the 150 collections held 0 products and still
+        rendered a card reading "0 products" that led to an empty page - placeholder brand and
+        category collections that were never filled. products_count is read from Liquid, which
+        is accurate for smart collections where the Admin API count is not.
+      {%- endcomment -%}
       {%- assign sorted = collections | sort: 'title' -%}
       {%- for collection in sorted -%}
-        {%- unless collection.handle == 'frontpage' -%}
+        {%- unless collection.handle == 'frontpage' or collection.products_count == 0 -%}
           <a href="{{ collection.url }}" class="category-card">
             <div class="cat-img-wrap">
               <img src="{% if collection.image != blank %}{{ collection.image | image_url: width: 600 }}{% elsif collection.products.first.featured_image != blank %}{{ collection.products.first.featured_image | image_url: width: 600 }}{% elsif section.settings.fallback_image %}{{ section.settings.fallback_image | image_url: width: 600 }}{% else %}{{ 'space-home.png' | asset_url }}{% endif %}" alt="{{ collection.title | escape }}" width="600" height="600" loading="lazy" style="width:100%;height:100%;object-fit:cover;">

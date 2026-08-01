@@ -108,7 +108,19 @@
         <a href="{{ section.settings.warranty_link | default: '/pages/warranty' }}">{{ section.settings.warranty_label | default: 'Warranty &amp; Service' }}</a>
         {%- if section.settings.reviews_label != blank -%}<a href="{{ section.settings.reviews_page_link | default: '/pages/reviews' }}">{{ section.settings.reviews_label }}</a>{%- endif -%}
         {%- if section.settings.allcollections_label != blank -%}<a href="{{ section.settings.allcollections_link | default: '/collections' }}">{{ section.settings.allcollections_label }}</a>{%- endif -%}
-        {%- if section.settings.blog_label != blank -%}<a href="{{ section.settings.blog_link | default: '/blogs/news' }}">{{ section.settings.blog_label }}</a>{%- endif -%}
+        {%- comment -%}
+          The blog URL was hardcoded to /blogs/news as a fallback, so renaming or removing that
+          blog would have left a dead link in the footer of every page. Resolve it from the store
+          instead: use the configured link if set, otherwise the first blog that actually has
+          articles, and render nothing at all when the store has no blog.
+        {%- endcomment -%}
+        {%- assign blog_url = section.settings.blog_link -%}
+        {%- if blog_url == blank -%}
+          {%- for store_blog in blogs -%}
+            {%- if store_blog.articles_count > 0 -%}{%- assign blog_url = store_blog.url -%}{%- break -%}{%- endif -%}
+          {%- endfor -%}
+        {%- endif -%}
+        {%- if section.settings.blog_label != blank and blog_url != blank -%}<a href="{{ blog_url }}">{{ section.settings.blog_label }}</a>{%- endif -%}
       </div>
       {%- if settings.theqa_image != blank -%}
         <div class="footer-theqa">

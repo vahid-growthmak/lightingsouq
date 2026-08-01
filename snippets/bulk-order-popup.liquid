@@ -197,10 +197,15 @@
   function renderItems() {
     emptyEl.style.display = items.length ? 'none' : '';
     itemsEl.innerHTML = items.map(function (it, i) {
-      var meta = [it.variant && it.variant !== 'Default Title' ? it.variant : '', it.sku ? it.sku : '', it.price || ''].filter(Boolean).join(' · ');
+      var metaBits = [it.variant && it.variant !== 'Default Title' ? it.variant : '', it.sku ? it.sku : ''].filter(Boolean).map(esc);
+      /* The price part gets the ht-money wrapper so the currency selector converts it like
+         every other price on the page. it.price itself stays plain text, because the same
+         string also goes into the WhatsApp draft, where HTML must never appear. */
+      if (it.price) metaBits.push('<span class="notranslate ht-money">' + esc(it.price) + '</span>');
+      var meta = metaBits.join(' · ');
       return '<div class="rbo-item" data-i="' + i + '">' +
         (it.image ? '<img src="' + esc(it.image) + '" alt="" width="46" height="46" loading="lazy">' : '<img alt="" width="46" height="46">') +
-        '<div class="rbo-item-info"><div class="rbo-item-title">' + esc(it.title) + '</div>' + (meta ? '<div class="rbo-item-meta">' + esc(meta) + '</div>' : '') + '</div>' +
+        '<div class="rbo-item-info"><div class="rbo-item-title">' + esc(it.title) + '</div>' + (meta ? '<div class="rbo-item-meta">' + meta + '</div>' : '') + '</div>' + /* meta parts are escaped above; the price span must land as HTML */
         '<div class="rbo-qty"><button type="button" data-dec aria-label="Decrease">&minus;</button>' +
         '<input type="number" min="1" value="' + it.qty + '" data-qty aria-label="Quantity">' +
         '<button type="button" data-inc aria-label="Increase">+</button></div>' +

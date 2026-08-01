@@ -131,11 +131,27 @@
   (function () {
     var form = document.getElementById('lsq-cart-form');
     if (!form) return;
-    // Same money format as the cart drawer in store-scripts.liquid, and the currency code
-    // comes from the /cart/change.js response, so market currencies stay correct.
+    // Must emit the same markup Liquid's money filter emits (the ht-money span), or the
+    // currency selector app skips these prices and the page mixes converted and unconverted
+    // currencies after a quantity change - see the matching helper in store-scripts.liquid.
+    var SHOP_CURRENCY = {{ shop.currency | json }};
+    var MONEY_FORMAT = {{ shop.money_format | json }};
+    function moneyDigits(cents, token) {
+      var dec = token.indexOf('no_decimals') > -1 ? 0 : 2;
+      var comma = token.indexOf('comma_separator') > -1;
+      var space = token.indexOf('space_separator') > -1;
+      var thou = comma ? '.' : (space ? ' ' : ',');
+      var dsep = comma ? ',' : '.';
+      var n = (cents / 100) || 0;
+      var parts = Math.abs(n).toFixed(dec).split('.');
+      var ip = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thou);
+      return (n < 0 ? '-' : '') + ip + (dec ? dsep + parts[1] : '');
+    }
     function money(cents, code) {
-      var v = (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-      return (code || {{ cart.currency.iso_code | json }}) + ' ' + v;
+      if (!code || code === SHOP_CURRENCY) {
+        return MONEY_FORMAT.replace(/\{\{\s*(amount[a-z_]*)\s*\}\}/g, function (_, t) { return moneyDigits(cents, t); });
+      }
+      return code + ' ' + moneyDigits(cents, 'amount');
     }
     function fallbackSubmit() {
       var btn = form.querySelector('.lsq-update-btn');
@@ -150,13 +166,13 @@
         // server truth (e.g. stock caps the quantity) - but never fight the user mid-typing
         if (input && document.activeElement !== input) input.value = it.quantity;
         var lp = row.querySelector('.lsq-cart-line-price');
-        if (lp) lp.textContent = money(it.final_line_price, cart.currency);
+        if (lp) lp.innerHTML = money(it.final_line_price, cart.currency);
         var mp = row.querySelector('.lsq-cart-price-mobile');
-        if (mp) mp.textContent = money(it.final_line_price, cart.currency);
+        if (mp) mp.innerHTML = money(it.final_line_price, cart.currency);
         row.classList.remove('is-busy');
       });
       var sub = form.querySelector('.lsq-cart-summary-row strong');
-      if (sub) sub.textContent = money(cart.total_price, cart.currency);
+      if (sub) sub.innerHTML = money(cart.total_price, cart.currency);
       form.classList.remove('is-busy');
       document.querySelectorAll('[data-cart-count]').forEach(function (el) { el.textContent = cart.item_count; });
     }

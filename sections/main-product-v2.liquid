@@ -353,7 +353,10 @@
       var match = variants.find(function (v) { return v.options.every(function (o, i) { return o === sel[i]; }); });
       if (!match) return;
       if (idInput) idInput.value = match.id;
-      if (priceEl) priceEl.textContent = money(match.price);
+      /* innerHTML, not textContent: money() returns shop.money_format, which carries the
+         ht-money span - textContent would print the markup literally on variant change and
+         hide the price from the currency selector's converter. */
+      if (priceEl) priceEl.innerHTML = money(match.price);
       if (atc) { atc.disabled = !match.available; atc.textContent = match.available ? L_ATC : L_SOLD; }
     }
     optionGrids.forEach(function (g) {

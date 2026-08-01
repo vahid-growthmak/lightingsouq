@@ -125,9 +125,34 @@
   };
 
   /* ---------- helpers ---------- */
+  /* Prices rendered from JS must come out as the SAME markup Liquid's money filter produces -
+     <span class="notranslate ht-money">QAR 1,234.00</span>. The currency selector (Hextom TMS)
+     converts display currency client-side and only touches nodes carrying the ht-money class;
+     it watches the DOM with a MutationObserver, so nodes added later convert too. Plain
+     "QAR 50.00" text is invisible to it - which is exactly how the cart drawer kept showing
+     QAR while the product cards around it showed the visitor's currency. Checkout still
+     settles in QAR; the app's conversion is display-only.
+     If the server ever returns an amount in a different presentment currency (real Shopify
+     Markets multi-currency), it is already converted - label it plainly and skip the wrapper
+     so the display app cannot convert it a second time. */
+  var SHOP_CURRENCY = {{ shop.currency | json }};
+  var MONEY_FORMAT = {{ shop.money_format | json }};
+  function moneyDigits(cents, token) {
+    var dec = token.indexOf('no_decimals') > -1 ? 0 : 2;
+    var comma = token.indexOf('comma_separator') > -1;
+    var space = token.indexOf('space_separator') > -1;
+    var thou = comma ? '.' : (space ? ' ' : ',');
+    var dsep = comma ? ',' : '.';
+    var n = (cents / 100) || 0;
+    var parts = Math.abs(n).toFixed(dec).split('.');
+    var ip = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thou);
+    return (n < 0 ? '-' : '') + ip + (dec ? dsep + parts[1] : '');
+  }
   function money(cents, code) {
-    var v = (cents / 100).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    return (code || '{{ cart.currency.iso_code | default: shop.currency }}') + ' ' + v;
+    if (!code || code === SHOP_CURRENCY) {
+      return MONEY_FORMAT.replace(/\{\{\s*(amount[a-z_]*)\s*\}\}/g, function (_, t) { return moneyDigits(cents, t); });
+    }
+    return code + ' ' + moneyDigits(cents, 'amount');
   }
   function toast(msg) {
     var t = document.querySelector('[data-toast]');
@@ -239,7 +264,7 @@
         var n = row.querySelector('.cd-qty__num');
         var p = row.querySelector('.cd-item__price');
         if (n && n.textContent != it.quantity) n.textContent = it.quantity;
-        if (p) p.textContent = money(it.final_line_price, code);
+        if (p) p.innerHTML = money(it.final_line_price, code); /* money() returns ht-money markup */
         row.classList.remove('is-busy');
       });
     } else {

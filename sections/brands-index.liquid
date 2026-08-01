@@ -14,13 +14,13 @@
     and brand collections were deleted from Shopify, so any entry left here would link to a 404.
     Group 7 held only Huawei, Sony and Xiaomi, so the whole group is gone rather than left empty.
   endcomment
-  assign g1 = 'Lighting brands^Lamps, tubes, fixtures and fittings from the names that built the lighting industry.^Osram,Philips,LEDVANCE,GE,Sylvania,Tungsram,Kosnic,Bell Lighting,BESA,Rabalux,Al Babtain,GG LED,Glint,Luxzony,MP2,Tenia,Weiss,Skywatch'
+  assign g1 = 'Lighting brands^Lamps, tubes, fixtures and fittings from the names that built the lighting industry.^Osram,Philips,LEDVANCE,GE,Sylvania,Tungsram,Kosnic,Bell Lighting,BESA,Rabalux,Al Babtain,GG LED,Glint,Luxzony,MP2,Tenia'
   assign g2 = 'Smart home brands^App and voice-controlled lighting and devices that work with Alexa, Google Home and Apple.^Wink,Philips Hue,Sonoff,Amazon,Google'
   assign g3 = 'Solar and outdoor^Solar lighting, flood lighting and outdoor fittings built for the Gulf climate.^Vettam,GIAX'
   assign g4 = 'Components and control gear^Ballasts, LED drivers, capacitors, ignitors and switchgear for professional installations.^Tridonic,Helvar,VS,Hager,Electronicon,MECO,Thomas & Betts,GIAX,Sonoff'
   assign g5 = 'Fans and air^Ceiling, exhaust, cabinet and ventilation fans for homes and buildings in the Gulf climate.^KDK,Panasonic,Sirocco'
   assign g6 = 'Batteries and power^Batteries, chargers and power accessories.^Energizer,Ronix'
-  assign g8 = 'Other brands^Additional lines we stock across the catalogue.^BMC,Chink,Generic,Lighting Souq'
+  assign g8 = 'Other brands^Additional lines we stock across the catalogue.^Chink,Generic'
   assign groups = g1 | append: '~~' | append: g2 | append: '~~' | append: g3 | append: '~~' | append: g4 | append: '~~' | append: g5 | append: '~~' | append: g6 | append: '~~' | append: g8 | split: '~~'
 
   # Brand FAQ (doc 02 section 4) — Question ^ Answer(HTML)

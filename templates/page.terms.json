@@ -4,7 +4,7 @@
       "type": "breadcrumb",
       "settings": {
         "home_label": "Home",
-        "current": "Warranty"
+        "current": "Terms & Conditions"
       },
       "blocks": {
         "help": {
@@ -17,7 +17,7 @@
         "current": {
           "type": "crumb",
           "settings": {
-            "label": "Warranty"
+            "label": "Terms & Conditions"
           }
         }
       },
@@ -29,16 +29,16 @@
     "hero": {
       "type": "page-hero",
       "settings": {
-        "heading": "Warranty",
-        "subtitle": "Genuine products with a real local warranty — not a grey-market import.",
+        "heading": "Terms & Conditions",
+        "subtitle": "The terms that govern your use of our site and any purchase you make through it.",
         "bg": "bg-gray"
       }
     },
-    "terms": {
+    "body": {
       "type": "rich-text",
       "settings": {
-        "heading": "Warranty & Service Policy",
-        "content": "<p>Warranty coverage depends on the brand and on whether we hold a formal distributor or dealership agreement with that manufacturer. The applicable warranty for each product is stated on its product page.</p>",
+        "heading": "Terms & Conditions",
+        "content": "<p>These Terms &amp; Conditions govern your use of the Lighting Souq website, operated by Go Green International Trading W.L.L., and any purchase you make through it.</p>",
         "bg": "bg-white"
       }
     }
@@ -46,6 +46,6 @@
   "order": [
     "breadcrumb",
     "hero",
-    "terms"
+    "body"
   ]
 }

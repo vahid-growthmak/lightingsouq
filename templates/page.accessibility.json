@@ -4,7 +4,7 @@
       "type": "breadcrumb",
       "settings": {
         "home_label": "Home",
-        "current": "Warranty"
+        "current": "Accessibility"
       },
       "blocks": {
         "help": {
@@ -17,7 +17,7 @@
         "current": {
           "type": "crumb",
           "settings": {
-            "label": "Warranty"
+            "label": "Accessibility"
           }
         }
       },
@@ -29,16 +29,16 @@
     "hero": {
       "type": "page-hero",
       "settings": {
-        "heading": "Warranty",
-        "subtitle": "Genuine products with a real local warranty — not a grey-market import.",
+        "heading": "Website Accessibility",
+        "subtitle": "How we build for accessibility, and how to adjust the site to suit you.",
         "bg": "bg-gray"
       }
     },
-    "terms": {
+    "body": {
       "type": "rich-text",
       "settings": {
-        "heading": "Warranty & Service Policy",
-        "content": "<p>Warranty coverage depends on the brand and on whether we hold a formal distributor or dealership agreement with that manufacturer. The applicable warranty for each product is stated on its product page.</p>",
+        "heading": "Website Accessibility Statement",
+        "content": "<p>Lighting Souq is committed to providing a website that is accessible to the widest possible audience, including people using assistive technologies.</p>",
         "bg": "bg-white"
       }
     }
@@ -46,6 +46,6 @@
   "order": [
     "breadcrumb",
     "hero",
-    "terms"
+    "body"
   ]
 }

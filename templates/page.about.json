@@ -10,7 +10,7 @@
     "story": {
       "type": "text-media",
       "settings": {
-        "bg": "bg-white",
+        "bg": "bg-gray",
         "media_side": "left",
         "image_alt": "Lighting Souq showroom interior in Doha",
         "eyebrow": "Life in Light",
@@ -26,19 +26,44 @@
         "heading": "Why LightingSouq",
         "subtitle": "The difference you feel from the first message to the final fitting.",
         "grid_class": "grid-3",
-        "bg": "bg-gray"
+        "bg": "bg-white"
       },
       "blocks": {
-        "w1": { "type": "item", "settings": { "icon": "verified", "title": "Local warranty", "text": "Genuine stock with warranty you can claim in Qatar — not grey-market imports." } },
-        "w2": { "type": "item", "settings": { "icon": "support_agent", "title": "Real advice", "text": "Talk to specialists who confirm compatibility before you buy." } },
-        "w3": { "type": "item", "settings": { "icon": "local_shipping", "title": "Fast delivery", "text": "Same-day Doha delivery and GCC shipping, with showroom pickup." } }
+        "w1": {
+          "type": "item",
+          "settings": {
+            "icon": "verified",
+            "title": "Local warranty",
+            "text": "Genuine stock with warranty you can claim in Qatar — not grey-market imports."
+          }
+        },
+        "w2": {
+          "type": "item",
+          "settings": {
+            "icon": "support_agent",
+            "title": "Real advice",
+            "text": "Talk to specialists who confirm compatibility before you buy."
+          }
+        },
+        "w3": {
+          "type": "item",
+          "settings": {
+            "icon": "local_shipping",
+            "title": "Fast delivery",
+            "text": "Same-day Doha delivery and GCC shipping, with showroom pickup."
+          }
+        }
       },
-      "block_order": ["w1", "w2", "w3"]
+      "block_order": [
+        "w1",
+        "w2",
+        "w3"
+      ]
     },
     "team": {
       "type": "text-media",
       "settings": {
-        "bg": "bg-white",
+        "bg": "bg-gray",
         "media_side": "right",
         "image_alt": "The Lighting Souq showroom team",
         "eyebrow": "Showroom and team",
@@ -51,9 +76,9 @@
     "ggi": {
       "type": "rich-text",
       "settings": {
-        "heading": "Backed by GGI Lighting",
-        "content": "<p>Lighting Souq is the consumer face of <strong>GGI Lighting</strong>, our B2B parent and importer. That backbone means direct sourcing, genuine stock and volume pricing for projects.</p><p>Running a project or trade order? We can route you to the right pricing and lead times.</p>",
-        "bg": "bg-gray"
+        "heading": "About Lighting Souq",
+        "content": "<p>Lighting Souq is an online lighting and smart-home retailer based in Doha, Qatar, operated by Go Green International Trading W.L.L. Since 2018 we have supplied homes, offices, hospitality venues and commercial projects across Qatar and the wider region.</p>",
+        "bg": "bg-white"
       }
     },
     "contact": {
@@ -66,5 +91,12 @@
       }
     }
   },
-  "order": ["breadcrumb", "story", "why", "team", "ggi", "contact"]
+  "order": [
+    "breadcrumb",
+    "ggi",
+    "story",
+    "why",
+    "team",
+    "contact"
+  ]
 }

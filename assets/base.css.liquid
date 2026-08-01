@@ -2056,6 +2056,14 @@ body.has-sticky-atc { padding-bottom: 0; }
 .lsq-prose ul, .lsq-prose ol { margin: 0 0 1rem 1.25rem; }
 .lsq-prose li { margin-bottom: 0.4rem; }
 .lsq-prose a { color: var(--brand-link); font-weight: 600; }
+/* Policy pages carry rate/transit tables (shipping zones, delivery methods). .lsq-prose had no
+   table styling, so they rendered as unreadable runs of text. The wrapper scrolls rather than
+   the page, so a wide table cannot push the whole layout sideways on a phone. */
+.lsq-prose table { width: 100%; border-collapse: collapse; margin: 0 0 1.5rem; font-size: 0.95rem; display: block; overflow-x: auto; }
+.lsq-prose thead { background: var(--gray-50, #f9fafb); }
+.lsq-prose th, .lsq-prose td { border: 1px solid var(--gray-200, #e5e7eb); padding: 0.6rem 0.75rem; text-align: left; vertical-align: top; line-height: 1.6; }
+.lsq-prose th { font-weight: 700; white-space: nowrap; }
+.lsq-prose h2:first-child, .lsq-prose h3:first-child { margin-top: 0; }
 
 /* ---- Mobile hamburger: visible on mobile only; hidden on desktop (mega nav takes over) ---- */
 .menu-toggle-btn { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; border: none; background: transparent; color: var(--brand-text); cursor: pointer; }

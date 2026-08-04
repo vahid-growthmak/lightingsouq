@@ -1441,6 +1441,25 @@ button.footer-heading { display: block; width: 100%; text-align: left; backgroun
 }
 .brand-tile:hover { border-color: var(--brand-accent); box-shadow: var(--shadow-sm); transform: translateY(-2px); }
 .brand-tile img { max-height: 44px; max-width: 80%; object-fit: contain; }
+/* Four logos read far smaller than the rest of the row, from two different causes.
+   Vettam, Ledvance and Glint shipped with blank margin baked into the PNG - the mark filled
+   only 34%, 47% and 48% of its own canvas - so the tile sized the padding, not the logo.
+   Those three assets are trimmed to the ink, which needs no CSS at all.
+   Two need help the trim cannot give:
+     Ledvance is wide (3.76:1 once trimmed), so the 80% WIDTH cap binds before the height cap
+       and it stops at ~36px while square logos reach 44px. A little more width lets it reach
+       the same height as its neighbours.
+     KDK is a tall portrait lockup (0.75:1) whose ink already fills 98% of its canvas - it is
+       pinned at the 44px height cap, so trimming does nothing. It gets more height.
+   The tile is a fixed 88px with 1rem padding, so 56px of inner height is available and the
+   44px cap leaves 12px unused: raising one logo cannot change the tile or shift the grid.
+   Scoped by aria-label (case-insensitive - the strip says "Ledvance", the brands index says
+   "LEDVANCE") so no other brand is touched, and scoped to the strip and marquee so the brand
+   hero and index cards keep their own sizing rules. */
+.brand-strip-grid .brand-tile[aria-label="ledvance" i] img,
+.brand-tile--marquee[aria-label="ledvance" i] img { max-width: 94%; }
+.brand-strip-grid .brand-tile[aria-label="kdk" i] img,
+.brand-tile--marquee[aria-label="kdk" i] img { max-height: 56px; }
 /* wordmark fallback shown when a logo image is missing/broken */
 .brand-wordmark { align-items: center; justify-content: center; font-weight: 800; font-size: 1.15rem; letter-spacing: 0.01em; color: var(--brand-primary); text-align: center; line-height: 1.15; }
 /* marquee variant: boxless, so the tile itself carries no card chrome */

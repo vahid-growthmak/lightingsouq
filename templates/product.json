@@ -224,6 +224,8 @@
       "settings": {
         "heading": "Trusted by Buyers in Qatar",
         "initial_count": 4,
+        "mobile_count": 2,
+        "more_label": "",
         "view_more_label": "View more reviews",
         "view_more_link": "shopify://pages/reviews",
         "bg": "bg-white"
@@ -234,6 +236,7 @@
       "blocks": {
         "judge_me_reviews_review_widget_GMRfT7": {
           "type": "shopify://apps/judge-me-reviews/blocks/review_widget/61ccd3b1-a9f2-4160-9fe9-4fec8413e5d8",
+          "disabled": true,
           "settings": {
             "review_data": "no_reviews",
             "max_width": 1200,

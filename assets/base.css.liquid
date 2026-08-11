@@ -2191,6 +2191,15 @@ body.has-sticky-atc { padding-bottom: 0; }
 .cd-subtotal strong { font-weight: 800; }
 .cd-note { margin: 0.35rem 0 0.9rem; font-size: 0.78rem; color: var(--gray-500); }
 .cd-checkout { display: flex; width: 100%; justify-content: center; }
+/* Checkout was the teal --brand-secondary while every Add to Cart on the site is the blue
+   --brand-primary, so the two halves of one purchase used two different colours. Both
+   checkout buttons - the drawer and the cart page - now match Add to Cart.
+   Scoped to the checkout buttons on purpose: they carry .btn-primary, which is shared by 43
+   places across 24 templates (newsletter, contact, login, 404, hero, brand pages...), so
+   recolouring that class would repaint the whole site. Same specificity as .btn-primary and
+   declared after it, so this wins without !important; the opacity hover still applies. */
+.cd-checkout,
+.lsq-checkout-btn { background: var(--brand-primary); }
 .cd-viewcart { display: block; text-align: center; margin-top: 0.7rem; font-size: 0.88rem; color: var(--brand-primary); text-decoration: none; font-weight: 600; }
 .cd-viewcart:hover { text-decoration: underline; }
 
